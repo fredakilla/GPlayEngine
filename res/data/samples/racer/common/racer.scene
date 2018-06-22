@@ -1,0 +1,392 @@
+scene main
+{
+    path = res/data/samples/racer/common/racer.gpb
+
+    activeCamera = camera1
+
+    node carbody
+    {
+        url = car_top
+        material = res/data/samples/racer/common/racer.material#car
+        collisionObject = res/data/samples/racer/common/racer.physics#car
+    }
+
+    node wheelFrontLeft
+    {
+        url = Left_top
+        material = res/data/samples/racer/common/racer.material#car
+        collisionObject = res/data/samples/racer/common/racer.physics#carWheelFrontLeft
+    }
+
+    node wheelFrontRight
+    {
+        url = Right_top
+        material = res/data/samples/racer/common/racer.material#car
+        collisionObject = res/data/samples/racer/common/racer.physics#carWheelFrontRight
+    }
+
+    node wheelBackLeft
+    {
+        url = Left_bottom
+        material = res/data/samples/racer/common/racer.material#car
+        collisionObject = res/data/samples/racer/common/racer.physics#carWheelBackLeft
+    }
+
+    node wheelBackRight
+    {
+        url = Right_bottom
+        material = res/data/samples/racer/common/racer.material#car
+        collisionObject = res/data/samples/racer/common/racer.physics#carWheelBackRight
+    }
+
+    node mapplane_1
+    {
+        material = res/data/samples/racer/common/racer.material#tile1
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_2
+    {
+        material = res/data/samples/racer/common/racer.material#tile2
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_3
+    {
+        material = res/data/samples/racer/common/racer.material#tile3
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_4
+    {
+        material = res/data/samples/racer/common/racer.material#tile4
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_5
+    {
+        material = res/data/samples/racer/common/racer.material#tile5
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_6
+    {
+        material = res/data/samples/racer/common/racer.material#tile6
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_7
+    {
+        material = res/data/samples/racer/common/racer.material#tile7
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_8
+    {
+        material = res/data/samples/racer/common/racer.material#tile8
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_9
+    {
+        material = res/data/samples/racer/common/racer.material#tile9
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_10
+    {
+        material = res/data/samples/racer/common/racer.material#tile10
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_11
+    {
+        material = res/data/samples/racer/common/racer.material#tile11
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_12
+    {
+        material = res/data/samples/racer/common/racer.material#tile12
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_13
+    {
+        material = res/data/samples/racer/common/racer.material#tile13
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_14
+    {
+        material = res/data/samples/racer/common/racer.material#tile14
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_15
+    {
+        material = res/data/samples/racer/common/racer.material#tile15
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node mapplane_16
+    {
+        material = res/data/samples/racer/common/racer.material#tile16
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node overhang_1
+    {
+        material = res/data/samples/racer/common/racer.material#tile3
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node overhang_2
+    {
+        material = res/data/samples/racer/common/racer.material#tile3
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node overhang_3
+    {
+        material = res/data/samples/racer/common/racer.material#tile11
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node overhang_4
+    {
+        material = res/data/samples/racer/common/racer.material#tile12
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+    }
+
+    node track_0
+    {
+        material = res/data/samples/racer/common/racer.material#track
+        collisionObject = res/data/samples/racer/common/racer.physics#roadway
+    }
+
+    node pillar
+    {
+        url = pillar_*
+        material = res/data/samples/racer/common/racer.material#pillar
+    }
+
+    node rail_1
+    {
+        material = res/data/samples/racer/common/racer.material#rail
+        collisionObject = res/data/samples/racer/common/racer.physics#guard_rail
+        tags
+        {
+            transparent
+        }
+    }
+
+    node rail_2
+    {
+        material = res/data/samples/racer/common/racer.material#rail
+        collisionObject = res/data/samples/racer/common/racer.physics#guard_rail
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treepine
+    {
+        url = treepine_*
+        material = res/data/samples/racer/common/racer.material#treepine
+        collisionObject = res/data/samples/racer/common/racer.physics#treepine
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treelightgreen
+    {
+        url = treelightgreen_*
+        material[0] = res/data/samples/racer/common/racer.material#treelightgreen
+        material[1] = res/data/samples/racer/common/racer.material#trunk
+        collisionObject = res/data/samples/racer/common/racer.physics#treelightgreen
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treebig
+    {
+        url = treebig_*
+        material[0] = res/data/samples/racer/common/racer.material#treebig
+        material[1] = res/data/samples/racer/common/racer.material#trunk
+        collisionObject = res/data/samples/racer/common/racer.physics#treebig
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treebrown
+    {
+        url = treebrown_*
+        material[1] = res/data/samples/racer/common/racer.material#treebrown
+        material[0] = res/data/samples/racer/common/racer.material#trunk
+        collisionObject = res/data/samples/racer/common/racer.physics#treebrown
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treetall
+    {
+        url = treetall_*
+        material[0] = res/data/samples/racer/common/racer.material#treetall
+        material[1] = res/data/samples/racer/common/racer.material#trunk
+        collisionObject = res/data/samples/racer/common/racer.physics#treetall
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treetallpine
+    {
+        url = treetallpine*
+        material = res/data/samples/racer/common/racer.material#treetallpine
+        collisionObject = res/data/samples/racer/common/racer.physics#treetallpine
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treewhitepine
+    {
+        url = treewhitepine*
+        material = res/data/samples/racer/common/racer.material#treewhitepine
+        collisionObject = res/data/samples/racer/common/racer.physics#treepine
+        tags
+        {
+            transparent
+        }
+    }
+
+    node treedetailed
+    {
+        url = treedetailed*
+        material[0] = res/data/samples/racer/common/racer.material#trunk2
+        material[1] = res/data/samples/racer/common/racer.material#treedetailed
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+        tags
+        {
+            transparent
+        }
+    }
+
+    node shrublightgreen
+    {
+        url = shrublightgreen_*
+        material = res/data/samples/racer/common/racer.material#shrublightgreen
+        tags
+        {
+            transparent
+        }
+    }
+
+    node shrubdark
+    {
+        url = shrubdark_*
+        material = res/data/samples/racer/common/racer.material#shrubdark
+        tags
+        {
+            transparent
+        }
+    }
+
+    node shruborange
+    {
+        url = shruborange_*
+        material = res/data/samples/racer/common/racer.material#shruborange
+        tags
+        {
+            transparent
+        }
+    }
+
+    node shrubyellow
+    {
+        url = shrubyellow_*
+        material = res/data/samples/racer/common/racer.material#shruborange
+        tags
+        {
+            transparent
+        }
+    }
+
+    node grassdrygreen
+    {
+        url = grassdrygreen*
+        material = res/data/samples/racer/common/racer.material#grassgreen
+        tags
+        {
+            transparent
+        }
+    }
+
+    node grassdryred
+    {
+        url = grassdryred*
+        material = res/data/samples/racer/common/racer.material#grassred
+        tags
+        {
+            transparent
+        }
+    }
+
+    node chainfence_0
+    {
+        material[0] = res/data/samples/racer/common/racer.material#chain
+        material[1] = res/data/samples/racer/common/racer.material#wall
+        collisionObject = res/data/samples/racer/common/racer.physics#static_mesh
+        tags
+        {
+            transparent
+        }
+    }
+
+    node light
+    {
+        url = light_*
+        material[0] = res/data/samples/racer/common/racer.material#lightpost
+        material[1] = res/data/samples/racer/common/racer.material#lightbulb
+    }
+
+    node water
+    {
+        material = res/data/samples/racer/common/racer.material#water
+        tags
+        {
+            transparent
+        }
+    }
+
+    node mountains_0
+    {
+        material = res/data/samples/racer/common/racer.material#mountains
+        tags
+        {
+            transparent
+        }
+    }
+
+    node skydome_0
+    {
+        material = res/data/samples/racer/common/racer.material#skydome
+    }
+
+    physics
+    {
+        gravity = 0.0, -9.8, 0.0
+    }
+}

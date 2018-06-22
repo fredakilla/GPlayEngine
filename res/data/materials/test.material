@@ -1,0 +1,49 @@
+material
+{
+    technique shadowmap
+    {
+        renderState
+        {
+            cullFace = true
+            cullFaceSide = FRONT
+            depthTest = true
+            depthWrite = true
+        }
+
+        pass
+        {
+            vertexShader = res/core/shaders/shadow.vert
+            fragmentShader = res/core/shaders/shadow.frag
+        } 
+    }
+
+    technique forward
+    {
+        //pass 0
+        //{
+        //    vertexShader = res/core/shaders/shadow.vert
+        //    fragmentShader = res/core/shaders/shadow.frag
+        //}
+
+        pass
+        {
+            // shaders
+            vertexShader = res/core/shaders/forward/forward.vert
+            fragmentShader = res/core/shaders/forward/forward.frag
+            defines = DIRECTIONAL_LIGHT_COUNT=1
+            
+            // uniforms
+            //u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+            //u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
+            //u_ambientColor = 0.4, 0.4, 0.4
+
+            // render state
+            renderState
+            {
+                cullFace = true
+                cullFaceSide = BACK
+                depthTest = true
+            }
+        }
+    }
+}

@@ -1,0 +1,208 @@
+scene
+{
+    path = res/data/samples/character/common/sample.gpb
+
+    node boycharacter
+    {
+        collisionObject = res/data/samples/character/common/sample.physics#boy
+    }
+
+    node boymesh
+    {
+        material = res/data/samples/character/common/sample.material#boy
+        tags
+        {
+            dynamic
+        }
+    }
+
+    node boyshadow
+    {
+        material = res/data/samples/character/common/sample.material#boyshadow
+        tags
+        {
+            transparent
+            dynamic
+        }
+    }
+
+    node camera
+    {
+        collisionObject = res/data/samples/character/common/sample.physics#camera
+    }
+
+    node tabletop
+    {
+        material = res/data/samples/character/common/sample.material#tabletop
+        collisionObject = res/data/samples/character/common/sample.physics#table
+    }
+
+    node tableleg1
+    {
+        material = res/data/samples/character/common/sample.material#tableleg1
+        collisionObject = res/data/samples/character/common/sample.physics#table
+    }
+
+    node tableleg2
+    {
+        material = res/data/samples/character/common/sample.material#tableleg2
+        collisionObject = res/data/samples/character/common/sample.physics#table
+    }
+
+    node tableleg3
+    {
+        material = res/data/samples/character/common/sample.material#tableleg3
+        collisionObject = res/data/samples/character/common/sample.physics#table
+    }
+
+    node tableleg4
+    {
+        material = res/data/samples/character/common/sample.material#tableleg4
+        collisionObject = res/data/samples/character/common/sample.physics#table
+    }
+
+    node greenchair1
+    {
+        material = res/data/samples/character/common/sample.material#green
+        collisionObject = res/data/samples/character/common/sample.physics#chair
+        tags
+        {
+            dynamic
+        }
+    }
+    node greenchair2 : greenchair1 {}
+    node greenchair3 : greenchair1 {}
+
+    node bluechair1
+    {
+        material = res/data/samples/character/common/sample.material#lightblue
+        collisionObject = res/data/samples/character/common/sample.physics#chair
+        tags
+        {
+            dynamic
+        }
+    }
+    node bluechair2 : bluechair1 {}
+    node bluechair3 : bluechair1 {}
+
+    node playtable
+    {
+        material = res/data/samples/character/common/sample.material#playtable
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node easel
+    {
+        material = res/data/samples/character/common/sample.material#easel
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node storageorganizer
+    {
+        material = res/data/samples/character/common/sample.material#storageorganizer
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node floor
+    {
+        material = res/data/samples/character/common/sample.material#floor
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node wallwest
+    {
+        material = res/data/samples/character/common/sample.material#wallwest
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node walleast
+    {
+        material = res/data/samples/character/common/sample.material#walleast
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node wallnorth
+    {
+        material = res/data/samples/character/common/sample.material#wallnorth
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node wallsouth
+    {
+        material = res/data/samples/character/common/sample.material#wallsouth
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node walloverhang
+    {
+        material = res/data/samples/character/common/sample.material#walloverhang
+        collisionObject = res/data/samples/character/common/sample.physics#staticMesh
+    }
+
+    node windowledge
+    {
+        material = res/data/samples/character/common/sample.material#windowledge
+    }
+
+    node door
+    {
+        material = res/data/samples/character/common/sample.material#door
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node doorframe
+    {
+        material = res/data/samples/character/common/sample.material#doorframe
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node bookshelf
+    {
+        material = res/data/samples/character/common/sample.material#bookshelf
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node book
+    {
+        material = res/data/samples/character/common/sample.material#book
+    }
+
+    node toybox
+    {
+        material = res/data/samples/character/common/sample.material#toybox
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node floortiles
+    {
+        material = res/data/samples/character/common/sample.material#floortiles
+    }
+
+    node basketball
+    {
+        material = res/data/samples/character/common/sample.material#basketball
+        collisionObject = res/data/samples/character/common/sample.physics#basketball
+        tags
+        {
+            dynamic
+        }
+    }
+
+    node basketballnet
+    {
+        material = res/data/samples/character/common/sample.material#basketballnet
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    node backboard
+    {
+        material = res/data/samples/character/common/sample.material#backboard
+        collisionObject = res/data/samples/character/common/sample.physics#staticBox
+    }
+
+    physics
+    {
+        // TODO: Fixme Gravity is set to 3x normal gravity to compenate for larger scale of scene. Bug
+        gravity = 0.0, -29.4, 0.0
+    }
+}

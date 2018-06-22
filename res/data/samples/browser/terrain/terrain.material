@@ -1,0 +1,62 @@
+
+material terrain
+{
+    u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+
+    u_normalMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
+    u_normalMap = TERRAIN_NORMAL_MAP
+    u_surfaceLayerMaps = TERRAIN_LAYER_MAPS
+
+    u_ambientColor = SCENE_AMBIENT_COLOR
+    u_directionalLightDirection[0] = LIGHT_DIRECTION_0
+    u_directionalLightColor[0] = LIGHT_COLOR_0
+
+
+    sampler u_surfaceLayerMaps_0
+    {
+        path = res/data/samples/browser/terrain/rock.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = LINEAR_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_surfaceLayerMaps_1
+    {
+        path = res/data/samples/browser/terrain/dirt.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = LINEAR_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_surfaceLayerMaps_2
+    {
+        path = res/data/samples/browser/terrain/grass.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = LINEAR_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+
+
+    renderState
+    {
+        cullFace = true
+        depthTest = true
+    }
+
+    technique
+    {
+        pass
+        {
+            vertexShader = res/core/shaders/terrain.vert
+            fragmentShader = res/core/shaders/terrain.frag
+            defines = DIRECTIONAL_LIGHT_COUNT=1
+        }
+    }
+}

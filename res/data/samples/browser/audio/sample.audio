@@ -1,0 +1,16 @@
+audio backgroundTrack
+{
+    path = res/data/sounds/background_track.ogg
+    looped = true
+}
+
+audio engine
+{
+    path = res/data/sounds/engine_loop.ogg
+    looped = true
+}
+
+audio braking
+{
+    path = res/data/sounds/braking.wav
+}

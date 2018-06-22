@@ -1,0 +1,38 @@
+material duck
+{
+    technique
+    {
+        pass 0
+        {
+            // shaders
+            vertexShader = res/core/shaders/forward/textured.vert
+            fragmentShader = res/core/shaders/forward/textured.frag
+            defines = SPECULAR;DIRECTIONAL_LIGHT_COUNT=1
+            
+            // uniforms
+            u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+            u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
+            u_cameraPosition = CAMERA_WORLD_POSITION
+            u_ambientColor = SCENE_AMBIENT_COLOR
+            u_specularExponent = 50
+            
+            // samplers
+            sampler u_diffuseTexture
+            {
+                path = res/data/textures/duck.png
+                mipmap = true
+                wrapS = CLAMP
+                wrapT = CLAMP
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+
+            // render state
+            renderState
+            {
+                cullFace = true
+                depthTest = true
+            }
+        }
+    }
+}

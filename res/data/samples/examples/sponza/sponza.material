@@ -1,0 +1,752 @@
+material textured
+{    
+    u_specularExponent = 7.45098    
+    
+    
+    sampler u_diffuseTexture
+    {
+        mipmap = true
+        wrapS = CLAMP
+        wrapT = CLAMP
+        minFilter = LINEAR_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }    
+
+    sampler u_normalTexture
+    {
+        path = res/data/textures/brickn.png
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = res/data/samples/examples/sponza/sponza/sponza_floor_a_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+   
+    renderState
+    {
+        cullFace = true
+        depthTest = true
+    }
+    
+    technique
+    {
+        u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+        u_worldMatrix = WORLD_MATRIX
+        pass 
+        {
+            vertexShader = res/core/shaders/deferred/gbuffer.vert
+            fragmentShader = res/core/shaders/deferred/gbuffer.frag
+        }
+    }
+
+    /*technique mytech2
+    {
+        u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+        pass 
+        {
+            vertexShader = res/core/shaders/shadow.vert
+            fragmentShader = res/core/shaders/shadow.frag
+        }
+    }*/
+}
+
+material colored
+{
+    u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+    
+    renderState
+    {
+        cullFace = true
+        depthTest = true
+    }
+    
+    technique
+    {
+        pass 
+        {
+            vertexShader = res/core/shaders/forward/colored.vert
+            fragmentShader = res/core/shaders/forward/colored.frag
+        }
+    }
+}
+
+material m0Material__25 : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/lion.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/lion_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/lion_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m10column_c : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_column_c_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_column_c_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_column_c_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m11details : textured
+{    
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_details_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_details_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_details_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m12fabric_a : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_fabric_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_fabric_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_fabric_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m13fabric_c : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_curtain_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_curtain_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_curtain_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m14fabric_d : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_fabric_blue_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_fabric_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_fabric_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m15fabric_e : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_fabric_green_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_fabric_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_fabric_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m16fabric_f : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_curtain_green_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_curtain_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_curtain_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m17fabric_g : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_curtain_blue_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_curtain_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_curtain_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m18flagpole : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_flagpole_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_flagpole_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_flagpole_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m19floor : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_floor_a_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_floor_a_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_floor_a_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m1Material__298 : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/background.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/background_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/background_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m20leaf : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_thorn_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_thorn_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_thorn_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m21roof : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_roof_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_roof_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m22vase : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/vase_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/vase_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m23vase_hanging : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/vase_hanging_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+}
+
+material m24vase_round : textured
+{
+    u_cameraPosition = CAMERA_WORLD_POSITION
+    u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
+    sampler u_diffuseTexture
+    {
+        path = sponza/vase_round.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/vase_round_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/vase_round_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m2Material__47 : colored
+{
+    u_cameraPosition = CAMERA_WORLD_POSITION
+    u_diffuseColor = 0.735, 0.735, 0.735, 1
+    u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
+    
+}
+
+material m3Material__57 : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/vase_plant.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/vase_plant_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m4arch : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_arch_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_arch_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_arch_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m5bricks : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/spnza_bricks_a_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/spnza_bricks_a_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/spnza_bricks_a_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m6ceiling : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_ceiling_a_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_ceiling_a_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_ceiling_a_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m7chain : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/chain_texture.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/chain_texture_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m8column_a : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_column_a_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_column_a_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_column_a_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+
+material m9column_b : textured
+{
+    sampler u_diffuseTexture
+    {
+        path = sponza/sponza_column_b_diff.dds
+        wrapS = REPEAT
+        wrapT = REPEAT
+    }
+
+    sampler u_normalTexture
+    {
+        path = sponza/sponza_column_b_ddn.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+
+    sampler u_specularTexture
+    {
+        path = sponza/sponza_column_b_spec.dds
+        mipmap = true
+        wrapS = REPEAT
+        wrapT = REPEAT
+        minFilter = NEAREST_MIPMAP_LINEAR
+        magFilter = LINEAR
+    }
+}
+

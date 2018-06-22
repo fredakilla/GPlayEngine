@@ -1,0 +1,15 @@
+scene
+{
+    path = res/data/samples/browser/water/pond.gpb
+
+
+    node Ground
+    {
+        material = res/data/samples/browser/water/watersample.material#ground
+    }
+
+    node Water
+    {
+        material = res/data/samples/browser/water/watersample.material#water		
+    }    	
+}
