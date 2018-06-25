@@ -30,8 +30,9 @@ mkdir tmp
 rm -f libgplay-deps.a
 mv *.a ./tmp
 
+# does not amalgamate gplay and assimp libs
 mv tmp/libgplay.a .
-rm -f tmp/libgplay.a
+mv tmp/libassimp.a .
 
 
 # Build an MRI script file

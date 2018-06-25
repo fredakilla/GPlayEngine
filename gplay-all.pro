@@ -13,5 +13,5 @@ SUBDIRS += \
     samples/racer/sample-racer.pro \
     samples/character/sample-character.pro \
     tools/encoder/gplay-encoder.pro \
-    tools/luagen/gplay-luagen.pro \
+    #tools/luagen/gplay-luagen.pro \
 

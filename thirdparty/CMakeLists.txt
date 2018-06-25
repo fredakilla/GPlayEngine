@@ -74,6 +74,14 @@ set(BUILD_TARGETS
     efsw
 )
 
+
+OPTION(BUILD_WITH_TOOLS "Build gplay tools"	ON)
+if(BUILD_WITH_TOOLS)
+    include(${PROJECT_SOURCE_DIR}/cmake/assimp.cmake)
+    set(BUILD_TARGETS assimp)
+endif()
+
+
 if(LINUX)
     set(GLAY_DEPS libgplay-deps.a)
 elseif(WINDOWS)
@@ -123,3 +131,4 @@ COPY_HEADERS(zlib/zlib.h ${OUT_INCLUDE_THIRDPARTY_DIR}/zlib/)
 COPY_HEADERS(libpng/ ${OUT_INCLUDE_THIRDPARTY_DIR}/png/)
 COPY_HEADERS(freetype/include/freetype/ ${OUT_INCLUDE_THIRDPARTY_DIR}/freetype/)
 COPY_HEADERS(freetype/include/ft2build.h ${OUT_INCLUDE_THIRDPARTY_DIR}/)
+COPY_HEADERS(assimp/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
