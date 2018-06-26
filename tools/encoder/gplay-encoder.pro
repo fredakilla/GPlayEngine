@@ -31,7 +31,9 @@ INCLUDEPATH += $$BUILD_DIR/include/gplayengine/thirdparty
 linux: {
     DEFINES += __linux__
     PRE_TARGETDEPS += $$BUILD_DIR/lib/libgplay-deps.a
+    LIBS += -L$$BUILD_DIR/lib/ -lassimp
     LIBS += -L$$BUILD_DIR/lib/ -lgplay-deps
+
 
     QMAKE_CXXFLAGS += -std=c++11 -lstdc++ -pthread -w
     INCLUDEPATH += /usr/include/fbxsdk
@@ -41,6 +43,7 @@ linux: {
     LIBS += -L/usr/lib/gcc4/x64/release -lfbxsdk
     LIBS += -lstdc++ -ldl -lpthread
     LIBS += -lfreetype
+
 
     # Note: when running if error : error while loading shared libraries: libfbxsdk.so: cannot open shared object...
     # export LD_LIBRARY_PATH=/usr/lib/gcc4/x64/release

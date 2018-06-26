@@ -83,7 +83,9 @@ int main(int argc, const char** argv)
 {
     // tmp hard coded argument during dev
     argc = 3;
-    argv[1] = "../../thirdparty/assimp/test/models/FBX/box.fbx";
+    //argv[1] = "basicShapes.fbx";
+    //argv[1] = "../../thirdparty/assimp/test/models/FBX/box.fbx";
+    argv[1] = "../../thirdparty/assimp/test/models/FBX/spider.fbx";
     argv[2] = "test.gpb";
 
 
