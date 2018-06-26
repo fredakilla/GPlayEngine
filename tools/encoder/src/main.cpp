@@ -1,5 +1,6 @@
 #include "Base.h"
 #include "FBXSceneEncoder.h"
+#include "AssimpEncoder.h"
 #include "TMXSceneEncoder.h"
 #include "TTFFontEncoder.h"
 #include "GPBDecoder.h"
@@ -80,6 +81,12 @@ static std::vector<unsigned int> promptUserFontSize()
  */
 int main(int argc, const char** argv)
 {
+    // tmp hard coded argument during dev
+    argc = 3;
+    argv[1] = "../../thirdparty/assimp/test/models/FBX/box.fbx";
+    argv[2] = "test.gpb";
+
+
     EncoderArguments arguments(argc, argv);
 
     if (arguments.parseErrorOccured())
@@ -103,8 +110,12 @@ int main(int argc, const char** argv)
     case EncoderArguments::FILEFORMAT_FBX:
         {
             std::string realpath(arguments.getFilePath());
-            FBXSceneEncoder fbxEncoder;
-            fbxEncoder.write(realpath, arguments);
+            //@@FBXSceneEncoder fbxEncoder;
+            //@@fbxEncoder.write(realpath, arguments);
+
+            AssimpEncoder assimpEncoder;
+            assimpEncoder.write(realpath, arguments);
+
             break;
         }
     case EncoderArguments::FILEFORMAT_TMX:
