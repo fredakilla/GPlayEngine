@@ -1,8 +1,7 @@
 #ifndef ASSIMPCODER_H_
 #define ASSIMPCODER_H_
 
-#include <assimp/Importer.hpp>
-
+#include "GPBFile.h"
 #include "EncoderArguments.h"
 
 using namespace gplay;
@@ -38,7 +37,12 @@ public:
      */
     bool writeMaterial(const std::string& filepath);
 
+private:
 
+    /**
+     * The GPlay file that is populated while reading the FBX file.
+     */
+    GPBFile _gamePlayFile;
 };
 
 #endif // ASSIMPCODER_H_
