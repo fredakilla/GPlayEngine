@@ -3,7 +3,7 @@
 
 #include "FileIO.h"
 
-namespace gameplay
+namespace gplay
 {
 /**
  * This class is used for decoding a GPB file for the purpose of debugging.

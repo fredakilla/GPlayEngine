@@ -1,7 +1,7 @@
 #include "Image.h"
 #include "Base.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Image::Image() :

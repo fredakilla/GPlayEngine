@@ -7,7 +7,7 @@
 #include "VertexElement.h"
 #include "BoundingVolume.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Model;

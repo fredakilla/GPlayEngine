@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Reference.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Reference::Reference(void) :

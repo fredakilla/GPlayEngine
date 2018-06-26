@@ -32,7 +32,7 @@
 #include "GPBFile.h"
 #include "EncoderArguments.h"
 
-using namespace gameplay;
+using namespace gplay;
 
 /**
  * Class for binary encoding an FBX file.

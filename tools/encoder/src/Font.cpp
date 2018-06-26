@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Font.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Font::Font(void) :

@@ -14,7 +14,7 @@
 #include "Animation.h"
 #include "AnimationChannel.h"
 
-namespace gameplay
+namespace gplay
 {
 
 /**

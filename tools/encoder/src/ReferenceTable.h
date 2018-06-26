@@ -5,7 +5,7 @@
 #include "Reference.h"
 #include "Object.h"
 
-namespace gameplay
+namespace gplay
 {
 
 /**

@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "AnimationChannel.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Animation : public Object

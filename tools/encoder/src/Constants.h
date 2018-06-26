@@ -3,7 +3,7 @@
 
 #include "string"
 
-namespace gameplay
+namespace gplay
 {
 
 extern const std::string SPOT_LIGHT;

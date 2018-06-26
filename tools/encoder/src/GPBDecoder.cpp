@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "GPBDecoder.h"
 
-namespace gameplay
+namespace gplay
 {
 
 GPBDecoder::GPBDecoder(void) : _file(NULL), _outFile(NULL)

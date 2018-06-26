@@ -4,7 +4,7 @@
 #include "Base.h"
 #include "Constants.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Sampler

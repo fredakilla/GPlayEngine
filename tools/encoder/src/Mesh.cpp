@@ -2,7 +2,7 @@
 #include "Mesh.h"
 #include "Model.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Mesh::Mesh(void) : model(NULL)

@@ -3,7 +3,7 @@
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Camera : public Object

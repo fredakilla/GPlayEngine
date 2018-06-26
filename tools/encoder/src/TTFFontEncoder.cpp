@@ -3,7 +3,7 @@
 #include "GPBFile.h"
 #include "StringUtil.h"
 
-namespace gameplay
+namespace gplay
 {
 
 static void drawBitmap(unsigned char* dstBitmap, int x, int y, int dstWidth, unsigned char* srcBitmap, int srcWidth, int srcHeight)
@@ -386,7 +386,7 @@ int writeFont(const char* inFilePath, const char* outFilePath, std::vector<unsig
     FILE *gpbFp = fopen(outFilePath, "wb");    
     char fileHeader[9]     = {'\xAB', 'G', 'P', 'B', '\xBB', '\r', '\n', '\x1A', '\n'};
     fwrite(fileHeader, sizeof(char), 9, gpbFp);
-    fwrite(gameplay::GPB_VERSION, sizeof(char), 2, gpbFp);
+    fwrite(gplay::GPB_VERSION, sizeof(char), 2, gpbFp);
 
     // Write Ref table (for a single font)
     writeUint(gpbFp, 1);                // Ref[] count

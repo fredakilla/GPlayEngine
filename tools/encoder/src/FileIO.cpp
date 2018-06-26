@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "FileIO.h"
 
-namespace gameplay
+namespace gplay
 {
 
 // Writing out a binary file //

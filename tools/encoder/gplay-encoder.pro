@@ -98,7 +98,8 @@ SOURCES += src/Mesh.cpp \
     src/Vector3.cpp \
     src/Vector4.cpp \
     src/Vertex.cpp \
-    src/VertexElement.cpp
+    src/VertexElement.cpp \
+    src/ModelEncoder.cpp
 
 HEADERS += src/AnimationChannel.h \
     src/AnimationChannel.h \
@@ -153,4 +154,5 @@ HEADERS += src/AnimationChannel.h \
     src/Vector4.h \
     src/Vector4.inl \
     src/VertexElement.h \
-    src/Vertex.h
+    src/Vertex.h \
+    src/ModelEncoder.h

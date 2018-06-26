@@ -9,7 +9,7 @@
 // Maximum number of supported UV sets
 #define MAX_UV_SETS 8
 
-namespace gameplay
+namespace gplay
 {
 
 class Vertex

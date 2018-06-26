@@ -1,6 +1,6 @@
 #include "TMXTypes.h"
 
-using namespace gameplay;
+using namespace gplay;
 
 // TMXMap
 TMXMap::TMXMap()

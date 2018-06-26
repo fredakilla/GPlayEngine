@@ -3,7 +3,7 @@
 #include "GPBFile.h"
 #include "Thread.h"
 
-namespace gameplay
+namespace gplay
 {
 
 // Number of threads to spawn for the heightmap generator
@@ -333,7 +333,7 @@ int generateHeightmapChunk(void* threadData)
 // 
 // Fast, Minimum Storage Ray-Triangle Intersection
 // 
-// Authors: Tomas Möller, Ben Trumbore
+// Authors: Tomas Moller, Ben Trumbore
 // http://jgt.akpeters.com/papers/MollerTrumbore97
 //
 // Implementation of algorithm from Real-Time Rendering (vol 1), pg. 305.

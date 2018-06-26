@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Vertex.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Vertex::Vertex(void)

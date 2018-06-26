@@ -6,7 +6,7 @@
 #define END_INDEX       127
 #define GLYPH_PADDING   4
 
-namespace gameplay
+namespace gplay
 {
 
 // Structure of TTF Glyph.

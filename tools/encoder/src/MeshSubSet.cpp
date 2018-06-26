@@ -1,6 +1,6 @@
 #include "MeshSubSet.h"
 
-namespace gameplay
+namespace gplay
 {
 
 MeshSubSet::MeshSubSet(void)

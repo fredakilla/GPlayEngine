@@ -69,7 +69,7 @@ using std::endl;
 #define MATH_RANDOM_MINUS1_1()      ((2.0f*((float)rand()/RAND_MAX))-1.0f) // Returns a random float between -1 and 1.
 #define MATH_RANDOM_0_1()           ((float)rand()/RAND_MAX) // Returns a random float between 0 and 1.
 
-namespace gameplay
+namespace gplay
 {
 
 enum VertexUsage

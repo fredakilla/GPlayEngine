@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Camera.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Camera::Camera(void) :

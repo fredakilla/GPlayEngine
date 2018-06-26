@@ -6,7 +6,7 @@
 #include "Light.h"
 #include "Model.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Node : public Object

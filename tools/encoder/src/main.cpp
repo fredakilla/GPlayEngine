@@ -7,7 +7,7 @@
 #include "NormalMapGenerator.h"
 #include "Font.h"
 
-using namespace gameplay;
+using namespace gplay;
 
 #define FONT_SIZE_DISTANCEFIELD 48
 

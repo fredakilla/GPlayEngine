@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "Glyph.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Font : public Object

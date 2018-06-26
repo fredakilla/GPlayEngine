@@ -2,7 +2,7 @@
 #include "Sampler.h"
 #include "FileIO.h"
 
-namespace gameplay
+namespace gplay
 {
 
 using std::string;

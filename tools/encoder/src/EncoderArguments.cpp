@@ -13,7 +13,7 @@
 #define ENCODER_VERSION "3.0.0"
 #define HEIGHTMAP_SIZE_MAX 2049
 
-namespace gameplay
+namespace gplay
 {
 
 static EncoderArguments* __instance;
@@ -291,7 +291,7 @@ void EncoderArguments::printUsage() const
     "  \ttile sets to add a 1px border around it to prevent seams.\n"
     "  -tg:none\tDo not priduce a texture gutter.\n"
     "\n" \
-    "Normal map options:\n" \
+    "Heightmap options:\n" \
         "  -n\t\tGenerate normal map (requires input file of type PNG or RAW)\n" \
         "  -s\t\tSize/resolution of the input heightmap image (required for RAW files)\n" \
         "  -w <size>\tSpecifies the size of an input terrain heightmap file in world\n" \

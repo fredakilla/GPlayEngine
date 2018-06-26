@@ -5,7 +5,7 @@
 #include "Matrix.h"
 #include "Vector4.h"
 
-namespace gameplay
+namespace gplay
 {
 
 inline Vector4 Vector4::operator+(const Vector4& v)

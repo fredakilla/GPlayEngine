@@ -1,7 +1,7 @@
 #ifndef TRANSFORM_H_
 #define TRANSFORM_H_
 
-namespace gameplay
+namespace gplay
 {
 
 class Transform

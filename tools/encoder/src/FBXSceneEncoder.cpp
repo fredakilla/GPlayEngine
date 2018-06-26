@@ -6,7 +6,7 @@
 #include "FBXUtil.h"
 #include "Sampler.h"
 
-using namespace gameplay;
+using namespace gplay;
 using std::string;
 using std::vector;
 using std::map;

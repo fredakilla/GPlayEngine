@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Animation.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Animation::Animation(void)

@@ -4,7 +4,7 @@
 #include "FileIO.h"
 #include "Base.h"
 
-namespace gameplay
+namespace gplay
 {
 
 /**

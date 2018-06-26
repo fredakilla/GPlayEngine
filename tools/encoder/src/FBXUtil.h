@@ -19,7 +19,7 @@
 #include "AnimationChannel.h"
 #include "EncoderArguments.h"
 
-using namespace gameplay;
+using namespace gplay;
 
 /**
  * Returns the aspect ratio from the given camera.

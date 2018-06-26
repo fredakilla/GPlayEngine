@@ -1,7 +1,7 @@
 #ifndef VECTOR4_H_
 #define VECTOR4_H_
 
-namespace gameplay
+namespace gplay
 {
 
 class Matrix;

@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "Animation.h"
 
-namespace gameplay
+namespace gplay
 {
 
 /**

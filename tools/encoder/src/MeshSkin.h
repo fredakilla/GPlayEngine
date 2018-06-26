@@ -7,7 +7,7 @@
 #include "Animation.h"
 #include "BoundingVolume.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Node;

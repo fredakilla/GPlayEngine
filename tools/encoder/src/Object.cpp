@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Object.h"
 
-namespace gameplay
+namespace gplay
 {
 
 Object::Object(void) : _fposition(0)

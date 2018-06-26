@@ -11,7 +11,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
-namespace gameplay
+namespace gplay
 {
 
 /**

@@ -1,7 +1,7 @@
 #ifndef IMAGE_H__
 #define IMAGE_H__
 
-namespace gameplay
+namespace gplay
 {
 
 /**

@@ -5,7 +5,7 @@
 #include "Node.h"
 #include "FileIO.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Scene : public Object

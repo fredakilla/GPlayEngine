@@ -3,7 +3,7 @@
 
 #include "Vector3.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class NormalMapGenerator

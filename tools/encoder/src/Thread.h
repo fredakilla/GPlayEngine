@@ -1,7 +1,7 @@
 #ifndef THREAD_H_
 #define THREAD_H_
 
-namespace gameplay
+namespace gplay
 {
 
 #ifdef WIN32

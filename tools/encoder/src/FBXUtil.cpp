@@ -7,7 +7,7 @@
 #include "Vector3.h"
 #include "Vector2.h"
 
-using namespace gameplay;
+using namespace gplay;
 using std::string;
 using std::vector;
 using std::map;

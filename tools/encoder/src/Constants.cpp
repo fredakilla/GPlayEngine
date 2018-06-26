@@ -1,7 +1,7 @@
 #include "Constants.h"
 
 
-namespace gameplay
+namespace gplay
 {
 
 const std::string SPOT_LIGHT = "SPOT_LIGHT";

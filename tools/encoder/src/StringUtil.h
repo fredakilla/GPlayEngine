@@ -1,7 +1,7 @@
 #ifndef STRINGUTIL_H_
 #define STRINGUTIL_H_
 
-namespace gameplay
+namespace gplay
 {
 
 /**

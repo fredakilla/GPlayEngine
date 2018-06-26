@@ -5,7 +5,7 @@
 #include "Vector3.h"
 #include "Font.h"
 
-namespace gameplay
+namespace gplay
 {
 
 /**

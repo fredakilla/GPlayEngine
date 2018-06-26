@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "Vertex.h"
 
-namespace gameplay 
+namespace gplay 
 {
 
 class MeshSubSet : public Object

@@ -5,7 +5,7 @@
 #include "Light.h"
 #include "Constants.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Material

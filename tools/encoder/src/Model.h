@@ -6,7 +6,7 @@
 #include "MeshSkin.h"
 #include "Material.h"
 
-namespace gameplay
+namespace gplay
 {
 
 class Model : public Object
