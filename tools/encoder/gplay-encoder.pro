@@ -40,9 +40,13 @@ linux: {
     INCLUDEPATH += /usr/include/freetype2
     INCLUDEPATH += /usr/include
 
-    LIBS += -L/usr/lib/gcc4/x64/release -lfbxsdk
+    #DEFINES += GP_USE_FBX_SDK
+    #LIBS += -L/usr/lib/gcc4/x64/release -lfbxsdk
+
     LIBS += -lstdc++ -ldl -lpthread
     LIBS += -lfreetype
+
+
 
 
     # Note: when running if error : error while loading shared libraries: libfbxsdk.so: cannot open shared object...

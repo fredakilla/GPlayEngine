@@ -1,6 +1,8 @@
 #ifndef FBXUTIL_H_
 #define FBXUTIL_H_
 
+#ifdef GP_USE_FBX_SDK
+
 #define FBXSDK_NEW_API
 
 #include <iostream>
@@ -199,5 +201,7 @@ FbxAnimCurve* getCurve(FbxPropertyT<FbxDouble3>& prop, FbxAnimLayer* animLayer, 
 std::string toString(const FbxDouble3& fbxDouble);
 std::string toString(const FbxDouble3& fbxDouble, double d);
 std::string toString(double value);
+
+#endif
 
 #endif

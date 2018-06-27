@@ -1,3 +1,5 @@
+#ifdef GP_USE_FBX_SDK
+
 #include <algorithm>
 #include <string>
 #include <sstream>
@@ -803,3 +805,5 @@ std::string toString(double value)
     stream << value;
     return stream.str();
 }
+
+#endif

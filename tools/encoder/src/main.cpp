@@ -89,9 +89,9 @@ int main(int argc, const char** argv)
 
 
     // tmp hard coded argument during dev
-    argc = 3;
+    /*argc = 3;
     argv[1] = model3Dpath;
-    argv[2] = "test.gpb";
+    argv[2] = "test.gpb";*/
 
 
     EncoderArguments arguments(argc, argv);
@@ -117,8 +117,11 @@ int main(int argc, const char** argv)
     case EncoderArguments::FILEFORMAT_FBX:
         {
             std::string realpath(arguments.getFilePath());
+
+#ifdef GP_USE_FBX_SDK
             //@@FBXSceneEncoder fbxEncoder;
             //@@fbxEncoder.write(realpath, arguments);
+#endif
 
             AssimpEncoder assimpEncoder;
             assimpEncoder.write(realpath, arguments);
