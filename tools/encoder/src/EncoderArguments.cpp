@@ -375,7 +375,46 @@ EncoderArguments::FileFormat EncoderArguments::getFileFormat() const
         ext[i] = (char)tolower(ext[i]);
     
     // Match every supported extension with its format constant
-    if (ext.compare("fbx") == 0)
+    if (ext.compare("3ds") == 0
+       || ext.compare("3mf") == 0
+       || ext.compare("md3") == 0
+       || ext.compare("ac") == 0
+       || ext.compare("amf") == 0
+       || ext.compare("ase") == 0
+       || ext.compare("b3d") == 0
+       || ext.compare("blend") == 0
+       || ext.compare("bvh") == 0
+       || ext.compare("cob") == 0
+       || ext.compare("dae") == 0
+       || ext.compare("dxf") == 0
+       || ext.compare("fbx") == 0
+       || ext.compare("gltf") == 0
+       || ext.compare("glb") == 0
+       || ext.compare("irr") == 0
+       || ext.compare("irrmesh") == 0
+       || ext.compare("lwo") == 0
+       || ext.compare("lws") == 0
+       || ext.compare("md2") == 0
+       || ext.compare("md5mesh") == 0
+       || ext.compare("mdl") == 0
+       || ext.compare("ms3d") == 0
+       || ext.compare("nff") == 0
+       || ext.compare("obj") == 0
+       || ext.compare("off") == 0
+       || ext.compare("ogex") == 0
+       || ext.compare("ply") == 0
+       || ext.compare("q3o") == 0
+       || ext.compare("q3s") == 0
+       || ext.compare("raw") == 0
+       || ext.compare("sib") == 0
+       || ext.compare("smd") == 0
+       || ext.compare("stl") == 0
+       || ext.compare("ter") == 0
+       || ext.compare("x") == 0
+       || ext.compare("x3d") == 0
+       || ext.compare("xgl") == 0
+       || ext.compare("zgl") == 0
+       )
     {
         return FILEFORMAT_FBX;
     }

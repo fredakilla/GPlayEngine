@@ -81,11 +81,16 @@ static std::vector<unsigned int> promptUserFontSize()
  */
 int main(int argc, const char** argv)
 {
+    //const char * model3Dpath = "../../thirdparty/assimp/test/models/FBX/spider.fbx";
+    //const char * model3Dpath = "../../thirdparty/assimp/test/models/MD2/sydney.md2";
+    //const char * model3Dpath = "../../thirdparty/assimp/test/models/OBJ/spider.obj";
+    //const char * model3Dpath = "../../thirdparty/assimp/test/models/X/anim_test.x";
+    const char * model3Dpath = "../../thirdparty/assimp/test/models/BLEND/Suzanne_248.blend";
+
+
     // tmp hard coded argument during dev
     argc = 3;
-    //argv[1] = "basicShapes.fbx";
-    //argv[1] = "../../thirdparty/assimp/test/models/FBX/box.fbx";
-    argv[1] = "../../thirdparty/assimp/test/models/FBX/spider.fbx";
+    argv[1] = model3Dpath;
     argv[2] = "test.gpb";
 
 

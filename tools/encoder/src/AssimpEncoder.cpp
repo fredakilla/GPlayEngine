@@ -43,8 +43,8 @@ void AssimpEncoder::processFile(const std::string& filepath)
     unsigned int importFlags =  aiProcess_Triangulate
             //| aiProcess_FlipUVs
             | aiProcess_CalcTangentSpace
-            //| aiProcess_JoinIdenticalVertices
-            //| aiProcess_GenUVCoords
+            | aiProcess_JoinIdenticalVertices
+            | aiProcess_GenUVCoords
             ;
 
 
@@ -97,24 +97,45 @@ Mesh* AssimpEncoder::processMesh(aiMesh *mesh, const aiScene *scene, aiNode *nod
 
 
 
+    // Position
+    outMesh->addVetexAttribute(POSITION, 3);
 
-    //if(mesh->HasPositions())
-    {
-        outMesh->addVetexAttribute(POSITION, Vertex::POSITION_COUNT);
-    }
+    // Normals
     if(mesh->HasNormals())
     {
         outMesh->addVetexAttribute(NORMAL, Vertex::NORMAL_COUNT);
     }
-    if(mesh->HasTextureCoords(0))
-    {
-        outMesh->addVetexAttribute(TEXCOORD0, Vertex::TEXCOORD_COUNT);
-    }
+
+    // Tangents && Binormals
     if(mesh->HasTangentsAndBitangents())
     {
         outMesh->addVetexAttribute(TANGENT, Vertex::TANGENT_COUNT);
         outMesh->addVetexAttribute(BINORMAL, Vertex::BINORMAL_COUNT);
     }
+
+    // Texture Coordinates
+    for (unsigned int i=0; i<MAX_UV_SETS; ++i)
+    {
+        if (mesh->HasTextureCoords(i))
+        {
+            outMesh->addVetexAttribute(TEXCOORD0 + i, Vertex::TEXCOORD_COUNT);
+        }
+    }
+
+    // Vertex Color
+    if(mesh->HasVertexColors(0))
+    {
+        outMesh->addVetexAttribute(COLOR, Vertex::DIFFUSE_COUNT);
+    }
+
+    // Skinning BlendWeights BlendIndices
+    /*if(mesh->HasBones())
+    {
+        outMesh->addVetexAttribute(BLENDWEIGHTS, Vertex::BLEND_WEIGHTS_COUNT);
+        outMesh->addVetexAttribute(BLENDINDICES, Vertex::BLEND_INDICES_COUNT);
+    }*/
+
+
 
 
 
@@ -126,13 +147,10 @@ Mesh* AssimpEncoder::processMesh(aiMesh *mesh, const aiScene *scene, aiNode *nod
         Vector3 vector;
 
         // positions
-        //if(mesh->HasPositions())
-        {
-            vector.x = mesh->mVertices[i].x;
-            vector.y = mesh->mVertices[i].y;
-            vector.z = mesh->mVertices[i].z;
-            vertex.position = vector;
-        }
+        vector.x = mesh->mVertices[i].x;
+        vector.y = mesh->mVertices[i].y;
+        vector.z = mesh->mVertices[i].z;
+        vertex.position = vector;
 
         // normals
         if(mesh->HasNormals())
@@ -141,18 +159,8 @@ Mesh* AssimpEncoder::processMesh(aiMesh *mesh, const aiScene *scene, aiNode *nod
             vector.y = mesh->mNormals[i].y;
             vector.z = mesh->mNormals[i].z;
             vertex.normal = vector;
+            vertex.hasNormal = true;
         }
-
-        // texture coordinates
-        if(mesh->HasTextureCoords(0))
-        {
-            Vector2 vec;
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.texCoord[0] = vec;
-        }
-        else
-            vertex.texCoord[0] = Vector2(0.0f, 0.0f);
 
         // tangent && bitangent
         if(mesh->HasTangentsAndBitangents())
@@ -161,15 +169,45 @@ Mesh* AssimpEncoder::processMesh(aiMesh *mesh, const aiScene *scene, aiNode *nod
             vector.y = mesh->mTangents[i].y;
             vector.z = mesh->mTangents[i].z;
             vertex.tangent = vector;
+            vertex.hasTangent = true;
 
             vector.x = mesh->mBitangents[i].x;
             vector.y = mesh->mBitangents[i].y;
             vector.z = mesh->mBitangents[i].z;
             vertex.binormal = vector;
+            vertex.hasBinormal = true;
         }
+
+        // texture coordinates
+        for (unsigned int uvIndex=0; uvIndex<MAX_UV_SETS; ++uvIndex)
+        {
+            if(mesh->HasTextureCoords(uvIndex))
+            {
+                Vector2 vec;
+                vec.x = mesh->mTextureCoords[uvIndex][i].x;
+                vec.y = mesh->mTextureCoords[uvIndex][i].y;
+                vertex.texCoord[uvIndex] = vec;
+                vertex.hasTexCoord[uvIndex] = true;
+            }
+        }
+
+        // color
+        if(mesh->HasVertexColors(0))
+        {
+            Vector4 color;
+            color.x = mesh->mColors[0][i].r;
+            color.y = mesh->mColors[0][i].g;
+            color.z = mesh->mColors[0][i].b;
+            color.w = mesh->mColors[0][i].a;
+            vertex.diffuse = color;
+            vertex.hasDiffuse = true;
+        }
+
 
         outMesh->addVertex(vertex);
     }
+
+
 
 
     // wak through each of the mesh's faces and retrieve the corresponding vertex indices.
@@ -210,6 +248,8 @@ Mesh* AssimpEncoder::processMesh(aiMesh *mesh, const aiScene *scene, aiNode *nod
 
     // return a mesh object created from the extracted mesh data
     //return MeshPartData(vertices, indices, textures);
+
+
 
 
     //_gamePlayFile.addMesh(outMesh);
