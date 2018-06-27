@@ -16,8 +16,8 @@
 attribute vec4 a_position;
 
 #if defined(SKINNING)
-attribute vec4 a_blendWeights;
-attribute vec4 a_blendIndices;
+attribute vec4 a_weight;
+attribute vec4 a_indices;
 #endif
 
 #if defined(LIGHTMAP)
