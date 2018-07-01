@@ -664,8 +664,8 @@ Material* FBXSceneEncoder::createBaseMaterial(const string& baseMaterialName, Ma
 
     if (childMaterial->isTextured())
     {
-		baseMaterial->setVertexShader("res/shaders/textured.vert");
-        baseMaterial->setFragmentShader("res/shaders/textured.frag");
+        baseMaterial->setVertexShader("res/core/shaders/forward/textured.vert");
+        baseMaterial->setFragmentShader("res/core/shaders/forward/textured.frag");
 
         Sampler* sampler = baseMaterial->createSampler(u_diffuseTexture);
         sampler->set("mipmap", "true");
@@ -676,8 +676,8 @@ Material* FBXSceneEncoder::createBaseMaterial(const string& baseMaterialName, Ma
     }
     else
     {
-		baseMaterial->setVertexShader("res/shaders/colored.vert");
-        baseMaterial->setFragmentShader("res/shaders/colored.frag");
+        baseMaterial->setVertexShader("res/core/shaders/forward/colored.vert");
+        baseMaterial->setFragmentShader("res/core/shaders/forward/colored.frag");
     }
 
 	if (childMaterial->isLit())
@@ -1100,7 +1100,7 @@ Material* FBXSceneEncoder::createMaterial(const string& name, FbxSurfaceMaterial
         material->setUniform("u_matrixPalette", "MATRIX_PALETTE");
         material->addDefine("SKINNING");
         ostringstream stream;
-        stream << "SKINNING_JOINT_COUNT " << skin->getJointCount();
+        stream << "SKINNING_JOINT_COUNT=" << skin->getJointCount();
         material->addDefine(stream.str());
     }
     loadMaterialTextures(fbxMaterial, material);

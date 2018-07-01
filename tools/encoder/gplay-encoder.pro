@@ -42,9 +42,14 @@ linux: {
     LIBS += -lstdc++ -ldl -lpthread
     LIBS += -lfreetype
 
-    # Note: when running if error : error while loading shared libraries: libfbxsdk.so: cannot open shared object...
+    # Note: when running the encoder, if error : error while loading shared libraries: libfbxsdk.so: cannot open shared object...
+    # open a terminal :
     # export LD_LIBRARY_PATH=/usr/lib/gcc4/x64/release
     # ./gplay-encoder
+    #
+    # But this flag should resolve the path where to find the libfbxsdk.so library at runtime and fix this error.
+    QMAKE_LFLAGS_RPATH=
+    QMAKE_LFLAGS += "-Wl,-rpath,\'/usr/lib/gcc4/x64/release\'"
 }
 
 
