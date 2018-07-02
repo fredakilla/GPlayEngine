@@ -5,7 +5,9 @@
 
 #include <SDL2/SDL_config.h>
 #include <SDL2/SDL.h>
+    #ifdef GP_PLATFORM_LINUX
 #define SDL_VIDEO_DRIVER_X11
+#endif
 #include <SDL2/SDL_syswm.h>
 #include <bgfx/platform.h>
 

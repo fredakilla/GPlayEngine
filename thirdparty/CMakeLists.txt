@@ -77,8 +77,8 @@ set(BUILD_TARGETS
 
 OPTION(BUILD_WITH_TOOLS "Build gplay tools"	ON)
 if(BUILD_WITH_TOOLS)
-    include(${PROJECT_SOURCE_DIR}/cmake/assimp.cmake)
-    set(BUILD_TARGETS assimp)
+    #include(${PROJECT_SOURCE_DIR}/cmake/assimp.cmake)
+    #set(BUILD_TARGETS assimp)
 endif()
 
 
@@ -131,4 +131,8 @@ COPY_HEADERS(zlib/zlib.h ${OUT_INCLUDE_THIRDPARTY_DIR}/zlib/)
 COPY_HEADERS(libpng/ ${OUT_INCLUDE_THIRDPARTY_DIR}/png/)
 COPY_HEADERS(freetype/include/freetype/ ${OUT_INCLUDE_THIRDPARTY_DIR}/freetype/)
 COPY_HEADERS(freetype/include/ft2build.h ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-COPY_HEADERS(assimp/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
+#COPY_HEADERS(assimp/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
+
+if(WINDOWS)
+    COPY_HEADERS(bgfx-cmake/bx/include/compat/ ${OUT_INCLUDE_THIRDPARTY_DIR}/bx/compat/)
+endif()

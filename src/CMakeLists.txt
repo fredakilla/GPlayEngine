@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 11)
 # disable lua binding for now
 add_definitions(-DGP_NO_LUA_BINDINGS)
 
+if(WINDOWS)
+    include_directories(${OUT_DIR_INCLUDE}/gplayengine/thirdparty/bx/compat/msvc)
+endif()
+
 include_directories(
     ${OUT_DIR_INCLUDE}/gplayengine/
     ${OUT_DIR_INCLUDE}/gplayengine/thirdparty
