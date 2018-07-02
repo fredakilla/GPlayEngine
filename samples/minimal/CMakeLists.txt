@@ -10,7 +10,7 @@ set(GAME_SRC
 
 add_executable(${GAME_NAME} ${GAME_SRC})
 target_link_libraries(${GAME_NAME} ${GPLAY_LIBRARIES})
-add_dependencies(${GAME_NAME} GPLAY_TARGET GPLAY_DEPS_TARGET)
+add_dependencies(${GAME_NAME} GPLAY)
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/game.config ${OUT_DIR_BIN}/${GAME_NAME}.config COPYONLY)
 
 if(MSVC)

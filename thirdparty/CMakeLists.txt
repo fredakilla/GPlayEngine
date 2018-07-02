@@ -75,36 +75,24 @@ set(BUILD_TARGETS
 )
 
 
-OPTION(BUILD_WITH_TOOLS "Build gplay tools"	ON)
-if(BUILD_WITH_TOOLS)
-    #include(${PROJECT_SOURCE_DIR}/cmake/assimp.cmake)
-    #set(BUILD_TARGETS assimp)
-endif()
-
-
 if(LINUX)
-    set(GLAY_DEPS libgplay-deps.a)
+    set(GLAY_DEPS_LIB libgplay-deps.a)
+    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh ${CMAKE_AR} ${OUT_DIR_LIB_DEPS})
 elseif(WINDOWS)
-    set(GLAY_DEPS gplay-deps.lib)
+    set(GLAY_DEPS_LIB gplay-deps.lib)
+    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc-amalgamate.bat ${CMAKE_AR} ${OUT_DIR_LIB_DEPS})
 endif(LINUX)
 
-if(LINUX)
-    add_custom_command(
-        OUTPUT ${GLAY_DEPS}
-        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh ${CMAKE_AR} ${OUT_DIR_LIB}
-    )
-elseif(WINDOWS)
-    # Windows
-    add_custom_command(
-        OUTPUT ${GLAY_DEPS}
-        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc-amalgamate.bat ${OUT_DIR_LIB}/${CMAKE_CFG_INTDIR}
-    )
-endif(LINUX)
 
-add_custom_target( GPLAY_DEPS_TARGET ALL DEPENDS ${GLAY_DEPS})
-add_dependencies( GPLAY_DEPS_TARGET ${BUILD_TARGETS})
+add_custom_command(
+    OUTPUT ${GLAY_DEPS_LIB}
+    COMMAND ${TARGET_CMD}
+    DEPENDS ${BUILD_TARGETS}
+    COMMENT "Amalgamate external dependencies..."
+)
 
-SET_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${OUT_DIR_LIB}/${GLAY_DEPS})
+add_custom_target(GPLAY_DEPS ALL DEPENDS ${GLAY_DEPS_LIB})
+
 
 
 # copy headers to build directory

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(gplay-engine)
+project(gplay)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -31,12 +31,19 @@ file(GLOB GPLAY_SRC
     ${PROJECT_SOURCE_DIR}/ui/*.cpp
 )
 
-add_library(gplay STATIC
+add_library(GPLAY STATIC
     ${GPLAY_SRC}
 )
 
-add_custom_target( GPLAY_TARGET ALL DEPENDS ${gplay})
-add_dependencies( GPLAY_TARGET GPLAY_DEPS_TARGET )
+set_target_properties(GPLAY PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY ${OUT_DIR_LIB}
+    ARCHIVE_OUTPUT_DIRECTORY ${OUT_DIR_LIB}
+    OUTPUT_NAME gplay
+)
+
+add_dependencies(GPLAY GPLAY_DEPS)
+
+
 
 
 

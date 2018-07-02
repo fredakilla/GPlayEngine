@@ -1,22 +1,22 @@
 cmake_minimum_required(VERSION 3.1)
-project(gplay)
+project(GPlayEngine)
 
 # detect os
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(WINDOWS TRUE)
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(LINUX TRUE)
 endif()
 
 # set output directories
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libtmp)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libtmp)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(OUT_DIR_BIN ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-set(OUT_DIR_LIB ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+set(OUT_DIR_LIB ${CMAKE_BINARY_DIR}/lib)
+set(OUT_DIR_LIB_DEPS ${CMAKE_BINARY_DIR}/lib/thirdparty)
 set(OUT_DIR_INCLUDE ${CMAKE_BINARY_DIR}/include)
-
 
 
 # helper to copy include files to output directory
@@ -27,15 +27,14 @@ FUNCTION(COPY_HEADERS src dst)
         PATTERN "CMakeFiles" EXCLUDE)
 ENDFUNCTION(COPY_HEADERS)
 
-# build thirdparty
+
+# 3rdparty Libraries
 add_subdirectory(thirdparty)
-
-# build gplayengine
 add_subdirectory(src)
-
 add_subdirectory(samples)
 
-# copy headers to build
+
+# copy engine headers to output build directory
 COPY_HEADERS(src/ ${OUT_DIR_INCLUDE}/gplayengine/)
 
 # write setup.pri file for Qt

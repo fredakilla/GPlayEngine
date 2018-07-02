@@ -10,6 +10,8 @@ CWD=`pwd`
 AR="$1"
 TARGET="$2"
 
+mkdir -p $TARGET
+
 if [ ! -e $AR ];
 then
     echo "No such file: $AR"
@@ -23,17 +25,12 @@ then
 fi
 
 echo "Using ar : $AR"
-echo "Amalgamating target static libs $TARGET"
+echo "Amalgamating target static libs to $TARGET"
 
 cd $TARGET
-mkdir tmp
 rm -f libgplay-deps.a
-mv *.a ./tmp
-
-# does not amalgamate gplay and assimp libs
-mv tmp/libgplay.a .
-mv tmp/libassimp.a .
-
+mkdir tmp
+cp -f ../../libtmp/*.a ./tmp/
 
 # Build an MRI script file
 MRI="$CWD/deps.mri"

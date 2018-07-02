@@ -5,7 +5,7 @@ include_directories(
         ${OUT_DIR_INCLUDE}/gplayengine/thirdparty
 )
 
-link_directories(${OUT_DIR_LIB})
+link_directories(${OUT_DIR_LIB} ${OUT_DIR_LIB_DEPS})
 
 if(LINUX)
 
