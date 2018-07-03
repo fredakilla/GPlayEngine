@@ -36,24 +36,31 @@ add_library(GPLAY STATIC
 )
 
 
+
+
+set(libdir "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
+set(outdir "${OUT_DIR_LIB}")
+
+if(WINDOWS)
+    string(REPLACE "/" "\\" libdir "${libdir}")
+    string(REPLACE "/" "\\" outdir "${outdir}")
+endif()
+
 set_target_properties(GPLAY PROPERTIES
-#    LIBRARY_OUTPUT_DIRECTORY "${outdir}"
-#    ARCHIVE_OUTPUT_DIRECTORY "${outdir}"
+    LIBRARY_OUTPUT_DIRECTORY "${outdir}"
+    ARCHIVE_OUTPUT_DIRECTORY "${outdir}"
     OUTPUT_NAME gplay
 )
 
-# move gplay library to lib directory
-string(REPLACE "/" "\\" srcdir "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
-string(REPLACE "/" "\\" outdir "${OUT_DIR_LIB}")
-ADD_CUSTOM_COMMAND(
-    TARGET GPLAY
-    POST_BUILD
-    COMMAND move ARGS "${srcdir}\\gplay.lib" "${outdir}\\gplay.lib"
-)
+# On Windows, move gplay.lib to output lib directory using custom command
+# set target properties do not work on my Windows...
+if(WINDOWS)
+    ADD_CUSTOM_COMMAND(
+        TARGET GPLAY
+        POST_BUILD
+        COMMAND move ARGS "${srcdir}\\gplay.lib" "${outdir}\\gplay.lib"
+    )
+endif()
 
 add_dependencies(GPLAY GPLAY_DEPS)
-
-
-
-
 

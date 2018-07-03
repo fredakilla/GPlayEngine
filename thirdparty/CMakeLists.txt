@@ -125,7 +125,10 @@ if(WINDOWS)
     COPY_HEADERS(bgfx-cmake/bx/include/compat/ ${OUT_INCLUDE_THIRDPARTY_DIR}/bx/compat/)
 endif()
 
+
+
 # Organize folders in visual studio
+if(WINDOWS)
 set_target_properties (BulletDynamics   PROPERTIES FOLDER Thirdparty)
 set_target_properties (LinearMath       PROPERTIES FOLDER Thirdparty)
 set_target_properties (BulletCollision  PROPERTIES FOLDER Thirdparty)
@@ -158,3 +161,4 @@ set_target_properties (BulletInverseDynamics    PROPERTIES FOLDER Thirdparty)
 set_target_properties (BulletSoftBody           PROPERTIES FOLDER Thirdparty)
 set_target_properties (OpenAL32                 PROPERTIES FOLDER Thirdparty)
 set_target_properties (SDL2main                 PROPERTIES FOLDER Thirdparty)
+endif()
