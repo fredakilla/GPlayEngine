@@ -47,6 +47,9 @@ elseif(WINDOWS)
             odbccp32)
 endif()
 
-
-
 add_subdirectory(minimal)
+add_subdirectory(browser)
+add_subdirectory(spaceship)
+add_subdirectory(racer)
+add_subdirectory(character)
+add_subdirectory(graphics)
