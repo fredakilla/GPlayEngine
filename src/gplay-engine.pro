@@ -29,7 +29,7 @@ INCLUDEPATH += $$BUILD_DIR/include/gplayengine/thirdparty
 # platform specific
 #--------------------------------------------------------------------
 linux : {
-    PRE_TARGETDEPS += $$BUILD_DIR/lib/libgplay-deps.a
+    PRE_TARGETDEPS += $$BUILD_DIR/lib/thirdparty/libgplay-deps.a
     DEFINES += __linux__
     SOURCES += core/gplay3d-main-linux.cpp
     QMAKE_CXXFLAGS += -Wall

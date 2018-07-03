@@ -28,10 +28,10 @@ INCLUDEPATH += $$BUILD_DIR/include/gplayengine/thirdparty
 #--------------------------------------------------------------------
 linux: {
     DEFINES += __linux__
-    PRE_TARGETDEPS += $$BUILD_DIR/lib/libgplay-deps.a
+    PRE_TARGETDEPS += $$BUILD_DIR/lib/thirdparty/libgplay-deps.a
     PRE_TARGETDEPS += $$BUILD_DIR/lib/libgplay.a
     LIBS += -L$$BUILD_DIR/lib/ -lgplay
-    LIBS += -L$$BUILD_DIR/lib/ -lgplay-deps
+    LIBS += -L$$BUILD_DIR/lib/thirdparty/ -lgplay-deps
     LIBS += -lm -lGL -lrt -ldl -lX11 -lpthread -lsndio
     QMAKE_POST_LINK += $$quote(rsync -rau $$PWD/game.dds.config $${DESTDIR}/$${TARGET}.config$$escape_expand(\n\t))
 }
