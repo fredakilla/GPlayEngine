@@ -3,12 +3,16 @@ set LIBDIR=%1
 
 echo "Amalgamating target dir: %LIBDIR%"
 
-cd %LIBDIR%
-mkdir tmp
-del gplay3d-deps.lib
-move *.lib tmp
 
-LIB.EXE /OUT:gplay3d-deps.lib tmp\*
+md "%LIBDIR%"
+
+
+cd %LIBDIR%
+del gplay-deps.lib
+md tmp
+xcopy ..\..\libtmp\*.lib tmp
+
+LIB.EXE /OUT:gplay-deps.lib tmp\*
 
 rmdir /s /q "tmp\"
 cd %ROOTDIR%

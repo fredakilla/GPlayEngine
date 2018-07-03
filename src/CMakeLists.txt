@@ -35,10 +35,20 @@ add_library(GPLAY STATIC
     ${GPLAY_SRC}
 )
 
+
 set_target_properties(GPLAY PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${OUT_DIR_LIB}
-    ARCHIVE_OUTPUT_DIRECTORY ${OUT_DIR_LIB}
+#    LIBRARY_OUTPUT_DIRECTORY "${outdir}"
+#    ARCHIVE_OUTPUT_DIRECTORY "${outdir}"
     OUTPUT_NAME gplay
+)
+
+# move gplay library to lib directory
+string(REPLACE "/" "\\" srcdir "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
+string(REPLACE "/" "\\" outdir "${OUT_DIR_LIB}")
+ADD_CUSTOM_COMMAND(
+    TARGET GPLAY
+    POST_BUILD
+    COMMAND move ARGS "${srcdir}\\gplay.lib" "${outdir}\\gplay.lib"
 )
 
 add_dependencies(GPLAY GPLAY_DEPS)
