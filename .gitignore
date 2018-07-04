@@ -3,3 +3,6 @@
 /Debug
 /Release
 setup.pri
+
+external-deps
+thirdparty/BUILD
