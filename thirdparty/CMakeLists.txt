@@ -1,11 +1,50 @@
 cmake_minimum_required(VERSION 3.1)
 project(gplay-thirdparty)
 
-IF(NOT WIN32)
+
+
+
+# detect os
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(WINDOWS TRUE)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(LINUX TRUE)
+endif()
+
+# set cmake default output directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+if(WINDOWS)
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+endif()
+
+# set output directories
+set(OUT_DIR ${CMAKE_BINARY_DIR}/external-deps)
+set(OUT_DIR_INCLUDE ${OUT_DIR}/include/gplayengine/thirdparty)
+set(OUT_DIR_LIB ${OUT_DIR}/lib)
+#set(OUT_INCLUDE_THIRDPARTY_DIR ${OUT_DIR_INCLUDE}/gplayengine/thirdparty)
+
+IF(NOT WINDOWS)
     # For Windows, let the user pick since we need to generate both 
     # Debug and Release variants of all the libs.
     SET(CMAKE_BUILD_TYPE "Release")
-ENDIF(NOT WIN32)
+ENDIF(NOT WINDOWS)
+
+set(CMAKE_DEBUG_POSTFIX "")
+
+
+# helper to copy include files to output directory
+FUNCTION(COPY_HEADERS src dst)
+    file(COPY ${src}
+        DESTINATION ${dst} FILES_MATCHING REGEX "^.*.(h|hpp|inl)$"
+        PATTERN ".svn" EXCLUDE
+        PATTERN "CMakeFiles" EXCLUDE)
+ENDFUNCTION(COPY_HEADERS)
+
+
+
+file(MAKE_DIRECTORY ${OUT_DIR_LIB})
+
 
 # bgfx, bx and bimg
 set( BGFX_BUILD_TOOLS OFF CACHE BOOL "Build bgfx tools." FORCE )
@@ -43,7 +82,7 @@ add_subdirectory(lua)
 add_subdirectory(openal)
 add_subdirectory(zlib)
 add_subdirectory(libpng)
-add_subdirectory(ogg)   # Ogg needs to be built before vorbis
+add_subdirectory(ogg)   	# Ogg needs to be built before vorbis
 add_subdirectory(vorbis)
 add_subdirectory(base64)
 include(${PROJECT_SOURCE_DIR}/cmake/imgui.cmake)
@@ -74,15 +113,15 @@ set(BUILD_TARGETS
     efsw
 )
 
+# amalgamate libraries
 
 if(LINUX)
     set(GLAY_DEPS_LIB libgplay-deps.a)
-    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh ${CMAKE_AR} ${OUT_DIR_LIB_DEPS})
+    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh ${CMAKE_AR} ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 elseif(WINDOWS)
     set(GLAY_DEPS_LIB gplay-deps.lib)
-    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc-amalgamate.bat ${CMAKE_AR} ${OUT_DIR_LIB_DEPS})
+    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc-amalgamate.bat ${CMAKE_AR} ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 endif(LINUX)
-
 
 add_custom_command(
     OUTPUT ${GLAY_DEPS_LIB}
@@ -96,69 +135,29 @@ add_custom_target(GPLAY_DEPS ALL DEPENDS ${GLAY_DEPS_LIB})
 
 
 # copy headers to build directory
-set(OUT_INCLUDE_THIRDPARTY_DIR ${OUT_DIR_INCLUDE}/gplayengine/thirdparty)
-COPY_HEADERS(base64/base64.h ${OUT_INCLUDE_THIRDPARTY_DIR}/base64/)
-COPY_HEADERS(bgfx-cmake/bgfx/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-COPY_HEADERS(bgfx-cmake/bimg/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-COPY_HEADERS(bgfx-cmake/bx/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-COPY_HEADERS(bgfx-cmake/brtshaderc/brtshaderc.h ${OUT_INCLUDE_THIRDPARTY_DIR}/brtshaderc/)
-COPY_HEADERS(bullet/src/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-COPY_HEADERS(efsw/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-COPY_HEADERS(imgui/imconfig.h ${OUT_INCLUDE_THIRDPARTY_DIR}/imgui/)
-COPY_HEADERS(imgui/imgui.h ${OUT_INCLUDE_THIRDPARTY_DIR}/imgui/)
-COPY_HEADERS(imgui/imgui_internal.h ${OUT_INCLUDE_THIRDPARTY_DIR}/imgui/)
-COPY_HEADERS(libjson/ ${OUT_INCLUDE_THIRDPARTY_DIR}/libjson/)
-COPY_HEADERS(lua/src/ ${OUT_INCLUDE_THIRDPARTY_DIR}/lua/)
-COPY_HEADERS(ogg/include/ogg/ ${OUT_INCLUDE_THIRDPARTY_DIR}/ogg/)
-COPY_HEADERS(openal/include/AL/ ${OUT_INCLUDE_THIRDPARTY_DIR}/AL/)
-COPY_HEADERS(SDL2/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/SDL2/)
-COPY_HEADERS(spark/spark/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/spark/)
-COPY_HEADERS(tinyxml2/tinyxml2.h ${OUT_INCLUDE_THIRDPARTY_DIR}/tinyxml2/)
-COPY_HEADERS(vorbis/include/vorbis/ ${OUT_INCLUDE_THIRDPARTY_DIR}/vorbis/)
-COPY_HEADERS(zlib/zlib.h ${OUT_INCLUDE_THIRDPARTY_DIR}/zlib/)
-COPY_HEADERS(libpng/ ${OUT_INCLUDE_THIRDPARTY_DIR}/png/)
-COPY_HEADERS(freetype/include/freetype/ ${OUT_INCLUDE_THIRDPARTY_DIR}/freetype/)
-COPY_HEADERS(freetype/include/ft2build.h ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-#COPY_HEADERS(assimp/include/ ${OUT_INCLUDE_THIRDPARTY_DIR}/)
-
+COPY_HEADERS(base64/base64.h ${OUT_DIR_INCLUDE}/base64/)
+COPY_HEADERS(bgfx-cmake/bgfx/include/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(bgfx-cmake/bimg/include/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(bgfx-cmake/bx/include/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(bgfx-cmake/brtshaderc/brtshaderc.h ${OUT_DIR_INCLUDE}/brtshaderc/)
+COPY_HEADERS(bullet/src/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(efsw/include/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(imgui/imconfig.h ${OUT_DIR_INCLUDE}/imgui/)
+COPY_HEADERS(imgui/imgui.h ${OUT_DIR_INCLUDE}/imgui/)
+COPY_HEADERS(imgui/imgui_internal.h ${OUT_DIR_INCLUDE}/imgui/)
+COPY_HEADERS(libjson/ ${OUT_DIR_INCLUDE}/libjson/)
+COPY_HEADERS(lua/src/ ${OUT_DIR_INCLUDE}/lua/)
+COPY_HEADERS(ogg/include/ogg/ ${OUT_DIR_INCLUDE}/ogg/)
+COPY_HEADERS(openal/include/AL/ ${OUT_DIR_INCLUDE}/AL/)
+COPY_HEADERS(SDL2/include/ ${OUT_DIR_INCLUDE}/SDL2/)
+COPY_HEADERS(spark/spark/include/ ${OUT_DIR_INCLUDE}/spark/)
+COPY_HEADERS(tinyxml2/tinyxml2.h ${OUT_DIR_INCLUDE}/tinyxml2/)
+COPY_HEADERS(vorbis/include/vorbis/ ${OUT_DIR_INCLUDE}/vorbis/)
+COPY_HEADERS(zlib/zlib.h ${OUT_DIR_INCLUDE}/zlib/)
+COPY_HEADERS(libpng/ ${OUT_DIR_INCLUDE}/png/)
+COPY_HEADERS(freetype/include/freetype/ ${OUT_DIR_INCLUDE}/freetype/)
+COPY_HEADERS(freetype/include/ft2build.h ${OUT_DIR_INCLUDE}/)
+#COPY_HEADERS(assimp/include/ ${OUT_DIR_INCLUDE}/)
 if(WINDOWS)
-    COPY_HEADERS(bgfx-cmake/bx/include/compat/ ${OUT_INCLUDE_THIRDPARTY_DIR}/bx/compat/)
-endif()
-
-
-
-# Organize folders in visual studio
-if(WINDOWS)
-set_target_properties (BulletDynamics   PROPERTIES FOLDER Thirdparty)
-set_target_properties (LinearMath       PROPERTIES FOLDER Thirdparty)
-set_target_properties (BulletCollision  PROPERTIES FOLDER Thirdparty)
-set_target_properties (vorbisfile       PROPERTIES FOLDER Thirdparty)
-set_target_properties (vorbisenc        PROPERTIES FOLDER Thirdparty)
-set_target_properties (vorbis           PROPERTIES FOLDER Thirdparty)
-set_target_properties (ogg              PROPERTIES FOLDER Thirdparty)
-set_target_properties (png_static       PROPERTIES FOLDER Thirdparty)
-set_target_properties (zlibstatic       PROPERTIES FOLDER Thirdparty)
-set_target_properties (lua              PROPERTIES FOLDER Thirdparty)
-set_target_properties (tinyxml2static   PROPERTIES FOLDER Thirdparty)
-set_target_properties (json             PROPERTIES FOLDER Thirdparty)
-set_target_properties (base64           PROPERTIES FOLDER Thirdparty)
-set_target_properties (SDL2-static      PROPERTIES FOLDER Thirdparty)
-set_target_properties (bgfx             PROPERTIES FOLDER Thirdparty)
-set_target_properties (bimg             PROPERTIES FOLDER Thirdparty)
-set_target_properties (bx               PROPERTIES FOLDER Thirdparty)
-set_target_properties (brtshaderc       PROPERTIES FOLDER Thirdparty)
-set_target_properties (imgui            PROPERTIES FOLDER Thirdparty)
-set_target_properties (spark            PROPERTIES FOLDER Thirdparty)
-set_target_properties (efsw             PROPERTIES FOLDER Thirdparty)
-
-set_target_properties (Bullet2FileLoader        PROPERTIES FOLDER Thirdparty)
-set_target_properties (Bullet3Collision         PROPERTIES FOLDER Thirdparty)
-set_target_properties (Bullet3Common            PROPERTIES FOLDER Thirdparty)
-set_target_properties (Bullet3Dynamics          PROPERTIES FOLDER Thirdparty)
-set_target_properties (Bullet3Geometry          PROPERTIES FOLDER Thirdparty)
-set_target_properties (Bullet3OpenCL_clew       PROPERTIES FOLDER Thirdparty)
-set_target_properties (BulletInverseDynamics    PROPERTIES FOLDER Thirdparty)
-set_target_properties (BulletSoftBody           PROPERTIES FOLDER Thirdparty)
-set_target_properties (OpenAL32                 PROPERTIES FOLDER Thirdparty)
-set_target_properties (SDL2main                 PROPERTIES FOLDER Thirdparty)
+    COPY_HEADERS(bgfx-cmake/bx/include/compat/ ${OUT_DIR_INCLUDE}/bx/compat/)
 endif()
