@@ -1,15 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 project(gplay-thirdparty)
 
+include(../global.cmake)
 
-
-
-# detect os
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(WINDOWS TRUE)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(LINUX TRUE)
-endif()
 
 # set cmake default output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -22,7 +15,6 @@ endif()
 set(OUT_DIR ${CMAKE_BINARY_DIR}/external-deps)
 set(OUT_DIR_INCLUDE ${OUT_DIR}/include/gplayengine/thirdparty)
 set(OUT_DIR_LIB ${OUT_DIR}/lib)
-#set(OUT_INCLUDE_THIRDPARTY_DIR ${OUT_DIR_INCLUDE}/gplayengine/thirdparty)
 
 IF(NOT WINDOWS)
     # For Windows, let the user pick since we need to generate both 
@@ -32,17 +24,7 @@ ENDIF(NOT WINDOWS)
 
 set(CMAKE_DEBUG_POSTFIX "")
 
-
-# helper to copy include files to output directory
-FUNCTION(COPY_HEADERS src dst)
-    file(COPY ${src}
-        DESTINATION ${dst} FILES_MATCHING REGEX "^.*.(h|hpp|inl)$"
-        PATTERN ".svn" EXCLUDE
-        PATTERN "CMakeFiles" EXCLUDE)
-ENDFUNCTION(COPY_HEADERS)
-
-
-
+# create output directory
 file(MAKE_DIRECTORY ${OUT_DIR_LIB})
 
 
