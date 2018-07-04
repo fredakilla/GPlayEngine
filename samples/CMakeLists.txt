@@ -2,10 +2,10 @@ set(CMAKE_CXX_STANDARD 11)
 
 include_directories(
         ${OUT_DIR_INCLUDE}/gplayengine
-        ${EXTERNAL_DEPS_INCLUDE}/gplayengine/thirdparty
+        ${OUT_DIR_INCLUDE}/gplayengine/thirdparty
 )
 
-link_directories(${OUT_DIR_LIB} ${EXTERNAL_DEPS_LIB})
+link_directories(${OUT_DIR_LIB})
 
 if(LINUX)
 

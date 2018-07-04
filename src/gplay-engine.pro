@@ -14,7 +14,7 @@ CONFIG += staticlib
 CONFIG += c++11
 CONFIG -= qt
 
-DESTDIR = $$BUILD_DIR/lib
+DESTDIR = $$OUTPUT_DIR/lib
 QMAKE_CLEAN += $$DESTDIR/$$TARGET
 
 CONFIG(debug, debug|release):
@@ -22,14 +22,14 @@ CONFIG(debug, debug|release):
 DEFINES += GP_USE_GAMEPAD
 #DEFINES += COMPIL_WITH_LUA
 
-INCLUDEPATH += $$BUILD_DIR/include/gplayengine/
-INCLUDEPATH += $$BUILD_DIR/include/gplayengine/thirdparty
+INCLUDEPATH += $$OUTPUT_DIR/include/gplayengine/
+INCLUDEPATH += $$OUTPUT_DIR/include/gplayengine/thirdparty
 
 #--------------------------------------------------------------------
 # platform specific
 #--------------------------------------------------------------------
 linux : {
-    PRE_TARGETDEPS += $$BUILD_DIR/lib/thirdparty/libgplay-deps.a
+    PRE_TARGETDEPS += $$OUTPUT_DIR/lib/libgplay-deps.a
     DEFINES += __linux__
     SOURCES += core/gplay3d-main-linux.cpp
     QMAKE_CXXFLAGS += -Wall

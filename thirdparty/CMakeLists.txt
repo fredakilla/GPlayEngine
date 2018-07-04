@@ -12,7 +12,7 @@ if(WINDOWS)
 endif()
 
 # set output directories
-set(OUT_DIR ${CMAKE_BINARY_DIR}/external-deps)
+set(OUT_DIR ${CMAKE_SOURCE_DIR}/../output)
 set(OUT_DIR_INCLUDE ${OUT_DIR}/include/gplayengine/thirdparty)
 set(OUT_DIR_LIB ${OUT_DIR}/lib)
 
@@ -101,10 +101,16 @@ set(BUILD_TARGETS
 
 if(LINUX)
     set(GLAY_DEPS_LIB libgplay-deps.a)
-    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh ${CMAKE_AR} ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh
+    	${CMAKE_AR}
+    	${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
+    )
 elseif(WINDOWS)
     set(GLAY_DEPS_LIB gplay-deps.lib)
-    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc-amalgamate.bat ${CMAKE_AR} ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc-amalgamate.bat
+    	${CMAKE_AR}
+    	${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
+    )
 endif(LINUX)
 
 add_custom_command(
@@ -116,9 +122,7 @@ add_custom_command(
 
 add_custom_target(GPLAY_DEPS ALL DEPENDS ${GLAY_DEPS_LIB})
 
-
-
-# copy headers to build directory
+# copy thirdparty headers to output directory
 COPY_HEADERS(base64/base64.h ${OUT_DIR_INCLUDE}/base64/)
 COPY_HEADERS(bgfx-cmake/bgfx/include/ ${OUT_DIR_INCLUDE}/)
 COPY_HEADERS(bgfx-cmake/bimg/include/ ${OUT_DIR_INCLUDE}/)
@@ -145,3 +149,25 @@ COPY_HEADERS(freetype/include/ft2build.h ${OUT_DIR_INCLUDE}/)
 if(WINDOWS)
     COPY_HEADERS(bgfx-cmake/bx/include/compat/ ${OUT_DIR_INCLUDE}/bx/compat/)
 endif()
+
+
+
+
+# pre-steps before building engine
+
+# copy engine headers to output directory
+COPY_HEADERS(${CMAKE_CURRENT_SOURCE_DIR}/../src/ ${OUT_DIR}/include/gplayengine/)
+
+# write setup.pri file for Qt
+get_filename_component(result "${OUT_DIR}" ABSOLUTE)
+file(WRITE ../setup.pri "OUTPUT_DIR=${result}")
+
+# copy res directory to output bin directory (or create symbolic link on supported systems)
+file(MAKE_DIRECTORY ${OUT_DIR}/bin)
+if(WINDOWS)
+    # add copy command
+elseif(LINUX)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../res ${OUT_DIR}/bin/res)
+endif()
+
+

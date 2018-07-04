@@ -7,12 +7,12 @@ set(CMAKE_CXX_STANDARD 11)
 add_definitions(-DGP_NO_LUA_BINDINGS)
 
 if(WINDOWS)
-    include_directories(${EXTERNAL_DEPS_INCLUDE}/gplayengine/thirdparty/bx/compat/msvc)
+    include_directories(${OUT_DIR_INCLUDE}/gplayengine/thirdparty/bx/compat/msvc)
 endif()
 
 include_directories(
     ${OUT_DIR_INCLUDE}/gplayengine/
-    ${EXTERNAL_DEPS_INCLUDE}/gplayengine/thirdparty
+    ${OUT_DIR_INCLUDE}/gplayengine/thirdparty
 )
 
 file(GLOB GPLAY_SRC

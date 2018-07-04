@@ -4,5 +4,5 @@
 /Release
 setup.pri
 
-external-deps
+output
 thirdparty/BUILD

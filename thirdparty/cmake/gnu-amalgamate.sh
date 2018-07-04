@@ -1,14 +1,15 @@
 #!/bin/bash
 
-if [ $# -ne 2 ];
+if [ $# -ne 3 ];
 then
-    echo "Usage: gnu-amalgamate.sh <ar command> <target directory>"
+    echo "Usage: gnu-amalgamate.sh <ar command> <target directory> <output directory>"
     exit 1
 fi
 
 CWD=`pwd`
 AR="$1"
 TARGET="$2"
+OUTDIR="$3"
 
 if [ ! -e $AR ];
 then
@@ -18,7 +19,13 @@ fi
 
 if [ ! -d $TARGET ];
 then
-    echo "No such target directory: $AR"
+    echo "No such target directory: $TARGET"
+    exit 1
+fi
+
+if [ ! -d $OUTDIR ];
+then
+    echo "No such output directory: $OUTDIR"
     exit 1
 fi
 
@@ -48,8 +55,8 @@ cat $MRI
 # Now actually do something
 $AR -M < $MRI
 
-# Copy amalgamated lib to output dir
-mv libgplay-deps.a ../external-deps/lib/
+# move amalgamated lib to output dir
+mv -f libgplay-deps.a $OUTDIR
 
 # Clean up
 rm $MRI
