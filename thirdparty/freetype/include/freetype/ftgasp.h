@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Access of TrueType's `gasp' table (specification).                   */
 /*                                                                         */
-/*  Copyright 2007, 2008, 2011 by                                          */
+/*  Copyright 2007-2016 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef _FT_GASP_H_
-#define _FT_GASP_H_
+#ifndef FTGASP_H_
+#define FTGASP_H_
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -62,12 +62,12 @@
    *     It is up to the client to decide what to do.
    *
    *   FT_GASP_DO_GRIDFIT ::
-   *     Grid-fitting and hinting should be performed at the specified ppem. 
+   *     Grid-fitting and hinting should be performed at the specified ppem.
    *     This *really* means TrueType bytecode interpretation.  If this bit
    *     is not set, no hinting gets applied.
    *
    *   FT_GASP_DO_GRAY ::
-   *     Anti-aliased rendering should be performed at the specified ppem. 
+   *     Anti-aliased rendering should be performed at the specified ppem.
    *     If not set, do monochrome rendering.
    *
    *   FT_GASP_SYMMETRIC_SMOOTHING ::
@@ -120,9 +120,10 @@
   FT_Get_Gasp( FT_Face  face,
                FT_UInt  ppem );
 
-/* */
+  /* */
 
-#endif /* _FT_GASP_H_ */
+
+#endif /* FTGASP_H_ */
 
 
 /* END */

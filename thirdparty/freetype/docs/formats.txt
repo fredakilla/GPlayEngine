@@ -122,8 +122,8 @@ MAC  ---     PS     TYPE_1  ---        type1    T1_SPEC.pdf
                                                 probably never supported)
 
 
----  ---     WINFNT ---     ---        winfonts MS Windows 3 Developer's Notes
----  ---     WINFNT VECTOR  ---        ---      MS Windows 3 Developer's Notes
+---  ---     WINFNT ---     ---        winfonts Windows developer's notes [5]
+---  ---     WINFNT VECTOR  ---        ---      Windows developer's notes [5]
 
 
 [1] Support should be rather simple since this is identical to `CFF' but
@@ -153,15 +153,19 @@ MAC  ---     PS     TYPE_1  ---        type1    T1_SPEC.pdf
 
     for a specification  given in Appendix D on pgs. 436-450.   However,
     this information  might be out of  date; unfortunately,  there is no
-    PCF  specification available  online, and this book is out of print. 
+    PCF  specification available  online, and this book is out of print.
     George  Williams deduced  the font  format from the X11  sources and
     documented it for his FontForge font editor:
 
       http://fontforge.sourceforge.net/pcf-format.html
 
+[5] This is from MS Windows 3; see Microsoft's Knowledge Base article at
+
+      http://support.microsoft.com/kb/65123
+
 ------------------------------------------------------------------------
 
-Copyright 2004, 2005, 2008, 2009, 2010 by
+Copyright 2004-2016 by
 David Turner, Robert Wilhelm, and Werner Lemberg.
 
 This  file is  part  of the  FreeType  project, and  may  only be  used,

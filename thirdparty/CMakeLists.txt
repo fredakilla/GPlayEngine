@@ -88,6 +88,7 @@ add_subdirectory(base64)
 include(${PROJECT_SOURCE_DIR}/cmake/imgui.cmake)
 add_subdirectory(spark)
 add_subdirectory(efsw)
+add_subdirectory(freetype)
 
 set(BUILD_TARGETS
     BulletDynamics
@@ -111,6 +112,7 @@ set(BUILD_TARGETS
     imgui
     spark
     efsw
+    freetype
 )
 
 # amalgamate libraries
