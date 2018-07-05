@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  *  License along with this library; if not, write to the
- *  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- *  Boston, MA  02111-1307, USA.
+ *  Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
@@ -29,9 +29,17 @@
 #include "alError.h"
 
 
+extern inline void LockFiltersRead(ALCdevice *device);
+extern inline void UnlockFiltersRead(ALCdevice *device);
+extern inline void LockFiltersWrite(ALCdevice *device);
+extern inline void UnlockFiltersWrite(ALCdevice *device);
 extern inline struct ALfilter *LookupFilter(ALCdevice *device, ALuint id);
 extern inline struct ALfilter *RemoveFilter(ALCdevice *device, ALuint id);
-extern inline ALfloat ALfilterState_processSingle(ALfilterState *filter, ALfloat sample);
+extern inline void ALfilterState_clear(ALfilterState *filter);
+extern inline void ALfilterState_copyParams(ALfilterState *restrict dst, const ALfilterState *restrict src);
+extern inline void ALfilterState_processPassthru(ALfilterState *filter, const ALfloat *restrict src, ALsizei numsamples);
+extern inline ALfloat calc_rcpQ_from_slope(ALfloat gain, ALfloat slope);
+extern inline ALfloat calc_rcpQ_from_bandwidth(ALfloat freq_mult, ALfloat bandwidth);
 
 static void InitFilterParams(ALfilter *filter, ALenum type);
 
@@ -52,7 +60,7 @@ AL_API ALvoid AL_APIENTRY alGenFilters(ALsizei n, ALuint *filters)
     device = context->Device;
     for(cur = 0;cur < n;cur++)
     {
-        ALfilter *filter = calloc(1, sizeof(ALfilter));
+        ALfilter *filter = al_calloc(16, sizeof(ALfilter));
         if(!filter)
         {
             alDeleteFilters(cur, filters);
@@ -67,7 +75,7 @@ AL_API ALvoid AL_APIENTRY alGenFilters(ALsizei n, ALuint *filters)
         {
             FreeThunkEntry(filter->id);
             memset(filter, 0, sizeof(ALfilter));
-            free(filter);
+            al_free(filter);
 
             alDeleteFilters(cur, filters);
             SET_ERROR_AND_GOTO(context, err, done);
@@ -90,10 +98,10 @@ AL_API ALvoid AL_APIENTRY alDeleteFilters(ALsizei n, const ALuint *filters)
     context = GetContextRef();
     if(!context) return;
 
+    device = context->Device;
+    LockFiltersWrite(device);
     if(!(n >= 0))
         SET_ERROR_AND_GOTO(context, AL_INVALID_VALUE, done);
-
-    device = context->Device;
     for(i = 0;i < n;i++)
     {
         if(filters[i] && LookupFilter(device, filters[i]) == NULL)
@@ -106,10 +114,11 @@ AL_API ALvoid AL_APIENTRY alDeleteFilters(ALsizei n, const ALuint *filters)
         FreeThunkEntry(filter->id);
 
         memset(filter, 0, sizeof(*filter));
-        free(filter);
+        al_free(filter);
     }
 
 done:
+    UnlockFiltersWrite(device);
     ALCcontext_DecRef(context);
 }
 
@@ -121,8 +130,10 @@ AL_API ALboolean AL_APIENTRY alIsFilter(ALuint filter)
     Context = GetContextRef();
     if(!Context) return AL_FALSE;
 
+    LockFiltersRead(Context->Device);
     result = ((!filter || LookupFilter(Context->Device, filter)) ?
               AL_TRUE : AL_FALSE);
+    UnlockFiltersRead(Context->Device);
 
     ALCcontext_DecRef(Context);
 
@@ -139,6 +150,7 @@ AL_API ALvoid AL_APIENTRY alFilteri(ALuint filter, ALenum param, ALint value)
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersWrite(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -157,6 +169,7 @@ AL_API ALvoid AL_APIENTRY alFilteri(ALuint filter, ALenum param, ALint value)
             ALfilter_SetParami(ALFilter, Context, param, value);
         }
     }
+    UnlockFiltersWrite(Device);
 
     ALCcontext_DecRef(Context);
 }
@@ -178,6 +191,7 @@ AL_API ALvoid AL_APIENTRY alFilteriv(ALuint filter, ALenum param, const ALint *v
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersWrite(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -185,6 +199,7 @@ AL_API ALvoid AL_APIENTRY alFilteriv(ALuint filter, ALenum param, const ALint *v
         /* Call the appropriate handler */
         ALfilter_SetParamiv(ALFilter, Context, param, values);
     }
+    UnlockFiltersWrite(Device);
 
     ALCcontext_DecRef(Context);
 }
@@ -199,6 +214,7 @@ AL_API ALvoid AL_APIENTRY alFilterf(ALuint filter, ALenum param, ALfloat value)
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersWrite(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -206,6 +222,7 @@ AL_API ALvoid AL_APIENTRY alFilterf(ALuint filter, ALenum param, ALfloat value)
         /* Call the appropriate handler */
         ALfilter_SetParamf(ALFilter, Context, param, value);
     }
+    UnlockFiltersWrite(Device);
 
     ALCcontext_DecRef(Context);
 }
@@ -220,6 +237,7 @@ AL_API ALvoid AL_APIENTRY alFilterfv(ALuint filter, ALenum param, const ALfloat 
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersWrite(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -227,6 +245,7 @@ AL_API ALvoid AL_APIENTRY alFilterfv(ALuint filter, ALenum param, const ALfloat 
         /* Call the appropriate handler */
         ALfilter_SetParamfv(ALFilter, Context, param, values);
     }
+    UnlockFiltersWrite(Device);
 
     ALCcontext_DecRef(Context);
 }
@@ -241,6 +260,7 @@ AL_API ALvoid AL_APIENTRY alGetFilteri(ALuint filter, ALenum param, ALint *value
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersRead(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -253,6 +273,7 @@ AL_API ALvoid AL_APIENTRY alGetFilteri(ALuint filter, ALenum param, ALint *value
             ALfilter_GetParami(ALFilter, Context, param, value);
         }
     }
+    UnlockFiltersRead(Device);
 
     ALCcontext_DecRef(Context);
 }
@@ -274,6 +295,7 @@ AL_API ALvoid AL_APIENTRY alGetFilteriv(ALuint filter, ALenum param, ALint *valu
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersRead(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -281,6 +303,7 @@ AL_API ALvoid AL_APIENTRY alGetFilteriv(ALuint filter, ALenum param, ALint *valu
         /* Call the appropriate handler */
         ALfilter_GetParamiv(ALFilter, Context, param, values);
     }
+    UnlockFiltersRead(Device);
 
     ALCcontext_DecRef(Context);
 }
@@ -295,6 +318,7 @@ AL_API ALvoid AL_APIENTRY alGetFilterf(ALuint filter, ALenum param, ALfloat *val
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersRead(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -302,6 +326,7 @@ AL_API ALvoid AL_APIENTRY alGetFilterf(ALuint filter, ALenum param, ALfloat *val
         /* Call the appropriate handler */
         ALfilter_GetParamf(ALFilter, Context, param, value);
     }
+    UnlockFiltersRead(Device);
 
     ALCcontext_DecRef(Context);
 }
@@ -316,6 +341,7 @@ AL_API ALvoid AL_APIENTRY alGetFilterfv(ALuint filter, ALenum param, ALfloat *va
     if(!Context) return;
 
     Device = Context->Device;
+    LockFiltersRead(Device);
     if((ALFilter=LookupFilter(Device, filter)) == NULL)
         alSetError(Context, AL_INVALID_NAME);
     else
@@ -323,97 +349,89 @@ AL_API ALvoid AL_APIENTRY alGetFilterfv(ALuint filter, ALenum param, ALfloat *va
         /* Call the appropriate handler */
         ALfilter_GetParamfv(ALFilter, Context, param, values);
     }
+    UnlockFiltersRead(Device);
 
     ALCcontext_DecRef(Context);
 }
 
 
-void ALfilterState_clear(ALfilterState *filter)
+void ALfilterState_setParams(ALfilterState *filter, ALfilterType type, ALfloat gain, ALfloat freq_mult, ALfloat rcpQ)
 {
-    filter->x[0] = 0.0f;
-    filter->x[1] = 0.0f;
-    filter->y[0] = 0.0f;
-    filter->y[1] = 0.0f;
-}
-
-void ALfilterState_setParams(ALfilterState *filter, ALfilterType type, ALfloat gain, ALfloat freq_mult, ALfloat bandwidth)
-{
-    ALfloat alpha;
-    ALfloat w0;
+    ALfloat alpha, sqrtgain_alpha_2;
+    ALfloat w0, sin_w0, cos_w0;
+    ALfloat a[3] = { 1.0f, 0.0f, 0.0f };
+    ALfloat b[3] = { 1.0f, 0.0f, 0.0f };
 
     // Limit gain to -100dB
-    gain = maxf(gain, 0.00001f);
+    assert(gain > 0.00001f);
 
-    w0 = F_2PI * freq_mult;
+    w0 = F_TAU * freq_mult;
+    sin_w0 = sinf(w0);
+    cos_w0 = cosf(w0);
+    alpha = sin_w0/2.0f * rcpQ;
 
     /* Calculate filter coefficients depending on filter type */
     switch(type)
     {
         case ALfilterType_HighShelf:
-            alpha = sinf(w0)/2.0f*sqrtf((gain + 1.0f/gain)*(1.0f/0.75f - 1.0f) + 2.0f);
-            filter->b[0] =       gain*((gain+1.0f) + (gain-1.0f)*cosf(w0) + 2.0f*sqrtf(gain)*alpha);
-            filter->b[1] = -2.0f*gain*((gain-1.0f) + (gain+1.0f)*cosf(w0)                         );
-            filter->b[2] =       gain*((gain+1.0f) + (gain-1.0f)*cosf(w0) - 2.0f*sqrtf(gain)*alpha);
-            filter->a[0] =             (gain+1.0f) - (gain-1.0f)*cosf(w0) + 2.0f*sqrtf(gain)*alpha;
-            filter->a[1] =  2.0f*     ((gain-1.0f) - (gain+1.0f)*cosf(w0)                         );
-            filter->a[2] =             (gain+1.0f) - (gain-1.0f)*cosf(w0) - 2.0f*sqrtf(gain)*alpha;
+            sqrtgain_alpha_2 = 2.0f * sqrtf(gain) * alpha;
+            b[0] =       gain*((gain+1.0f) + (gain-1.0f)*cos_w0 + sqrtgain_alpha_2);
+            b[1] = -2.0f*gain*((gain-1.0f) + (gain+1.0f)*cos_w0                   );
+            b[2] =       gain*((gain+1.0f) + (gain-1.0f)*cos_w0 - sqrtgain_alpha_2);
+            a[0] =             (gain+1.0f) - (gain-1.0f)*cos_w0 + sqrtgain_alpha_2;
+            a[1] =  2.0f*     ((gain-1.0f) - (gain+1.0f)*cos_w0                   );
+            a[2] =             (gain+1.0f) - (gain-1.0f)*cos_w0 - sqrtgain_alpha_2;
             break;
         case ALfilterType_LowShelf:
-            alpha = sinf(w0)/2.0f*sqrtf((gain + 1.0f/gain)*(1.0f/0.75f - 1.0f) + 2.0f);
-            filter->b[0] =       gain*((gain+1.0f) - (gain-1.0f)*cosf(w0) + 2.0f*sqrtf(gain)*alpha);
-            filter->b[1] =  2.0f*gain*((gain-1.0f) - (gain+1.0f)*cosf(w0)                         );
-            filter->b[2] =       gain*((gain+1.0f) - (gain-1.0f)*cosf(w0) - 2.0f*sqrtf(gain)*alpha);
-            filter->a[0] =             (gain+1.0f) + (gain-1.0f)*cosf(w0) + 2.0f*sqrtf(gain)*alpha;
-            filter->a[1] = -2.0f*     ((gain-1.0f) + (gain+1.0f)*cosf(w0)                         );
-            filter->a[2] =             (gain+1.0f) + (gain-1.0f)*cosf(w0) - 2.0f*sqrtf(gain)*alpha;
+            sqrtgain_alpha_2 = 2.0f * sqrtf(gain) * alpha;
+            b[0] =       gain*((gain+1.0f) - (gain-1.0f)*cos_w0 + sqrtgain_alpha_2);
+            b[1] =  2.0f*gain*((gain-1.0f) - (gain+1.0f)*cos_w0                   );
+            b[2] =       gain*((gain+1.0f) - (gain-1.0f)*cos_w0 - sqrtgain_alpha_2);
+            a[0] =             (gain+1.0f) + (gain-1.0f)*cos_w0 + sqrtgain_alpha_2;
+            a[1] = -2.0f*     ((gain-1.0f) + (gain+1.0f)*cos_w0                   );
+            a[2] =             (gain+1.0f) + (gain-1.0f)*cos_w0 - sqrtgain_alpha_2;
             break;
         case ALfilterType_Peaking:
-            alpha = sinf(w0) * sinhf(logf(2.0f) / 2.0f * bandwidth * w0 / sinf(w0));
-            filter->b[0] =  1.0f + alpha * gain;
-            filter->b[1] = -2.0f * cosf(w0);
-            filter->b[2] =  1.0f - alpha * gain;
-            filter->a[0] =  1.0f + alpha / gain;
-            filter->a[1] = -2.0f * cosf(w0);
-            filter->a[2] =  1.0f - alpha / gain;
+            gain = sqrtf(gain);
+            b[0] =  1.0f + alpha * gain;
+            b[1] = -2.0f * cos_w0;
+            b[2] =  1.0f - alpha * gain;
+            a[0] =  1.0f + alpha / gain;
+            a[1] = -2.0f * cos_w0;
+            a[2] =  1.0f - alpha / gain;
             break;
 
         case ALfilterType_LowPass:
-            alpha = sinf(w0) * sinhf(logf(2.0f) / 2.0f * bandwidth * w0 / sinf(w0));
-            filter->b[0] = (1.0f - cosf(w0)) / 2.0f;
-            filter->b[1] =  1.0f - cosf(w0);
-            filter->b[2] = (1.0f - cosf(w0)) / 2.0f;
-            filter->a[0] =  1.0f + alpha;
-            filter->a[1] = -2.0f * cosf(w0);
-            filter->a[2] =  1.0f - alpha;
+            b[0] = (1.0f - cos_w0) / 2.0f;
+            b[1] =  1.0f - cos_w0;
+            b[2] = (1.0f - cos_w0) / 2.0f;
+            a[0] =  1.0f + alpha;
+            a[1] = -2.0f * cos_w0;
+            a[2] =  1.0f - alpha;
             break;
         case ALfilterType_HighPass:
-            alpha = sinf(w0) * sinhf(logf(2.0f) / 2.0f * bandwidth * w0 / sinf(w0));
-            filter->b[0] = (1.0f + cosf(w0)) / 2.0f;
-            filter->b[1] =  1.0f + cosf(w0);
-            filter->b[2] = (1.0f + cosf(w0)) / 2.0f;
-            filter->a[0] =  1.0f + alpha;
-            filter->a[1] = -2.0f * cosf(w0);
-            filter->a[2] =  1.0f - alpha;
+            b[0] =  (1.0f + cos_w0) / 2.0f;
+            b[1] = -(1.0f + cos_w0);
+            b[2] =  (1.0f + cos_w0) / 2.0f;
+            a[0] =   1.0f + alpha;
+            a[1] =  -2.0f * cos_w0;
+            a[2] =   1.0f - alpha;
             break;
         case ALfilterType_BandPass:
-            alpha = sinf(w0) * sinhf(logf(2.0f) / 2.0f * bandwidth * w0 / sinf(w0));
-            filter->b[0] =  alpha;
-            filter->b[1] =  0;
-            filter->b[2] = -alpha;
-            filter->a[0] =  1.0f + alpha;
-            filter->a[1] = -2.0f * cosf(w0);
-            filter->a[2] =  1.0f - alpha;
+            b[0] =  alpha;
+            b[1] =  0;
+            b[2] = -alpha;
+            a[0] =  1.0f + alpha;
+            a[1] = -2.0f * cos_w0;
+            a[2] =  1.0f - alpha;
             break;
     }
 
-    filter->b[2] /= filter->a[0];
-    filter->b[1] /= filter->a[0];
-    filter->b[0] /= filter->a[0];
-    filter->a[2] /= filter->a[0];
-    filter->a[1] /= filter->a[0];
-    filter->a[0] /= filter->a[0];
-
-    filter->process = ALfilterState_processC;
+    filter->a1 = a[1] / a[0];
+    filter->a2 = a[2] / a[0];
+    filter->b0 = b[0] / a[0];
+    filter->b1 = b[1] / a[0];
+    filter->b2 = b[2] / a[0];
 }
 
 
@@ -616,13 +634,13 @@ ALvoid ReleaseALFilters(ALCdevice *device)
     ALsizei i;
     for(i = 0;i < device->FilterMap.size;i++)
     {
-        ALfilter *temp = device->FilterMap.array[i].value;
-        device->FilterMap.array[i].value = NULL;
+        ALfilter *temp = device->FilterMap.values[i];
+        device->FilterMap.values[i] = NULL;
 
         // Release filter structure
         FreeThunkEntry(temp->id);
         memset(temp, 0, sizeof(ALfilter));
-        free(temp);
+        al_free(temp);
     }
 }
 

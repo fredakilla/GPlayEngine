@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  *  License along with this library; if not, write to the
- *  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- *  Boston, MA  02111-1307, USA.
+ *  Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
@@ -55,7 +55,7 @@ extern inline int altss_set(altss_t tss_id, void *val);
 #endif
 
 
-#define THREAD_STACK_SIZE (1*1024*1024) /* 1MB */
+#define THREAD_STACK_SIZE (2*1024*1024) /* 2MB */
 
 #ifdef _WIN32
 
@@ -194,7 +194,8 @@ int althrd_sleep(const struct timespec *ts, struct timespec* UNUSED(rem))
 int almtx_init(almtx_t *mtx, int type)
 {
     if(!mtx) return althrd_error;
-    type &= ~(almtx_recursive|almtx_timed);
+
+    type &= ~almtx_recursive;
     if(type != almtx_plain)
         return althrd_error;
 
@@ -207,27 +208,10 @@ void almtx_destroy(almtx_t *mtx)
     DeleteCriticalSection(mtx);
 }
 
-int almtx_timedlock(almtx_t *mtx, const struct timespec *ts)
+int almtx_timedlock(almtx_t* UNUSED(mtx), const struct timespec* UNUSED(ts))
 {
-    int ret;
-
-    if(!mtx || !ts)
-        return althrd_error;
-
-    while((ret=almtx_trylock(mtx)) == althrd_busy)
-    {
-        struct timespec now;
-
-        if(ts->tv_sec < 0 || ts->tv_nsec < 0 || ts->tv_nsec >= 1000000000 ||
-           altimespec_get(&now, AL_TIME_UTC) != AL_TIME_UTC)
-            return althrd_error;
-        if(now.tv_sec > ts->tv_sec || (now.tv_sec == ts->tv_sec && now.tv_nsec >= ts->tv_nsec))
-            return althrd_timedout;
-
-        althrd_yield();
-    }
-
-    return ret;
+    /* Windows CRITICAL_SECTIONs don't seem to have a timedlock method. */
+    return althrd_error;
 }
 
 #if defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0600
@@ -264,10 +248,19 @@ int alcnd_timedwait(alcnd_t *cond, almtx_t *mtx, const struct timespec *time_poi
     if(altimespec_get(&curtime, AL_TIME_UTC) != AL_TIME_UTC)
         return althrd_error;
 
-    sleeptime  = (time_point->tv_nsec - curtime.tv_nsec + 999999)/1000000;
-    sleeptime += (time_point->tv_sec - curtime.tv_sec)*1000;
-    if(SleepConditionVariableCS(cond, mtx, sleeptime) != 0)
-        return althrd_success;
+    if(curtime.tv_sec > time_point->tv_sec || (curtime.tv_sec == time_point->tv_sec &&
+                                               curtime.tv_nsec >= time_point->tv_nsec))
+    {
+        if(SleepConditionVariableCS(cond, mtx, 0) != 0)
+            return althrd_success;
+    }
+    else
+    {
+        sleeptime  = (time_point->tv_nsec - curtime.tv_nsec + 999999)/1000000;
+        sleeptime += (DWORD)(time_point->tv_sec - curtime.tv_sec)*1000;
+        if(SleepConditionVariableCS(cond, mtx, sleeptime) != 0)
+            return althrd_success;
+    }
     return (GetLastError()==ERROR_TIMEOUT) ? althrd_timedout : althrd_error;
 }
 
@@ -306,8 +299,8 @@ int alcnd_init(alcnd_t *cond)
 
     InitRef(&icond->wait_count, 0);
 
-    icond->events[SIGNAL] = CreateEvent(NULL, FALSE, FALSE, NULL);
-    icond->events[BROADCAST] = CreateEvent(NULL, TRUE, FALSE, NULL);
+    icond->events[SIGNAL] = CreateEventW(NULL, FALSE, FALSE, NULL);
+    icond->events[BROADCAST] = CreateEventW(NULL, TRUE, FALSE, NULL);
     if(!icond->events[SIGNAL] || !icond->events[BROADCAST])
     {
         if(icond->events[SIGNAL])
@@ -364,8 +357,15 @@ int alcnd_timedwait(alcnd_t *cond, almtx_t *mtx, const struct timespec *time_poi
 
     if(altimespec_get(&curtime, AL_TIME_UTC) != AL_TIME_UTC)
         return althrd_error;
-    sleeptime  = (time_point->tv_nsec - curtime.tv_nsec + 999999)/1000000;
-    sleeptime += (time_point->tv_sec - curtime.tv_sec)*1000;
+
+    if(curtime.tv_sec > time_point->tv_sec || (curtime.tv_sec == time_point->tv_sec &&
+                                               curtime.tv_nsec >= time_point->tv_nsec))
+        sleeptime = 0;
+    else
+    {
+        sleeptime  = (time_point->tv_nsec - curtime.tv_nsec + 999999)/1000000;
+        sleeptime += (DWORD)(time_point->tv_sec - curtime.tv_sec)*1000;
+    }
 
     IncrementRef(&icond->wait_count);
     LeaveCriticalSection(mtx);
@@ -413,8 +413,8 @@ static void NTAPI altss_callback(void* UNUSED(handle), DWORD reason, void* UNUSE
     LockUIntMapRead(&TlsDestructors);
     for(i = 0;i < TlsDestructors.size;i++)
     {
-        void *ptr = altss_get(TlsDestructors.array[i].key);
-        altss_dtor_t callback = (altss_dtor_t)TlsDestructors.array[i].value;
+        void *ptr = altss_get(TlsDestructors.keys[i]);
+        altss_dtor_t callback = (altss_dtor_t)TlsDestructors.values[i];
         if(ptr && callback)
             callback(ptr);
     }
@@ -497,11 +497,13 @@ extern inline void alcall_once(alonce_flag *once, void (*callback)(void));
 void althrd_setname(althrd_t thr, const char *name)
 {
 #if defined(HAVE_PTHREAD_SETNAME_NP)
-#if defined(__GNUC__)
-    pthread_setname_np(thr, name);
-#elif defined(__APPLE__)
-    if(althrd_equal(thr, althrd_current())
+#if defined(PTHREAD_SETNAME_NP_ONE_PARAM)
+    if(althrd_equal(thr, althrd_current()))
         pthread_setname_np(name);
+#elif defined(PTHREAD_SETNAME_NP_THREE_PARAMS)
+    pthread_setname_np(thr, "%s", (void*)name);
+#else
+    pthread_setname_np(thr, name);
 #endif
 #elif defined(HAVE_PTHREAD_SET_NAME_NP)
     pthread_set_name_np(thr, name);
@@ -531,6 +533,8 @@ int althrd_create(althrd_t *thr, althrd_start_t func, void *arg)
 {
     thread_cntr *cntr;
     pthread_attr_t attr;
+    size_t stackmult = 1;
+    int err;
 
     cntr = malloc(sizeof(*cntr));
     if(!cntr) return althrd_nomem;
@@ -540,7 +544,8 @@ int althrd_create(althrd_t *thr, althrd_start_t func, void *arg)
         free(cntr);
         return althrd_error;
     }
-    if(pthread_attr_setstacksize(&attr, THREAD_STACK_SIZE) != 0)
+retry_stacksize:
+    if(pthread_attr_setstacksize(&attr, THREAD_STACK_SIZE*stackmult) != 0)
     {
         pthread_attr_destroy(&attr);
         free(cntr);
@@ -549,15 +554,30 @@ int althrd_create(althrd_t *thr, althrd_start_t func, void *arg)
 
     cntr->func = func;
     cntr->arg = arg;
-    if(pthread_create(thr, &attr, althrd_starter, cntr) != 0)
+    if((err=pthread_create(thr, &attr, althrd_starter, cntr)) == 0)
     {
         pthread_attr_destroy(&attr);
-        free(cntr);
-        return althrd_error;
+        return althrd_success;
+    }
+
+    if(err == EINVAL)
+    {
+        /* If an invalid stack size, try increasing it (limit x4, 8MB). */
+        if(stackmult < 4)
+        {
+            stackmult *= 2;
+            goto retry_stacksize;
+        }
+        /* If still nothing, try defaults and hope they're good enough. */
+        if(pthread_create(thr, NULL, althrd_starter, cntr) == 0)
+        {
+            pthread_attr_destroy(&attr);
+            return althrd_success;
+        }
     }
     pthread_attr_destroy(&attr);
-
-    return althrd_success;
+    free(cntr);
+    return althrd_error;
 }
 
 int althrd_detach(althrd_t thr)
@@ -584,8 +604,13 @@ int almtx_init(almtx_t *mtx, int type)
     int ret;
 
     if(!mtx) return althrd_error;
+#ifdef HAVE_PTHREAD_MUTEX_TIMEDLOCK
     if((type&~(almtx_recursive|almtx_timed)) != 0)
         return althrd_error;
+#else
+    if((type&~almtx_recursive) != 0)
+        return althrd_error;
+#endif
 
     type &= ~almtx_timed;
     if(type == almtx_plain)
@@ -621,36 +646,16 @@ void almtx_destroy(almtx_t *mtx)
 
 int almtx_timedlock(almtx_t *mtx, const struct timespec *ts)
 {
-    int ret;
-
 #ifdef HAVE_PTHREAD_MUTEX_TIMEDLOCK
-    ret = pthread_mutex_timedlock(mtx, ts);
+    int ret = pthread_mutex_timedlock(mtx, ts);
     switch(ret)
     {
         case 0: return althrd_success;
         case ETIMEDOUT: return althrd_timedout;
         case EBUSY: return althrd_busy;
     }
-    return althrd_error;
-#else
-    if(!mtx || !ts)
-        return althrd_error;
-
-    while((ret=almtx_trylock(mtx)) == althrd_busy)
-    {
-        struct timespec now;
-
-        if(ts->tv_sec < 0 || ts->tv_nsec < 0 || ts->tv_nsec >= 1000000000 ||
-           altimespec_get(&now, AL_TIME_UTC) != AL_TIME_UTC)
-            return althrd_error;
-        if(now.tv_sec > ts->tv_sec || (now.tv_sec == ts->tv_sec && now.tv_nsec >= ts->tv_nsec))
-            return althrd_timedout;
-
-        althrd_yield();
-    }
-
-    return ret;
 #endif
+    return althrd_error;
 }
 
 int alcnd_init(alcnd_t *cond)
@@ -733,11 +738,11 @@ int altimespec_get(struct timespec *ts, int base)
 #endif
 
 
-void al_nssleep(time_t sec, long nsec)
+void al_nssleep(unsigned long nsec)
 {
     struct timespec ts, rem;
-    ts.tv_sec = sec;
-    ts.tv_nsec = nsec;
+    ts.tv_sec = nsec / 1000000000ul;
+    ts.tv_nsec = nsec % 1000000000ul;
 
     while(althrd_sleep(&ts, &rem) == -1)
         ts = rem;

@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  *  License along with this library; if not, write to the
- *  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- *  Boston, MA  02111-1307, USA.
+ *  Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
@@ -41,7 +41,7 @@ static ALCboolean ALCloopback_start(ALCloopback *self);
 static void ALCloopback_stop(ALCloopback *self);
 static DECLARE_FORWARD2(ALCloopback, ALCbackend, ALCenum, captureSamples, void*, ALCuint)
 static DECLARE_FORWARD(ALCloopback, ALCbackend, ALCuint, availableSamples)
-static DECLARE_FORWARD(ALCloopback, ALCbackend, ALint64, getLatency)
+static DECLARE_FORWARD(ALCloopback, ALCbackend, ClockLatency, getClockLatency)
 static DECLARE_FORWARD(ALCloopback, ALCbackend, void, lock)
 static DECLARE_FORWARD(ALCloopback, ALCbackend, void, unlock)
 DECLARE_DEFAULT_ALLOCATORS(ALCloopback)
@@ -59,7 +59,7 @@ static ALCenum ALCloopback_open(ALCloopback *self, const ALCchar *name)
 {
     ALCdevice *device = STATIC_CAST(ALCbackend, self)->mDevice;
 
-    al_string_copy_cstr(&device->DeviceName, name);
+    alstr_copy_cstr(&device->DeviceName, name);
     return ALC_NO_ERROR;
 }
 
@@ -124,13 +124,8 @@ static ALCbackend* ALCloopbackFactory_createBackend(ALCloopbackFactory* UNUSED(s
     if(type == ALCbackend_Loopback)
     {
         ALCloopback *backend;
-
-        backend = ALCloopback_New(sizeof(*backend));
+        NEW_OBJ(backend, ALCloopback)(device);
         if(!backend) return NULL;
-        memset(backend, 0, sizeof(*backend));
-
-        ALCloopback_Construct(backend, device);
-
         return STATIC_CAST(ALCbackend, backend);
     }
 

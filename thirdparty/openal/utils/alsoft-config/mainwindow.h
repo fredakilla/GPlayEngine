@@ -17,15 +17,31 @@ public:
     ~MainWindow();
 
 private slots:
+    void cancelCloseAction();
+
     void saveCurrentConfig();
 
     void saveConfigAsFile();
     void loadConfigFromFile();
 
+    void showAboutPage();
+
+    void enableApplyButton();
+
+    void updateResamplerLabel(int num);
+
     void updatePeriodSizeEdit(int size);
     void updatePeriodSizeSlider();
     void updatePeriodCountEdit(int size);
     void updatePeriodCountSlider();
+
+    void selectQuadDecoderFile();
+    void select51DecoderFile();
+    void select61DecoderFile();
+    void select71DecoderFile();
+
+    void updateJackBufferSizeEdit(int size);
+    void updateJackBufferSizeSlider();
 
     void addHrtfFile();
     void removeHrtfFile();
@@ -35,8 +51,12 @@ private slots:
     void showEnabledBackendMenu(QPoint pt);
     void showDisabledBackendMenu(QPoint pt);
 
-    void updateReverbBoostEdit(int size);
-    void updateReverbBoostSlider(QString value);
+    void selectOSSPlayback();
+    void selectOSSCapture();
+
+    void selectSolarisPlayback();
+
+    void selectWaveOutput();
 
 private:
     Ui::MainWindow *ui;
@@ -47,7 +67,15 @@ private:
     QValidator *mEffectSlotValidator;
     QValidator *mSourceSendValidator;
     QValidator *mSampleRateValidator;
-    QValidator *mReverbBoostValidator;
+    QValidator *mJackBufferValidator;
+
+    bool mNeedsSave;
+
+    void closeEvent(QCloseEvent *event);
+
+    void selectDecoderFile(QLineEdit *line, const char *name);
+
+    QStringList collectHrtfs();
 
     void loadConfig(const QString &fname);
     void saveConfig(const QString &fname) const;

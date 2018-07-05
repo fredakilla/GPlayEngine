@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  *  License along with this library; if not, write to the
- *  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- *  Boston, MA  02111-1307, USA.
+ *  Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
@@ -43,6 +43,9 @@
 #ifndef DSSPEAKER_5POINT1
 #   define DSSPEAKER_5POINT1          0x00000006
 #endif
+#ifndef DSSPEAKER_5POINT1_BACK
+#   define DSSPEAKER_5POINT1_BACK     0x00000006
+#endif
 #ifndef DSSPEAKER_7POINT1
 #   define DSSPEAKER_7POINT1          0x00000007
 #endif
@@ -56,6 +59,8 @@
 
 DEFINE_GUID(KSDATAFORMAT_SUBTYPE_PCM, 0x00000001, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
 DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, 0x00000003, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+
+#define DEVNAME_HEAD "OpenAL Soft on "
 
 
 #ifdef HAVE_DYNLOAD
@@ -118,15 +123,14 @@ static void clear_devlist(vector_DevMap *list)
 {
 #define DEINIT_STR(i) AL_STRING_DEINIT((i)->name)
     VECTOR_FOR_EACH(DevMap, *list, DEINIT_STR);
+    VECTOR_RESIZE(*list, 0, 0);
 #undef DEINIT_STR
-    VECTOR_RESIZE(*list, 0);
 }
 
 static BOOL CALLBACK DSoundEnumDevices(GUID *guid, const WCHAR *desc, const WCHAR* UNUSED(drvname), void *data)
 {
     vector_DevMap *devices = data;
     OLECHAR *guidstr = NULL;
-    DevMap *iter, *end;
     DevMap entry;
     HRESULT hr;
     int count;
@@ -137,30 +141,31 @@ static BOOL CALLBACK DSoundEnumDevices(GUID *guid, const WCHAR *desc, const WCHA
     AL_STRING_INIT(entry.name);
 
     count = 0;
-    do {
-        al_string_copy_wcstr(&entry.name, desc);
+    while(1)
+    {
+        const DevMap *iter;
+
+        alstr_copy_cstr(&entry.name, DEVNAME_HEAD);
+        alstr_append_wcstr(&entry.name, desc);
         if(count != 0)
         {
             char str[64];
             snprintf(str, sizeof(str), " #%d", count+1);
-            al_string_append_cstr(&entry.name, str);
+            alstr_append_cstr(&entry.name, str);
         }
-        count++;
 
-        iter = VECTOR_ITER_BEGIN(*devices);
-        end = VECTOR_ITER_END(*devices);
-        for(;iter != end;++iter)
-        {
-            if(al_string_cmp(entry.name, iter->name) == 0)
-                break;
-        }
-    } while(iter != end);
+#define MATCH_ENTRY(i) (alstr_cmp(entry.name, (i)->name) == 0)
+        VECTOR_FIND_IF(iter, const DevMap, *devices, MATCH_ENTRY);
+        if(iter == VECTOR_END(*devices)) break;
+#undef MATCH_ENTRY
+        count++;
+    }
     entry.guid = *guid;
 
     hr = StringFromCLSID(guid, &guidstr);
     if(SUCCEEDED(hr))
     {
-        TRACE("Got device \"%s\", GUID \"%ls\"\n", al_string_get_cstr(entry.name), guidstr);
+        TRACE("Got device \"%s\", GUID \"%ls\"\n", alstr_get_cstr(entry.name), guidstr);
         CoTaskMemFree(guidstr);
     }
 
@@ -194,7 +199,7 @@ static ALCboolean ALCdsoundPlayback_start(ALCdsoundPlayback *self);
 static void ALCdsoundPlayback_stop(ALCdsoundPlayback *self);
 static DECLARE_FORWARD2(ALCdsoundPlayback, ALCbackend, ALCenum, captureSamples, void*, ALCuint)
 static DECLARE_FORWARD(ALCdsoundPlayback, ALCbackend, ALCuint, availableSamples)
-static DECLARE_FORWARD(ALCdsoundPlayback, ALCbackend, ALint64, getLatency)
+static DECLARE_FORWARD(ALCdsoundPlayback, ALCbackend, ClockLatency, getClockLatency)
 static DECLARE_FORWARD(ALCdsoundPlayback, ALCbackend, void, lock)
 static DECLARE_FORWARD(ALCdsoundPlayback, ALCbackend, void, unlock)
 DECLARE_DEFAULT_ALLOCATORS(ALCdsoundPlayback)
@@ -239,7 +244,7 @@ FORCE_ALIGN static int ALCdsoundPlayback_mixerProc(void *ptr)
         return 1;
     }
 
-    FrameSize = FrameSizeFromDevFmt(device->FmtChans, device->FmtType);
+    FrameSize = FrameSizeFromDevFmt(device->FmtChans, device->FmtType, device->AmbiOrder);
     FragSize = device->UpdateSize * FrameSize;
 
     IDirectSoundBuffer_GetCurrentPosition(self->Buffer, &LastCursor, NULL);
@@ -294,8 +299,10 @@ FORCE_ALIGN static int ALCdsoundPlayback_mixerProc(void *ptr)
         if(SUCCEEDED(err))
         {
             // If we have an active context, mix data directly into output buffer otherwise fill with silence
+            ALCdevice_Lock(device);
             aluMixData(device, WritePtr1, WriteCnt1/FrameSize);
             aluMixData(device, WritePtr2, WriteCnt2/FrameSize);
+            ALCdevice_Unlock(device);
 
             // Unlock output buffer only when successfully locked
             IDirectSoundBuffer_Unlock(self->Buffer, WritePtr1, WriteCnt1, WritePtr2, WriteCnt2);
@@ -336,23 +343,23 @@ static ALCenum ALCdsoundPlayback_open(ALCdsoundPlayback *self, const ALCchar *de
 
     if(!deviceName && VECTOR_SIZE(PlaybackDevices) > 0)
     {
-        deviceName = al_string_get_cstr(VECTOR_FRONT(PlaybackDevices).name);
+        deviceName = alstr_get_cstr(VECTOR_FRONT(PlaybackDevices).name);
         guid = &VECTOR_FRONT(PlaybackDevices).guid;
     }
     else
     {
         const DevMap *iter;
 
-#define MATCH_NAME(i)  (al_string_cmp_cstr((i)->name, deviceName) == 0)
+#define MATCH_NAME(i)  (alstr_cmp_cstr((i)->name, deviceName) == 0)
         VECTOR_FIND_IF(iter, const DevMap, PlaybackDevices, MATCH_NAME);
 #undef MATCH_NAME
-        if(iter == VECTOR_ITER_END(PlaybackDevices))
+        if(iter == VECTOR_END(PlaybackDevices))
             return ALC_INVALID_VALUE;
         guid = &iter->guid;
     }
 
     hr = DS_OK;
-    self->NotifyEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+    self->NotifyEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
     if(self->NotifyEvent == NULL)
         hr = E_FAIL;
 
@@ -374,7 +381,7 @@ static ALCenum ALCdsoundPlayback_open(ALCdsoundPlayback *self, const ALCchar *de
         return ALC_INVALID_VALUE;
     }
 
-    al_string_copy_cstr(&device->DeviceName, deviceName);
+    alstr_copy_cstr(&device->DeviceName, deviceName);
 
     return ALC_NO_ERROR;
 }
@@ -441,28 +448,35 @@ static ALCboolean ALCdsoundPlayback_reset(ALCdsoundPlayback *self)
     hr = IDirectSound_GetSpeakerConfig(self->DS, &speakers);
     if(SUCCEEDED(hr))
     {
+        speakers = DSSPEAKER_CONFIG(speakers);
         if(!(device->Flags&DEVICE_CHANNELS_REQUEST))
         {
-            speakers = DSSPEAKER_CONFIG(speakers);
             if(speakers == DSSPEAKER_MONO)
                 device->FmtChans = DevFmtMono;
             else if(speakers == DSSPEAKER_STEREO || speakers == DSSPEAKER_HEADPHONE)
                 device->FmtChans = DevFmtStereo;
             else if(speakers == DSSPEAKER_QUAD)
                 device->FmtChans = DevFmtQuad;
-            else if(speakers == DSSPEAKER_5POINT1 || speakers == DSSPEAKER_5POINT1_SURROUND)
+            else if(speakers == DSSPEAKER_5POINT1_SURROUND)
                 device->FmtChans = DevFmtX51;
+            else if(speakers == DSSPEAKER_5POINT1_BACK)
+                device->FmtChans = DevFmtX51Rear;
             else if(speakers == DSSPEAKER_7POINT1 || speakers == DSSPEAKER_7POINT1_SURROUND)
                 device->FmtChans = DevFmtX71;
             else
                 ERR("Unknown system speaker config: 0x%lx\n", speakers);
         }
+        device->IsHeadphones = (device->FmtChans == DevFmtStereo &&
+                                speakers == DSSPEAKER_HEADPHONE);
 
         switch(device->FmtChans)
         {
             case DevFmtMono:
                 OutputType.dwChannelMask = SPEAKER_FRONT_CENTER;
                 break;
+            case DevFmtAmbi3D:
+                device->FmtChans = DevFmtStereo;
+                /*fall-through*/
             case DevFmtStereo:
                 OutputType.dwChannelMask = SPEAKER_FRONT_LEFT |
                                            SPEAKER_FRONT_RIGHT;
@@ -478,16 +492,16 @@ static ALCboolean ALCdsoundPlayback_reset(ALCdsoundPlayback *self)
                                            SPEAKER_FRONT_RIGHT |
                                            SPEAKER_FRONT_CENTER |
                                            SPEAKER_LOW_FREQUENCY |
-                                           SPEAKER_BACK_LEFT |
-                                           SPEAKER_BACK_RIGHT;
+                                           SPEAKER_SIDE_LEFT |
+                                           SPEAKER_SIDE_RIGHT;
                 break;
-            case DevFmtX51Side:
+            case DevFmtX51Rear:
                 OutputType.dwChannelMask = SPEAKER_FRONT_LEFT |
                                            SPEAKER_FRONT_RIGHT |
                                            SPEAKER_FRONT_CENTER |
                                            SPEAKER_LOW_FREQUENCY |
-                                           SPEAKER_SIDE_LEFT |
-                                           SPEAKER_SIDE_RIGHT;
+                                           SPEAKER_BACK_LEFT |
+                                           SPEAKER_BACK_RIGHT;
                 break;
             case DevFmtX61:
                 OutputType.dwChannelMask = SPEAKER_FRONT_LEFT |
@@ -513,7 +527,7 @@ static ALCboolean ALCdsoundPlayback_reset(ALCdsoundPlayback *self)
 retry_open:
         hr = S_OK;
         OutputType.Format.wFormatTag = WAVE_FORMAT_PCM;
-        OutputType.Format.nChannels = ChannelsFromDevFmt(device->FmtChans);
+        OutputType.Format.nChannels = ChannelsFromDevFmt(device->FmtChans, device->AmbiOrder);
         OutputType.Format.wBitsPerSample = BytesFromDevFmt(device->FmtType) * 8;
         OutputType.Format.nBlockAlign = OutputType.Format.nChannels*OutputType.Format.wBitsPerSample/8;
         OutputType.Format.nSamplesPerSec = device->Frequency;
@@ -641,7 +655,8 @@ typedef struct ALCdsoundCapture {
     IDirectSoundCaptureBuffer *DSCbuffer;
     DWORD BufferBytes;
     DWORD Cursor;
-    RingBuffer *Ring;
+
+    ll_ringbuffer_t *Ring;
 } ALCdsoundCapture;
 
 static void ALCdsoundCapture_Construct(ALCdsoundCapture *self, ALCdevice *device);
@@ -653,7 +668,7 @@ static ALCboolean ALCdsoundCapture_start(ALCdsoundCapture *self);
 static void ALCdsoundCapture_stop(ALCdsoundCapture *self);
 static ALCenum ALCdsoundCapture_captureSamples(ALCdsoundCapture *self, ALCvoid *buffer, ALCuint samples);
 static ALCuint ALCdsoundCapture_availableSamples(ALCdsoundCapture *self);
-static DECLARE_FORWARD(ALCdsoundCapture, ALCbackend, ALint64, getLatency)
+static DECLARE_FORWARD(ALCdsoundCapture, ALCbackend, ClockLatency, getClockLatency)
 static DECLARE_FORWARD(ALCdsoundCapture, ALCbackend, void, lock)
 static DECLARE_FORWARD(ALCdsoundCapture, ALCbackend, void, unlock)
 DECLARE_DEFAULT_ALLOCATORS(ALCdsoundCapture)
@@ -689,17 +704,17 @@ static ALCenum ALCdsoundCapture_open(ALCdsoundCapture *self, const ALCchar *devi
 
     if(!deviceName && VECTOR_SIZE(CaptureDevices) > 0)
     {
-        deviceName = al_string_get_cstr(VECTOR_FRONT(CaptureDevices).name);
+        deviceName = alstr_get_cstr(VECTOR_FRONT(CaptureDevices).name);
         guid = &VECTOR_FRONT(CaptureDevices).guid;
     }
     else
     {
         const DevMap *iter;
 
-#define MATCH_NAME(i)  (al_string_cmp_cstr((i)->name, deviceName) == 0)
+#define MATCH_NAME(i)  (alstr_cmp_cstr((i)->name, deviceName) == 0)
         VECTOR_FIND_IF(iter, const DevMap, CaptureDevices, MATCH_NAME);
 #undef MATCH_NAME
-        if(iter == VECTOR_ITER_END(CaptureDevices))
+        if(iter == VECTOR_END(CaptureDevices))
             return ALC_INVALID_VALUE;
         guid = &iter->guid;
     }
@@ -719,97 +734,98 @@ static ALCenum ALCdsoundCapture_open(ALCdsoundCapture *self, const ALCchar *devi
             break;
     }
 
+    memset(&InputType, 0, sizeof(InputType));
+    switch(device->FmtChans)
+    {
+        case DevFmtMono:
+            InputType.dwChannelMask = SPEAKER_FRONT_CENTER;
+            break;
+        case DevFmtStereo:
+            InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
+                                      SPEAKER_FRONT_RIGHT;
+            break;
+        case DevFmtQuad:
+            InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
+                                      SPEAKER_FRONT_RIGHT |
+                                      SPEAKER_BACK_LEFT |
+                                      SPEAKER_BACK_RIGHT;
+            break;
+        case DevFmtX51:
+            InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
+                                      SPEAKER_FRONT_RIGHT |
+                                      SPEAKER_FRONT_CENTER |
+                                      SPEAKER_LOW_FREQUENCY |
+                                      SPEAKER_SIDE_LEFT |
+                                      SPEAKER_SIDE_RIGHT;
+            break;
+        case DevFmtX51Rear:
+            InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
+                                      SPEAKER_FRONT_RIGHT |
+                                      SPEAKER_FRONT_CENTER |
+                                      SPEAKER_LOW_FREQUENCY |
+                                      SPEAKER_BACK_LEFT |
+                                      SPEAKER_BACK_RIGHT;
+            break;
+        case DevFmtX61:
+            InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
+                                      SPEAKER_FRONT_RIGHT |
+                                      SPEAKER_FRONT_CENTER |
+                                      SPEAKER_LOW_FREQUENCY |
+                                      SPEAKER_BACK_CENTER |
+                                      SPEAKER_SIDE_LEFT |
+                                      SPEAKER_SIDE_RIGHT;
+            break;
+        case DevFmtX71:
+            InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
+                                      SPEAKER_FRONT_RIGHT |
+                                      SPEAKER_FRONT_CENTER |
+                                      SPEAKER_LOW_FREQUENCY |
+                                      SPEAKER_BACK_LEFT |
+                                      SPEAKER_BACK_RIGHT |
+                                      SPEAKER_SIDE_LEFT |
+                                      SPEAKER_SIDE_RIGHT;
+            break;
+        case DevFmtAmbi3D:
+            WARN("%s capture not supported\n", DevFmtChannelsString(device->FmtChans));
+            return ALC_INVALID_ENUM;
+    }
+
+    InputType.Format.wFormatTag = WAVE_FORMAT_PCM;
+    InputType.Format.nChannels = ChannelsFromDevFmt(device->FmtChans, device->AmbiOrder);
+    InputType.Format.wBitsPerSample = BytesFromDevFmt(device->FmtType) * 8;
+    InputType.Format.nBlockAlign = InputType.Format.nChannels*InputType.Format.wBitsPerSample/8;
+    InputType.Format.nSamplesPerSec = device->Frequency;
+    InputType.Format.nAvgBytesPerSec = InputType.Format.nSamplesPerSec*InputType.Format.nBlockAlign;
+    InputType.Format.cbSize = 0;
+    InputType.Samples.wValidBitsPerSample = InputType.Format.wBitsPerSample;
+    if(device->FmtType == DevFmtFloat)
+        InputType.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
+    else
+        InputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
+
+    if(InputType.Format.nChannels > 2 || device->FmtType == DevFmtFloat)
+    {
+        InputType.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+        InputType.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
+    }
+
+    samples = device->UpdateSize * device->NumUpdates;
+    samples = maxu(samples, 100 * device->Frequency / 1000);
+
+    memset(&DSCBDescription, 0, sizeof(DSCBUFFERDESC));
+    DSCBDescription.dwSize = sizeof(DSCBUFFERDESC);
+    DSCBDescription.dwFlags = 0;
+    DSCBDescription.dwBufferBytes = samples * InputType.Format.nBlockAlign;
+    DSCBDescription.lpwfxFormat = &InputType.Format;
+
     //DirectSoundCapture Init code
     hr = DirectSoundCaptureCreate(guid, &self->DSC, NULL);
     if(SUCCEEDED(hr))
-    {
-        memset(&InputType, 0, sizeof(InputType));
-
-        switch(device->FmtChans)
-        {
-            case DevFmtMono:
-                InputType.dwChannelMask = SPEAKER_FRONT_CENTER;
-                break;
-            case DevFmtStereo:
-                InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
-                                          SPEAKER_FRONT_RIGHT;
-                break;
-            case DevFmtQuad:
-                InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
-                                          SPEAKER_FRONT_RIGHT |
-                                          SPEAKER_BACK_LEFT |
-                                          SPEAKER_BACK_RIGHT;
-                break;
-            case DevFmtX51:
-                InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
-                                          SPEAKER_FRONT_RIGHT |
-                                          SPEAKER_FRONT_CENTER |
-                                          SPEAKER_LOW_FREQUENCY |
-                                          SPEAKER_BACK_LEFT |
-                                          SPEAKER_BACK_RIGHT;
-                break;
-            case DevFmtX51Side:
-                InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
-                                          SPEAKER_FRONT_RIGHT |
-                                          SPEAKER_FRONT_CENTER |
-                                          SPEAKER_LOW_FREQUENCY |
-                                          SPEAKER_SIDE_LEFT |
-                                          SPEAKER_SIDE_RIGHT;
-                break;
-            case DevFmtX61:
-                InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
-                                          SPEAKER_FRONT_RIGHT |
-                                          SPEAKER_FRONT_CENTER |
-                                          SPEAKER_LOW_FREQUENCY |
-                                          SPEAKER_BACK_CENTER |
-                                          SPEAKER_SIDE_LEFT |
-                                          SPEAKER_SIDE_RIGHT;
-                break;
-            case DevFmtX71:
-                InputType.dwChannelMask = SPEAKER_FRONT_LEFT |
-                                          SPEAKER_FRONT_RIGHT |
-                                          SPEAKER_FRONT_CENTER |
-                                          SPEAKER_LOW_FREQUENCY |
-                                          SPEAKER_BACK_LEFT |
-                                          SPEAKER_BACK_RIGHT |
-                                          SPEAKER_SIDE_LEFT |
-                                          SPEAKER_SIDE_RIGHT;
-                break;
-        }
-
-        InputType.Format.wFormatTag = WAVE_FORMAT_PCM;
-        InputType.Format.nChannels = ChannelsFromDevFmt(device->FmtChans);
-        InputType.Format.wBitsPerSample = BytesFromDevFmt(device->FmtType) * 8;
-        InputType.Format.nBlockAlign = InputType.Format.nChannels*InputType.Format.wBitsPerSample/8;
-        InputType.Format.nSamplesPerSec = device->Frequency;
-        InputType.Format.nAvgBytesPerSec = InputType.Format.nSamplesPerSec*InputType.Format.nBlockAlign;
-        InputType.Format.cbSize = 0;
-
-        if(InputType.Format.nChannels > 2 || device->FmtType == DevFmtFloat)
-        {
-            InputType.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
-            InputType.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
-            InputType.Samples.wValidBitsPerSample = InputType.Format.wBitsPerSample;
-            if(device->FmtType == DevFmtFloat)
-                InputType.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
-            else
-                InputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
-        }
-
-        samples = device->UpdateSize * device->NumUpdates;
-        samples = maxu(samples, 100 * device->Frequency / 1000);
-
-        memset(&DSCBDescription, 0, sizeof(DSCBUFFERDESC));
-        DSCBDescription.dwSize = sizeof(DSCBUFFERDESC);
-        DSCBDescription.dwFlags = 0;
-        DSCBDescription.dwBufferBytes = samples * InputType.Format.nBlockAlign;
-        DSCBDescription.lpwfxFormat = &InputType.Format;
-
         hr = IDirectSoundCapture_CreateCaptureBuffer(self->DSC, &DSCBDescription, &self->DSCbuffer, NULL);
-    }
     if(SUCCEEDED(hr))
     {
-         self->Ring = CreateRingBuffer(InputType.Format.nBlockAlign, device->UpdateSize * device->NumUpdates);
+         self->Ring = ll_ringbuffer_create(device->UpdateSize*device->NumUpdates + 1,
+                                           InputType.Format.nBlockAlign);
          if(self->Ring == NULL)
              hr = DSERR_OUTOFMEMORY;
     }
@@ -818,7 +834,7 @@ static ALCenum ALCdsoundCapture_open(ALCdsoundCapture *self, const ALCchar *devi
     {
         ERR("Device init failed: 0x%08lx\n", hr);
 
-        DestroyRingBuffer(self->Ring);
+        ll_ringbuffer_free(self->Ring);
         self->Ring = NULL;
         if(self->DSCbuffer != NULL)
             IDirectSoundCaptureBuffer_Release(self->DSCbuffer);
@@ -833,14 +849,14 @@ static ALCenum ALCdsoundCapture_open(ALCdsoundCapture *self, const ALCchar *devi
     self->BufferBytes = DSCBDescription.dwBufferBytes;
     SetDefaultWFXChannelOrder(device);
 
-    al_string_copy_cstr(&device->DeviceName, deviceName);
+    alstr_copy_cstr(&device->DeviceName, deviceName);
 
     return ALC_NO_ERROR;
 }
 
 static void ALCdsoundCapture_close(ALCdsoundCapture *self)
 {
-    DestroyRingBuffer(self->Ring);
+    ll_ringbuffer_free(self->Ring);
     self->Ring = NULL;
 
     if(self->DSCbuffer != NULL)
@@ -883,7 +899,7 @@ static void ALCdsoundCapture_stop(ALCdsoundCapture *self)
 
 static ALCenum ALCdsoundCapture_captureSamples(ALCdsoundCapture *self, ALCvoid *buffer, ALCuint samples)
 {
-    ReadRingBuffer(self->Ring, buffer, samples);
+    ll_ringbuffer_read(self->Ring, buffer, samples);
     return ALC_NO_ERROR;
 }
 
@@ -899,7 +915,7 @@ static ALCuint ALCdsoundCapture_availableSamples(ALCdsoundCapture *self)
     if(!device->Connected)
         goto done;
 
-    FrameSize = FrameSizeFromDevFmt(device->FmtChans, device->FmtType);
+    FrameSize = FrameSizeFromDevFmt(device->FmtChans, device->FmtType, device->AmbiOrder);
     BufferBytes = self->BufferBytes;
     LastCursor = self->Cursor;
 
@@ -915,9 +931,9 @@ static ALCuint ALCdsoundCapture_availableSamples(ALCdsoundCapture *self)
     }
     if(SUCCEEDED(hr))
     {
-        WriteRingBuffer(self->Ring, ReadPtr1, ReadCnt1/FrameSize);
+        ll_ringbuffer_write(self->Ring, ReadPtr1, ReadCnt1/FrameSize);
         if(ReadPtr2 != NULL)
-            WriteRingBuffer(self->Ring, ReadPtr2, ReadCnt2/FrameSize);
+            ll_ringbuffer_write(self->Ring, ReadPtr2, ReadCnt2/FrameSize);
         hr = IDirectSoundCaptureBuffer_Unlock(self->DSCbuffer,
                                               ReadPtr1, ReadCnt1,
                                               ReadPtr2, ReadCnt2);
@@ -931,14 +947,14 @@ static ALCuint ALCdsoundCapture_availableSamples(ALCdsoundCapture *self)
     }
 
 done:
-    return RingBufferSize(self->Ring);
+    return ll_ringbuffer_read_space(self->Ring);
 }
 
 
 static inline void AppendAllDevicesList2(const DevMap *entry)
-{ AppendAllDevicesList(al_string_get_cstr(entry->name)); }
+{ AppendAllDevicesList(alstr_get_cstr(entry->name)); }
 static inline void AppendCaptureDeviceList2(const DevMap *entry)
-{ AppendCaptureDeviceList(al_string_get_cstr(entry->name)); }
+{ AppendCaptureDeviceList(alstr_get_cstr(entry->name)); }
 
 typedef struct ALCdsoundBackendFactory {
     DERIVE_FROM_TYPE(ALCbackendFactory);
@@ -1027,26 +1043,16 @@ static ALCbackend* ALCdsoundBackendFactory_createBackend(ALCdsoundBackendFactory
     if(type == ALCbackend_Playback)
     {
         ALCdsoundPlayback *backend;
-
-        backend = ALCdsoundPlayback_New(sizeof(*backend));
+        NEW_OBJ(backend, ALCdsoundPlayback)(device);
         if(!backend) return NULL;
-        memset(backend, 0, sizeof(*backend));
-
-        ALCdsoundPlayback_Construct(backend, device);
-
         return STATIC_CAST(ALCbackend, backend);
     }
 
     if(type == ALCbackend_Capture)
     {
         ALCdsoundCapture *backend;
-
-        backend = ALCdsoundCapture_New(sizeof(*backend));
+        NEW_OBJ(backend, ALCdsoundCapture)(device);
         if(!backend) return NULL;
-        memset(backend, 0, sizeof(*backend));
-
-        ALCdsoundCapture_Construct(backend, device);
-
         return STATIC_CAST(ALCbackend, backend);
     }
 

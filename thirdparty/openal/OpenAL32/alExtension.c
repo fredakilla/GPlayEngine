@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  *  License along with this library; if not, write to the
- *  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- *  Boston, MA  02111-1307, USA.
+ *  Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
@@ -36,20 +36,17 @@
 
 
 const struct EffectList EffectList[] = {
-    { "eaxreverb",  EAXREVERB,  "AL_EFFECT_EAXREVERB",      AL_EFFECT_EAXREVERB },
-    { "reverb",     REVERB,     "AL_EFFECT_REVERB",         AL_EFFECT_REVERB },
-#if 0
-    { "autowah",    AUTOWAH,    "AL_EFFECT_AUTOWAH",        AL_EFFECT_AUTOWAH },
-#endif
-    { "chorus",     CHORUS,     "AL_EFFECT_CHORUS",         AL_EFFECT_CHORUS },
-    { "compressor", COMPRESSOR, "AL_EFFECT_COMPRESSOR",     AL_EFFECT_COMPRESSOR },
-    { "distortion", DISTORTION, "AL_EFFECT_DISTORTION",     AL_EFFECT_DISTORTION },
-    { "echo",       ECHO,       "AL_EFFECT_ECHO",           AL_EFFECT_ECHO },
-    { "equalizer",  EQUALIZER,  "AL_EFFECT_EQUALIZER",      AL_EFFECT_EQUALIZER },
-    { "flanger",    FLANGER,    "AL_EFFECT_FLANGER",        AL_EFFECT_FLANGER },
-    { "modulator",  MODULATOR,  "AL_EFFECT_RING_MODULATOR", AL_EFFECT_RING_MODULATOR },
-    { "dedicated",  DEDICATED,  "AL_EFFECT_DEDICATED_LOW_FREQUENCY_EFFECT", AL_EFFECT_DEDICATED_LOW_FREQUENCY_EFFECT },
-    { "dedicated",  DEDICATED,  "AL_EFFECT_DEDICATED_DIALOGUE", AL_EFFECT_DEDICATED_DIALOGUE },
+    { "eaxreverb",  AL__EAXREVERB,  "AL_EFFECT_EAXREVERB",      AL_EFFECT_EAXREVERB },
+    { "reverb",     AL__REVERB,     "AL_EFFECT_REVERB",         AL_EFFECT_REVERB },
+    { "chorus",     AL__CHORUS,     "AL_EFFECT_CHORUS",         AL_EFFECT_CHORUS },
+    { "compressor", AL__COMPRESSOR, "AL_EFFECT_COMPRESSOR",     AL_EFFECT_COMPRESSOR },
+    { "distortion", AL__DISTORTION, "AL_EFFECT_DISTORTION",     AL_EFFECT_DISTORTION },
+    { "echo",       AL__ECHO,       "AL_EFFECT_ECHO",           AL_EFFECT_ECHO },
+    { "equalizer",  AL__EQUALIZER,  "AL_EFFECT_EQUALIZER",      AL_EFFECT_EQUALIZER },
+    { "flanger",    AL__FLANGER,    "AL_EFFECT_FLANGER",        AL_EFFECT_FLANGER },
+    { "modulator",  AL__MODULATOR,  "AL_EFFECT_RING_MODULATOR", AL_EFFECT_RING_MODULATOR },
+    { "dedicated",  AL__DEDICATED,  "AL_EFFECT_DEDICATED_LOW_FREQUENCY_EFFECT", AL_EFFECT_DEDICATED_LOW_FREQUENCY_EFFECT },
+    { "dedicated",  AL__DEDICATED,  "AL_EFFECT_DEDICATED_DIALOGUE", AL_EFFECT_DEDICATED_DIALOGUE },
     { NULL, 0, NULL, (ALenum)0 }
 };
 

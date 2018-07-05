@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  *  License along with this library; if not, write to the
- *  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- *  Boston, MA  02111-1307, USA.
+ *  Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
@@ -33,78 +33,55 @@
 typedef struct ALmodulatorState {
     DERIVE_FROM_TYPE(ALeffectState);
 
-    enum {
-        SINUSOID,
-        SAWTOOTH,
-        SQUARE
-    } Waveform;
+    void (*Process)(ALfloat*, const ALfloat*, ALsizei, const ALsizei, ALsizei);
 
-    ALuint index;
-    ALuint step;
+    ALsizei index;
+    ALsizei step;
 
-    ALfloat Gain[MaxChannels];
+    ALfloat Gain[MAX_EFFECT_CHANNELS][MAX_OUTPUT_CHANNELS];
 
-    ALfilterState Filter;
+    ALfilterState Filter[MAX_EFFECT_CHANNELS];
 } ALmodulatorState;
+
+static ALvoid ALmodulatorState_Destruct(ALmodulatorState *state);
+static ALboolean ALmodulatorState_deviceUpdate(ALmodulatorState *state, ALCdevice *device);
+static ALvoid ALmodulatorState_update(ALmodulatorState *state, const ALCdevice *Device, const ALeffectslot *Slot, const ALeffectProps *props);
+static ALvoid ALmodulatorState_process(ALmodulatorState *state, ALsizei SamplesToDo, const ALfloat (*restrict SamplesIn)[BUFFERSIZE], ALfloat (*restrict SamplesOut)[BUFFERSIZE], ALsizei NumChannels);
+DECLARE_DEFAULT_ALLOCATORS(ALmodulatorState)
+
+DEFINE_ALEFFECTSTATE_VTABLE(ALmodulatorState);
+
 
 #define WAVEFORM_FRACBITS  24
 #define WAVEFORM_FRACONE   (1<<WAVEFORM_FRACBITS)
 #define WAVEFORM_FRACMASK  (WAVEFORM_FRACONE-1)
 
-static inline ALfloat Sin(ALuint index)
+static inline ALfloat Sin(ALsizei index)
 {
-    return sinf(index*(F_2PI/WAVEFORM_FRACONE) - F_PI)*0.5f + 0.5f;
+    return sinf(index*(F_TAU/WAVEFORM_FRACONE) - F_PI)*0.5f + 0.5f;
 }
 
-static inline ALfloat Saw(ALuint index)
+static inline ALfloat Saw(ALsizei index)
 {
     return (ALfloat)index / WAVEFORM_FRACONE;
 }
 
-static inline ALfloat Square(ALuint index)
+static inline ALfloat Square(ALsizei index)
 {
     return (ALfloat)((index >> (WAVEFORM_FRACBITS - 1)) & 1);
 }
 
 #define DECL_TEMPLATE(func)                                                   \
-static void Process##func(ALmodulatorState *state, ALuint SamplesToDo,        \
-  const ALfloat *restrict SamplesIn,                                          \
-  ALfloat (*restrict SamplesOut)[BUFFERSIZE])                                 \
+static void Modulate##func(ALfloat *restrict dst, const ALfloat *restrict src,\
+                           ALsizei index, const ALsizei step, ALsizei todo)   \
 {                                                                             \
-    const ALuint step = state->step;                                          \
-    ALuint index = state->index;                                              \
-    ALuint base;                                                              \
-                                                                              \
-    for(base = 0;base < SamplesToDo;)                                         \
+    ALsizei i;                                                                \
+    for(i = 0;i < todo;i++)                                                   \
     {                                                                         \
-        ALfloat temps[64];                                                    \
-        ALuint td = minu(SamplesToDo-base, 64);                               \
-        ALuint i, k;                                                          \
-                                                                              \
-        for(i = 0;i < td;i++)                                                 \
-        {                                                                     \
-            ALfloat samp;                                                     \
-            samp = SamplesIn[base+i];                                         \
-            samp = ALfilterState_processSingle(&state->Filter, samp);         \
-                                                                              \
-            index += step;                                                    \
-            index &= WAVEFORM_FRACMASK;                                       \
-            temps[i] = samp * func(index);                                    \
-        }                                                                     \
-                                                                              \
-        for(k = 0;k < MaxChannels;k++)                                        \
-        {                                                                     \
-            ALfloat gain = state->Gain[k];                                    \
-            if(!(gain > GAIN_SILENCE_THRESHOLD))                              \
-                continue;                                                     \
-                                                                              \
-            for(i = 0;i < td;i++)                                             \
-                SamplesOut[k][base+i] += gain * temps[i];                     \
-        }                                                                     \
-                                                                              \
-        base += td;                                                           \
+        index += step;                                                        \
+        index &= WAVEFORM_FRACMASK;                                           \
+        dst[i] = src[i] * func(index);                                        \
     }                                                                         \
-    state->index = index;                                                     \
 }
 
 DECL_TEMPLATE(Sin)
@@ -114,8 +91,23 @@ DECL_TEMPLATE(Square)
 #undef DECL_TEMPLATE
 
 
-static ALvoid ALmodulatorState_Destruct(ALmodulatorState *UNUSED(state))
+static void ALmodulatorState_Construct(ALmodulatorState *state)
 {
+    ALuint i;
+
+    ALeffectState_Construct(STATIC_CAST(ALeffectState, state));
+    SET_VTABLE2(ALmodulatorState, ALeffectState, state);
+
+    state->index = 0;
+    state->step = 1;
+
+    for(i = 0;i < MAX_EFFECT_CHANNELS;i++)
+        ALfilterState_clear(&state->Filter[i]);
+}
+
+static ALvoid ALmodulatorState_Destruct(ALmodulatorState *state)
+{
+    ALeffectState_Destruct(STATIC_CAST(ALeffectState,state));
 }
 
 static ALboolean ALmodulatorState_deviceUpdate(ALmodulatorState *UNUSED(state), ALCdevice *UNUSED(device))
@@ -123,57 +115,79 @@ static ALboolean ALmodulatorState_deviceUpdate(ALmodulatorState *UNUSED(state), 
     return AL_TRUE;
 }
 
-static ALvoid ALmodulatorState_update(ALmodulatorState *state, ALCdevice *Device, const ALeffectslot *Slot)
+static ALvoid ALmodulatorState_update(ALmodulatorState *state, const ALCdevice *Device, const ALeffectslot *Slot, const ALeffectProps *props)
 {
-    ALfloat gain, cw, a;
+    ALfloat cw, a;
+    ALsizei i;
 
-    if(Slot->EffectProps.Modulator.Waveform == AL_RING_MODULATOR_SINUSOID)
-        state->Waveform = SINUSOID;
-    else if(Slot->EffectProps.Modulator.Waveform == AL_RING_MODULATOR_SAWTOOTH)
-        state->Waveform = SAWTOOTH;
-    else if(Slot->EffectProps.Modulator.Waveform == AL_RING_MODULATOR_SQUARE)
-        state->Waveform = SQUARE;
+    if(props->Modulator.Waveform == AL_RING_MODULATOR_SINUSOID)
+        state->Process = ModulateSin;
+    else if(props->Modulator.Waveform == AL_RING_MODULATOR_SAWTOOTH)
+        state->Process = ModulateSaw;
+    else /*if(Slot->Params.EffectProps.Modulator.Waveform == AL_RING_MODULATOR_SQUARE)*/
+        state->Process = ModulateSquare;
 
-    state->step = fastf2u(Slot->EffectProps.Modulator.Frequency*WAVEFORM_FRACONE /
+    state->step = fastf2i(props->Modulator.Frequency*WAVEFORM_FRACONE /
                           Device->Frequency);
     if(state->step == 0) state->step = 1;
 
     /* Custom filter coeffs, which match the old version instead of a low-shelf. */
-    cw = cosf(F_2PI * Slot->EffectProps.Modulator.HighPassCutoff / Device->Frequency);
+    cw = cosf(F_TAU * props->Modulator.HighPassCutoff / Device->Frequency);
     a = (2.0f-cw) - sqrtf(powf(2.0f-cw, 2.0f) - 1.0f);
 
-    state->Filter.b[0] = a;
-    state->Filter.b[1] = -a;
-    state->Filter.b[2] = 0.0f;
-    state->Filter.a[0] = 1.0f;
-    state->Filter.a[1] = -a;
-    state->Filter.a[2] = 0.0f;
-
-    gain = sqrtf(1.0f/Device->NumChan) * Slot->Gain;
-    SetGains(Device, gain, state->Gain);
-}
-
-static ALvoid ALmodulatorState_process(ALmodulatorState *state, ALuint SamplesToDo, const ALfloat *restrict SamplesIn, ALfloat (*restrict SamplesOut)[BUFFERSIZE])
-{
-    switch(state->Waveform)
+    for(i = 0;i < MAX_EFFECT_CHANNELS;i++)
     {
-        case SINUSOID:
-            ProcessSin(state, SamplesToDo, SamplesIn, SamplesOut);
-            break;
-
-        case SAWTOOTH:
-            ProcessSaw(state, SamplesToDo, SamplesIn, SamplesOut);
-            break;
-
-        case SQUARE:
-            ProcessSquare(state, SamplesToDo, SamplesIn, SamplesOut);
-            break;
+        state->Filter[i].b0 = a;
+        state->Filter[i].b1 = -a;
+        state->Filter[i].b2 = 0.0f;
+        state->Filter[i].a1 = -a;
+        state->Filter[i].a2 = 0.0f;
     }
+
+    STATIC_CAST(ALeffectState,state)->OutBuffer = Device->FOAOut.Buffer;
+    STATIC_CAST(ALeffectState,state)->OutChannels = Device->FOAOut.NumChannels;
+    for(i = 0;i < MAX_EFFECT_CHANNELS;i++)
+        ComputeFirstOrderGains(Device->FOAOut, IdentityMatrixf.m[i],
+                               Slot->Params.Gain, state->Gain[i]);
 }
 
-DECLARE_DEFAULT_ALLOCATORS(ALmodulatorState)
+static ALvoid ALmodulatorState_process(ALmodulatorState *state, ALsizei SamplesToDo, const ALfloat (*restrict SamplesIn)[BUFFERSIZE], ALfloat (*restrict SamplesOut)[BUFFERSIZE], ALsizei NumChannels)
+{
+    const ALsizei step = state->step;
+    ALsizei index = state->index;
+    ALsizei base;
 
-DEFINE_ALEFFECTSTATE_VTABLE(ALmodulatorState);
+    for(base = 0;base < SamplesToDo;)
+    {
+        ALfloat temps[2][128];
+        ALsizei td = mini(128, SamplesToDo-base);
+        ALsizei i, j, k;
+
+        for(j = 0;j < MAX_EFFECT_CHANNELS;j++)
+        {
+            ALfilterState_process(&state->Filter[j], temps[0], &SamplesIn[j][base], td);
+            state->Process(temps[1], temps[0], index, step, td);
+
+            for(k = 0;k < NumChannels;k++)
+            {
+                ALfloat gain = state->Gain[j][k];
+                if(!(fabsf(gain) > GAIN_SILENCE_THRESHOLD))
+                    continue;
+
+                for(i = 0;i < td;i++)
+                    SamplesOut[k][base+i] += gain * temps[1][i];
+            }
+        }
+
+        for(i = 0;i < td;i++)
+        {
+            index += step;
+            index &= WAVEFORM_FRACMASK;
+        }
+        base += td;
+    }
+    state->index = index;
+}
 
 
 typedef struct ALmodulatorStateFactory {
@@ -184,14 +198,8 @@ static ALeffectState *ALmodulatorStateFactory_create(ALmodulatorStateFactory *UN
 {
     ALmodulatorState *state;
 
-    state = ALmodulatorState_New(sizeof(*state));
+    NEW_OBJ0(state, ALmodulatorState)();
     if(!state) return NULL;
-    SET_VTABLE2(ALmodulatorState, ALeffectState, state);
-
-    state->index = 0;
-    state->step = 1;
-
-    ALfilterState_clear(&state->Filter);
 
     return STATIC_CAST(ALeffectState, state);
 }

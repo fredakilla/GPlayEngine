@@ -174,14 +174,6 @@ typedef ALubyte ALmulaw;
 typedef ALubyte ALalaw;
 typedef ALubyte ALima4;
 typedef ALubyte ALmsadpcm;
-typedef struct {
-    ALbyte b[3];
-} ALbyte3;
-static_assert(sizeof(ALbyte3)==sizeof(ALbyte[3]), "ALbyte3 size is not 3");
-typedef struct {
-    ALubyte b[3];
-} ALubyte3;
-static_assert(sizeof(ALubyte3)==sizeof(ALubyte[3]), "ALubyte3 size is not 3");
 
 static inline ALshort DecodeMuLaw(ALmulaw val)
 { return muLawDecompressionTable[val]; }
@@ -498,320 +490,128 @@ static void EncodeMSADPCMBlock(ALmsadpcm *dst, const ALshort *src, ALint *sample
 }
 
 
-static inline ALint DecodeByte3(ALbyte3 val)
-{
-    if(IS_LITTLE_ENDIAN)
-        return (val.b[2]<<16) | (((ALubyte)val.b[1])<<8) | ((ALubyte)val.b[0]);
-    return (val.b[0]<<16) | (((ALubyte)val.b[1])<<8) | ((ALubyte)val.b[2]);
-}
+/* Define same-type pass-through sample conversion functions (excludes ADPCM,
+ * which are block-based). */
+#define DECL_TEMPLATE(T) \
+static inline T Conv_##T##_##T(T val) { return val; }
 
-static inline ALbyte3 EncodeByte3(ALint val)
-{
-    if(IS_LITTLE_ENDIAN)
-    {
-        ALbyte3 ret = {{ val, val>>8, val>>16 }};
-        return ret;
-    }
-    else
-    {
-        ALbyte3 ret = {{ val>>16, val>>8, val }};
-        return ret;
-    }
-}
+DECL_TEMPLATE(ALbyte);
+DECL_TEMPLATE(ALubyte);
+DECL_TEMPLATE(ALshort);
+DECL_TEMPLATE(ALushort);
+DECL_TEMPLATE(ALint);
+DECL_TEMPLATE(ALuint);
+DECL_TEMPLATE(ALalaw);
+DECL_TEMPLATE(ALmulaw);
 
-static inline ALint DecodeUByte3(ALubyte3 val)
-{
-    if(IS_LITTLE_ENDIAN)
-        return (val.b[2]<<16) | (val.b[1]<<8) | (val.b[0]);
-    return (val.b[0]<<16) | (val.b[1]<<8) | val.b[2];
-}
-
-static inline ALubyte3 EncodeUByte3(ALint val)
-{
-    if(IS_LITTLE_ENDIAN)
-    {
-        ALubyte3 ret = {{ val, val>>8, val>>16 }};
-        return ret;
-    }
-    else
-    {
-        ALubyte3 ret = {{ val>>16, val>>8, val }};
-        return ret;
-    }
-}
-
-
-static inline ALbyte Conv_ALbyte_ALbyte(ALbyte val)
-{ return val; }
-static inline ALbyte Conv_ALbyte_ALubyte(ALubyte val)
-{ return val-128; }
-static inline ALbyte Conv_ALbyte_ALshort(ALshort val)
-{ return val>>8; }
-static inline ALbyte Conv_ALbyte_ALushort(ALushort val)
-{ return (val>>8)-128; }
-static inline ALbyte Conv_ALbyte_ALint(ALint val)
-{ return val>>24; }
-static inline ALbyte Conv_ALbyte_ALuint(ALuint val)
-{ return (val>>24)-128; }
-static inline ALbyte Conv_ALbyte_ALfloat(ALfloat val)
-{
-    if(val > 1.0f) return 127;
-    if(val < -1.0f) return -128;
-    return (ALint)(val * 127.0f);
-}
-static inline ALbyte Conv_ALbyte_ALdouble(ALdouble val)
-{
-    if(val > 1.0) return 127;
-    if(val < -1.0) return -128;
-    return (ALint)(val * 127.0);
-}
-static inline ALbyte Conv_ALbyte_ALmulaw(ALmulaw val)
-{ return Conv_ALbyte_ALshort(DecodeMuLaw(val)); }
-static inline ALbyte Conv_ALbyte_ALalaw(ALalaw val)
-{ return Conv_ALbyte_ALshort(DecodeALaw(val)); }
-static inline ALbyte Conv_ALbyte_ALbyte3(ALbyte3 val)
-{ return DecodeByte3(val)>>16; }
-static inline ALbyte Conv_ALbyte_ALubyte3(ALubyte3 val)
-{ return (DecodeUByte3(val)>>16)-128; }
-
-static inline ALubyte Conv_ALubyte_ALbyte(ALbyte val)
-{ return val+128; }
-static inline ALubyte Conv_ALubyte_ALubyte(ALubyte val)
-{ return val; }
-static inline ALubyte Conv_ALubyte_ALshort(ALshort val)
-{ return (val>>8)+128; }
-static inline ALubyte Conv_ALubyte_ALushort(ALushort val)
-{ return val>>8; }
-static inline ALubyte Conv_ALubyte_ALint(ALint val)
-{ return (val>>24)+128; }
-static inline ALubyte Conv_ALubyte_ALuint(ALuint val)
-{ return val>>24; }
-static inline ALubyte Conv_ALubyte_ALfloat(ALfloat val)
-{
-    if(val > 1.0f) return 255;
-    if(val < -1.0f) return 0;
-    return (ALint)(val * 127.0f) + 128;
-}
-static inline ALubyte Conv_ALubyte_ALdouble(ALdouble val)
-{
-    if(val > 1.0) return 255;
-    if(val < -1.0) return 0;
-    return (ALint)(val * 127.0) + 128;
-}
-static inline ALubyte Conv_ALubyte_ALmulaw(ALmulaw val)
-{ return Conv_ALubyte_ALshort(DecodeMuLaw(val)); }
-static inline ALubyte Conv_ALubyte_ALalaw(ALalaw val)
-{ return Conv_ALubyte_ALshort(DecodeALaw(val)); }
-static inline ALubyte Conv_ALubyte_ALbyte3(ALbyte3 val)
-{ return (DecodeByte3(val)>>16)+128; }
-static inline ALubyte Conv_ALubyte_ALubyte3(ALubyte3 val)
-{ return DecodeUByte3(val)>>16; }
-
-static inline ALshort Conv_ALshort_ALbyte(ALbyte val)
-{ return val<<8; }
-static inline ALshort Conv_ALshort_ALubyte(ALubyte val)
-{ return (val-128)<<8; }
-static inline ALshort Conv_ALshort_ALshort(ALshort val)
-{ return val; }
-static inline ALshort Conv_ALshort_ALushort(ALushort val)
-{ return val-32768; }
-static inline ALshort Conv_ALshort_ALint(ALint val)
-{ return val>>16; }
-static inline ALshort Conv_ALshort_ALuint(ALuint val)
-{ return (val>>16)-32768; }
-static inline ALshort Conv_ALshort_ALfloat(ALfloat val)
-{
-    if(val > 1.0f) return 32767;
-    if(val < -1.0f) return -32768;
-    return (ALint)(val * 32767.0f);
-}
-static inline ALshort Conv_ALshort_ALdouble(ALdouble val)
-{
-    if(val > 1.0) return 32767;
-    if(val < -1.0) return -32768;
-    return (ALint)(val * 32767.0);
-}
-static inline ALshort Conv_ALshort_ALmulaw(ALmulaw val)
-{ return Conv_ALshort_ALshort(DecodeMuLaw(val)); }
-static inline ALshort Conv_ALshort_ALalaw(ALalaw val)
-{ return Conv_ALshort_ALshort(DecodeALaw(val)); }
-static inline ALshort Conv_ALshort_ALbyte3(ALbyte3 val)
-{ return DecodeByte3(val)>>8; }
-static inline ALshort Conv_ALshort_ALubyte3(ALubyte3 val)
-{ return (DecodeUByte3(val)>>8)-32768; }
-
-static inline ALushort Conv_ALushort_ALbyte(ALbyte val)
-{ return (val+128)<<8; }
-static inline ALushort Conv_ALushort_ALubyte(ALubyte val)
-{ return val<<8; }
-static inline ALushort Conv_ALushort_ALshort(ALshort val)
-{ return val+32768; }
-static inline ALushort Conv_ALushort_ALushort(ALushort val)
-{ return val; }
-static inline ALushort Conv_ALushort_ALint(ALint val)
-{ return (val>>16)+32768; }
-static inline ALushort Conv_ALushort_ALuint(ALuint val)
-{ return val>>16; }
-static inline ALushort Conv_ALushort_ALfloat(ALfloat val)
-{
-    if(val > 1.0f) return 65535;
-    if(val < -1.0f) return 0;
-    return (ALint)(val * 32767.0f) + 32768;
-}
-static inline ALushort Conv_ALushort_ALdouble(ALdouble val)
-{
-    if(val > 1.0) return 65535;
-    if(val < -1.0) return 0;
-    return (ALint)(val * 32767.0) + 32768;
-}
-static inline ALushort Conv_ALushort_ALmulaw(ALmulaw val)
-{ return Conv_ALushort_ALshort(DecodeMuLaw(val)); }
-static inline ALushort Conv_ALushort_ALalaw(ALalaw val)
-{ return Conv_ALushort_ALshort(DecodeALaw(val)); }
-static inline ALushort Conv_ALushort_ALbyte3(ALbyte3 val)
-{ return (DecodeByte3(val)>>8)+32768; }
-static inline ALushort Conv_ALushort_ALubyte3(ALubyte3 val)
-{ return DecodeUByte3(val)>>8; }
-
-static inline ALint Conv_ALint_ALbyte(ALbyte val)
-{ return val<<24; }
-static inline ALint Conv_ALint_ALubyte(ALubyte val)
-{ return (val-128)<<24; }
-static inline ALint Conv_ALint_ALshort(ALshort val)
-{ return val<<16; }
-static inline ALint Conv_ALint_ALushort(ALushort val)
-{ return (val-32768)<<16; }
-static inline ALint Conv_ALint_ALint(ALint val)
-{ return val; }
-static inline ALint Conv_ALint_ALuint(ALuint val)
-{ return val-2147483648u; }
-static inline ALint Conv_ALint_ALfloat(ALfloat val)
-{
-    if(val > 1.0f) return 2147483647;
-    if(val < -1.0f) return -2147483647-1;
-    return (ALint)(val*16777215.0f) << 7;
-}
-static inline ALint Conv_ALint_ALdouble(ALdouble val)
-{
-    if(val > 1.0) return 2147483647;
-    if(val < -1.0) return -2147483647-1;
-    return (ALint)(val * 2147483647.0);
-}
-static inline ALint Conv_ALint_ALmulaw(ALmulaw val)
-{ return Conv_ALint_ALshort(DecodeMuLaw(val)); }
-static inline ALint Conv_ALint_ALalaw(ALalaw val)
-{ return Conv_ALint_ALshort(DecodeALaw(val)); }
-static inline ALint Conv_ALint_ALbyte3(ALbyte3 val)
-{ return DecodeByte3(val)<<8; }
-static inline ALint Conv_ALint_ALubyte3(ALubyte3 val)
-{ return (DecodeUByte3(val)-8388608)<<8; }
-
-static inline ALuint Conv_ALuint_ALbyte(ALbyte val)
-{ return (val+128)<<24; }
-static inline ALuint Conv_ALuint_ALubyte(ALubyte val)
-{ return val<<24; }
-static inline ALuint Conv_ALuint_ALshort(ALshort val)
-{ return (val+32768)<<16; }
-static inline ALuint Conv_ALuint_ALushort(ALushort val)
-{ return val<<16; }
-static inline ALuint Conv_ALuint_ALint(ALint val)
-{ return val+2147483648u; }
-static inline ALuint Conv_ALuint_ALuint(ALuint val)
-{ return val; }
-static inline ALuint Conv_ALuint_ALfloat(ALfloat val)
-{
-    if(val > 1.0f) return 4294967295u;
-    if(val < -1.0f) return 0;
-    return ((ALint)(val*16777215.0f)<<7) + 2147483648u;
-}
-static inline ALuint Conv_ALuint_ALdouble(ALdouble val)
-{
-    if(val > 1.0) return 4294967295u;
-    if(val < -1.0) return 0;
-    return (ALint)(val * 2147483647.0) + 2147483648u;
-}
-static inline ALuint Conv_ALuint_ALmulaw(ALmulaw val)
-{ return Conv_ALuint_ALshort(DecodeMuLaw(val)); }
-static inline ALuint Conv_ALuint_ALalaw(ALalaw val)
-{ return Conv_ALuint_ALshort(DecodeALaw(val)); }
-static inline ALuint Conv_ALuint_ALbyte3(ALbyte3 val)
-{ return (DecodeByte3(val)+8388608)<<8; }
-static inline ALuint Conv_ALuint_ALubyte3(ALubyte3 val)
-{ return DecodeUByte3(val)<<8; }
-
-static inline ALfloat Conv_ALfloat_ALbyte(ALbyte val)
-{ return val * (1.0f/127.0f); }
-static inline ALfloat Conv_ALfloat_ALubyte(ALubyte val)
-{ return (val-128) * (1.0f/127.0f); }
-static inline ALfloat Conv_ALfloat_ALshort(ALshort val)
-{ return val * (1.0f/32767.0f); }
-static inline ALfloat Conv_ALfloat_ALushort(ALushort val)
-{ return (val-32768) * (1.0f/32767.0f); }
-static inline ALfloat Conv_ALfloat_ALint(ALint val)
-{ return (ALfloat)(val>>7) * (1.0f/16777215.0f); }
-static inline ALfloat Conv_ALfloat_ALuint(ALuint val)
-{ return (ALfloat)((ALint)(val>>7)-16777216) * (1.0f/16777215.0f); }
+/* Slightly special handling for floats and doubles (converts NaN to 0, and
+ * allows float<->double pass-through).
+ */
 static inline ALfloat Conv_ALfloat_ALfloat(ALfloat val)
 { return (val==val) ? val : 0.0f; }
 static inline ALfloat Conv_ALfloat_ALdouble(ALdouble val)
 { return (val==val) ? (ALfloat)val : 0.0f; }
-static inline ALfloat Conv_ALfloat_ALmulaw(ALmulaw val)
-{ return Conv_ALfloat_ALshort(DecodeMuLaw(val)); }
-static inline ALfloat Conv_ALfloat_ALalaw(ALalaw val)
-{ return Conv_ALfloat_ALshort(DecodeALaw(val)); }
-static inline ALfloat Conv_ALfloat_ALbyte3(ALbyte3 val)
-{ return (ALfloat)(DecodeByte3(val) * (1.0/8388607.0)); }
-static inline ALfloat Conv_ALfloat_ALubyte3(ALubyte3 val)
-{ return (ALfloat)((DecodeUByte3(val)-8388608) * (1.0/8388607.0)); }
-
-static inline ALdouble Conv_ALdouble_ALbyte(ALbyte val)
-{ return val * (1.0/127.0); }
-static inline ALdouble Conv_ALdouble_ALubyte(ALubyte val)
-{ return (val-128) * (1.0/127.0); }
-static inline ALdouble Conv_ALdouble_ALshort(ALshort val)
-{ return val * (1.0/32767.0); }
-static inline ALdouble Conv_ALdouble_ALushort(ALushort val)
-{ return (val-32768) * (1.0/32767.0); }
-static inline ALdouble Conv_ALdouble_ALint(ALint val)
-{ return val * (1.0/2147483647.0); }
-static inline ALdouble Conv_ALdouble_ALuint(ALuint val)
-{ return (ALint)(val-2147483648u) * (1.0/2147483647.0); }
 static inline ALdouble Conv_ALdouble_ALfloat(ALfloat val)
-{ return (val==val) ? val : 0.0f; }
+{ return (val==val) ? (ALdouble)val : 0.0; }
 static inline ALdouble Conv_ALdouble_ALdouble(ALdouble val)
 { return (val==val) ? val : 0.0; }
-static inline ALdouble Conv_ALdouble_ALmulaw(ALmulaw val)
-{ return Conv_ALdouble_ALshort(DecodeMuLaw(val)); }
-static inline ALdouble Conv_ALdouble_ALalaw(ALalaw val)
-{ return Conv_ALdouble_ALshort(DecodeALaw(val)); }
-static inline ALdouble Conv_ALdouble_ALbyte3(ALbyte3 val)
-{ return DecodeByte3(val) * (1.0/8388607.0); }
-static inline ALdouble Conv_ALdouble_ALubyte3(ALubyte3 val)
-{ return (DecodeUByte3(val)-8388608) * (1.0/8388607.0); }
 
+#undef DECL_TEMPLATE
+
+/* Define alternate-sign functions. */
+#define DECL_TEMPLATE(T1, T2, O)                                  \
+static inline T1 Conv_##T1##_##T2(T2 val) { return (T1)val - O; } \
+static inline T2 Conv_##T2##_##T1(T1 val) { return (T2)val + O; }
+
+DECL_TEMPLATE(ALbyte, ALubyte, 128);
+DECL_TEMPLATE(ALshort, ALushort, 32768);
+DECL_TEMPLATE(ALint, ALuint, 2147483648u);
+
+#undef DECL_TEMPLATE
+
+/* Define int-type to int-type functions */
+#define DECL_TEMPLATE(T, ST, UT, SH)                                          \
+static inline T Conv_##T##_##ST(ST val){ return val >> SH; }                  \
+static inline T Conv_##T##_##UT(UT val){ return Conv_##ST##_##UT(val) >> SH; }\
+static inline ST Conv_##ST##_##T(T val){ return val << SH; }                  \
+static inline UT Conv_##UT##_##T(T val){ return Conv_##UT##_##ST(val << SH); }
+
+#define DECL_TEMPLATE2(T1, T2, SH)          \
+DECL_TEMPLATE(AL##T1, AL##T2, ALu##T2, SH)  \
+DECL_TEMPLATE(ALu##T1, ALu##T2, AL##T2, SH)
+
+DECL_TEMPLATE2(byte,  short, 8)
+DECL_TEMPLATE2(short, int,   16)
+DECL_TEMPLATE2(byte,  int,   24)
+
+#undef DECL_TEMPLATE2
+#undef DECL_TEMPLATE
+
+/* Define int-type to fp functions */
+#define DECL_TEMPLATE(T, ST, UT, OP)                                          \
+static inline T Conv_##T##_##ST(ST val) { return (T)val * OP; }               \
+static inline T Conv_##T##_##UT(UT val) { return (T)Conv_##ST##_##UT(val) * OP; }
+
+#define DECL_TEMPLATE2(T1, T2, OP)     \
+DECL_TEMPLATE(T1, AL##T2, ALu##T2, OP)
+
+DECL_TEMPLATE2(ALfloat, byte, (1.0f/128.0f))
+DECL_TEMPLATE2(ALdouble, byte, (1.0/128.0))
+DECL_TEMPLATE2(ALfloat, short, (1.0f/32768.0f))
+DECL_TEMPLATE2(ALdouble, short, (1.0/32768.0))
+DECL_TEMPLATE2(ALdouble, int, (1.0/2147483648.0))
+
+/* Special handling for int32 to float32, since it would overflow. */
+static inline ALfloat Conv_ALfloat_ALint(ALint val)
+{ return (ALfloat)(val>>7) * (1.0f/16777216.0f); }
+static inline ALfloat Conv_ALfloat_ALuint(ALuint val)
+{ return (ALfloat)(Conv_ALint_ALuint(val)>>7) * (1.0f/16777216.0f); }
+
+#undef DECL_TEMPLATE2
+#undef DECL_TEMPLATE
+
+/* Define fp to int-type functions */
+#define DECL_TEMPLATE(FT, T, smin, smax)        \
+static inline AL##T Conv_AL##T##_##FT(FT val)   \
+{                                               \
+    val *= (FT)smax + 1;                        \
+    if(val >= (FT)smax) return smax;            \
+    if(val <= (FT)smin) return smin;            \
+    return (AL##T)val;                          \
+}                                               \
+static inline ALu##T Conv_ALu##T##_##FT(FT val) \
+{ return Conv_ALu##T##_AL##T(Conv_AL##T##_##FT(val)); }
+
+DECL_TEMPLATE(ALfloat, byte, -128, 127)
+DECL_TEMPLATE(ALdouble, byte, -128, 127)
+DECL_TEMPLATE(ALfloat, short, -32768, 32767)
+DECL_TEMPLATE(ALdouble, short, -32768, 32767)
+DECL_TEMPLATE(ALdouble, int, -2147483647-1, 2147483647)
+
+/* Special handling for float32 to int32, since it would overflow. */
+static inline ALint Conv_ALint_ALfloat(ALfloat val)
+{
+    val *= 16777216.0f;
+    if(val >= 16777215.0f) return 0x7fffff80/*16777215 << 7*/;
+    if(val <= -16777216.0f) return 0x80000000/*-16777216 << 7*/;
+    return (ALint)val << 7;
+}
+static inline ALuint Conv_ALuint_ALfloat(ALfloat val)
+{ return Conv_ALuint_ALint(Conv_ALint_ALfloat(val)); }
+
+#undef DECL_TEMPLATE
+
+/* Define muLaw and aLaw functions (goes through short functions). */
 #define DECL_TEMPLATE(T)                                                      \
 static inline ALmulaw Conv_ALmulaw_##T(T val)                                 \
-{ return EncodeMuLaw(Conv_ALshort_##T(val)); }
-
-DECL_TEMPLATE(ALbyte)
-DECL_TEMPLATE(ALubyte)
-DECL_TEMPLATE(ALshort)
-DECL_TEMPLATE(ALushort)
-DECL_TEMPLATE(ALint)
-DECL_TEMPLATE(ALuint)
-DECL_TEMPLATE(ALfloat)
-DECL_TEMPLATE(ALdouble)
-static inline ALmulaw Conv_ALmulaw_ALmulaw(ALmulaw val)
-{ return val; }
-DECL_TEMPLATE(ALalaw)
-DECL_TEMPLATE(ALbyte3)
-DECL_TEMPLATE(ALubyte3)
-
-#undef DECL_TEMPLATE
-
-#define DECL_TEMPLATE(T)                                                      \
+{ return EncodeMuLaw(Conv_ALshort_##T(val)); }                                \
+static inline T Conv_##T##_ALmulaw(ALmulaw val)                               \
+{ return Conv_##T##_ALshort(DecodeMuLaw(val)); }                              \
+                                                                              \
 static inline ALalaw Conv_ALalaw_##T(T val)                                   \
-{ return EncodeALaw(Conv_ALshort_##T(val)); }
+{ return EncodeALaw(Conv_ALshort_##T(val)); }                                 \
+static inline T Conv_##T##_ALalaw(ALalaw val)                                 \
+{ return Conv_##T##_ALshort(DecodeALaw(val)); }
 
 DECL_TEMPLATE(ALbyte)
 DECL_TEMPLATE(ALubyte)
@@ -821,53 +621,14 @@ DECL_TEMPLATE(ALint)
 DECL_TEMPLATE(ALuint)
 DECL_TEMPLATE(ALfloat)
 DECL_TEMPLATE(ALdouble)
-DECL_TEMPLATE(ALmulaw)
-static inline ALalaw Conv_ALalaw_ALalaw(ALalaw val)
-{ return val; }
-DECL_TEMPLATE(ALbyte3)
-DECL_TEMPLATE(ALubyte3)
 
 #undef DECL_TEMPLATE
 
-#define DECL_TEMPLATE(T)                                                      \
-static inline ALbyte3 Conv_ALbyte3_##T(T val)                                 \
-{ return EncodeByte3(Conv_ALint_##T(val)>>8); }
-
-DECL_TEMPLATE(ALbyte)
-DECL_TEMPLATE(ALubyte)
-DECL_TEMPLATE(ALshort)
-DECL_TEMPLATE(ALushort)
-DECL_TEMPLATE(ALint)
-DECL_TEMPLATE(ALuint)
-DECL_TEMPLATE(ALfloat)
-DECL_TEMPLATE(ALdouble)
-DECL_TEMPLATE(ALmulaw)
-DECL_TEMPLATE(ALalaw)
-static inline ALbyte3 Conv_ALbyte3_ALbyte3(ALbyte3 val)
-{ return val; }
-DECL_TEMPLATE(ALubyte3)
-
-#undef DECL_TEMPLATE
-
-#define DECL_TEMPLATE(T)                                                      \
-static inline ALubyte3 Conv_ALubyte3_##T(T val)                               \
-{ return EncodeUByte3(Conv_ALuint_##T(val)>>8); }
-
-DECL_TEMPLATE(ALbyte)
-DECL_TEMPLATE(ALubyte)
-DECL_TEMPLATE(ALshort)
-DECL_TEMPLATE(ALushort)
-DECL_TEMPLATE(ALint)
-DECL_TEMPLATE(ALuint)
-DECL_TEMPLATE(ALfloat)
-DECL_TEMPLATE(ALdouble)
-DECL_TEMPLATE(ALmulaw)
-DECL_TEMPLATE(ALalaw)
-DECL_TEMPLATE(ALbyte3)
-static inline ALubyte3 Conv_ALubyte3_ALubyte3(ALubyte3 val)
-{ return val; }
-
-#undef DECL_TEMPLATE
+/* Define muLaw <-> aLaw functions. */
+static inline ALalaw Conv_ALalaw_ALmulaw(ALmulaw val)
+{ return EncodeALaw(DecodeMuLaw(val)); }
+static inline ALmulaw Conv_ALmulaw_ALalaw(ALalaw val)
+{ return EncodeMuLaw(DecodeALaw(val)); }
 
 
 #define DECL_TEMPLATE(T1, T2)                                                 \
@@ -892,9 +653,7 @@ DECL_TEMPLATE(T, ALuint)   \
 DECL_TEMPLATE(T, ALfloat)  \
 DECL_TEMPLATE(T, ALdouble) \
 DECL_TEMPLATE(T, ALmulaw)  \
-DECL_TEMPLATE(T, ALalaw)   \
-DECL_TEMPLATE(T, ALbyte3)  \
-DECL_TEMPLATE(T, ALubyte3)
+DECL_TEMPLATE(T, ALalaw)
 
 DECL_TEMPLATE2(ALbyte)
 DECL_TEMPLATE2(ALubyte)
@@ -906,8 +665,6 @@ DECL_TEMPLATE2(ALfloat)
 DECL_TEMPLATE2(ALdouble)
 DECL_TEMPLATE2(ALmulaw)
 DECL_TEMPLATE2(ALalaw)
-DECL_TEMPLATE2(ALbyte3)
-DECL_TEMPLATE2(ALubyte3)
 
 #undef DECL_TEMPLATE2
 #undef DECL_TEMPLATE
@@ -957,8 +714,6 @@ DECL_TEMPLATE(ALfloat)
 DECL_TEMPLATE(ALdouble)
 DECL_TEMPLATE(ALmulaw)
 DECL_TEMPLATE(ALalaw)
-DECL_TEMPLATE(ALbyte3)
-DECL_TEMPLATE(ALubyte3)
 
 #undef DECL_TEMPLATE
 
@@ -1010,8 +765,6 @@ DECL_TEMPLATE(ALfloat)
 DECL_TEMPLATE(ALdouble)
 DECL_TEMPLATE(ALmulaw)
 DECL_TEMPLATE(ALalaw)
-DECL_TEMPLATE(ALbyte3)
-DECL_TEMPLATE(ALubyte3)
 
 #undef DECL_TEMPLATE
 
@@ -1063,8 +816,6 @@ DECL_TEMPLATE(ALfloat)
 DECL_TEMPLATE(ALdouble)
 DECL_TEMPLATE(ALmulaw)
 DECL_TEMPLATE(ALalaw)
-DECL_TEMPLATE(ALbyte3)
-DECL_TEMPLATE(ALubyte3)
 
 #undef DECL_TEMPLATE
 
@@ -1114,8 +865,6 @@ DECL_TEMPLATE(ALfloat)
 DECL_TEMPLATE(ALdouble)
 DECL_TEMPLATE(ALmulaw)
 DECL_TEMPLATE(ALalaw)
-DECL_TEMPLATE(ALbyte3)
-DECL_TEMPLATE(ALubyte3)
 
 #undef DECL_TEMPLATE
 
@@ -1192,12 +941,6 @@ static void Convert_##T(T *dst, const ALvoid *src, enum UserFmtType srcType,  \
         case UserFmtMSADPCM:                                                  \
             Convert_##T##_ALmsadpcm(dst, src, numchans, len, align);          \
             break;                                                            \
-        case UserFmtByte3:                                                    \
-            Convert_##T##_ALbyte3(dst, src, numchans, len, align);            \
-            break;                                                            \
-        case UserFmtUByte3:                                                   \
-            Convert_##T##_ALubyte3(dst, src, numchans, len, align);           \
-            break;                                                            \
     }                                                                         \
 }
 
@@ -1213,8 +956,6 @@ DECL_TEMPLATE(ALmulaw)
 DECL_TEMPLATE(ALalaw)
 DECL_TEMPLATE(ALima4)
 DECL_TEMPLATE(ALmsadpcm)
-DECL_TEMPLATE(ALbyte3)
-DECL_TEMPLATE(ALubyte3)
 
 #undef DECL_TEMPLATE
 
@@ -1258,12 +999,6 @@ void ConvertData(ALvoid *dst, enum UserFmtType dstType, const ALvoid *src, enum 
             break;
         case UserFmtMSADPCM:
             Convert_ALmsadpcm(dst, src, srcType, numchans, len, align);
-            break;
-        case UserFmtByte3:
-            Convert_ALbyte3(dst, src, srcType, numchans, len, align);
-            break;
-        case UserFmtUByte3:
-            Convert_ALubyte3(dst, src, srcType, numchans, len, align);
             break;
     }
 }

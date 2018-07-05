@@ -4,25 +4,49 @@
 #include "AL/al.h"
 #include "AL/alc.h"
 
-enum DevFmtChannels;
+#include "alMain.h"
+#include "alstring.h"
+#include "atomic.h"
 
-struct Hrtf;
 
-#define HRIR_BITS        (7)
-#define HRIR_LENGTH      (1<<HRIR_BITS)
-#define HRIR_MASK        (HRIR_LENGTH-1)
-#define HRTFDELAY_BITS    (20)
-#define HRTFDELAY_FRACONE (1<<HRTFDELAY_BITS)
-#define HRTFDELAY_MASK    (HRTFDELAY_FRACONE-1)
+/* The maximum number of virtual speakers used to generate HRTF coefficients
+ * for decoding B-Format.
+ */
+#define HRTF_AMBI_MAX_CHANNELS 16
 
-const struct Hrtf *GetHrtf(enum DevFmtChannels chans, ALCuint srate);
-ALCboolean FindHrtfFormat(enum DevFmtChannels *chans, ALCuint *srate);
+
+struct HrtfEntry;
+
+struct Hrtf {
+    RefCount ref;
+
+    ALuint sampleRate;
+    ALsizei irSize;
+    ALubyte evCount;
+
+    const ALubyte *azCount;
+    const ALushort *evOffset;
+    const ALfloat (*coeffs)[2];
+    const ALubyte (*delays)[2];
+};
+
 
 void FreeHrtfs(void);
 
-ALuint GetHrtfIrSize(const struct Hrtf *Hrtf);
-ALfloat CalcHrtfDelta(ALfloat oldGain, ALfloat newGain, const ALfloat olddir[3], const ALfloat newdir[3]);
-void GetLerpedHrtfCoeffs(const struct Hrtf *Hrtf, ALfloat elevation, ALfloat azimuth, ALfloat dirfact, ALfloat gain, ALfloat (*coeffs)[2], ALuint *delays);
-ALuint GetMovingHrtfCoeffs(const struct Hrtf *Hrtf, ALfloat elevation, ALfloat azimuth, ALfloat dirfact, ALfloat gain, ALfloat delta, ALint counter, ALfloat (*coeffs)[2], ALuint *delays, ALfloat (*coeffStep)[2], ALint *delayStep);
+vector_EnumeratedHrtf EnumerateHrtf(const_al_string devname);
+void FreeHrtfList(vector_EnumeratedHrtf *list);
+struct Hrtf *GetLoadedHrtf(struct HrtfEntry *entry);
+void Hrtf_IncRef(struct Hrtf *hrtf);
+void Hrtf_DecRef(struct Hrtf *hrtf);
+
+void GetHrtfCoeffs(const struct Hrtf *Hrtf, ALfloat elevation, ALfloat azimuth, ALfloat spread, ALfloat (*coeffs)[2], ALsizei *delays);
+
+/**
+ * Produces HRTF filter coefficients for decoding B-Format, given a set of
+ * virtual speaker positions and HF/LF matrices for decoding to them. The
+ * returned coefficients are ordered and scaled according to the matrices.
+ * Returns the maximum impulse-response length of the generated coefficients.
+ */
+ALsizei BuildBFormatHrtf(const struct Hrtf *Hrtf, DirectHrtfState *state, ALsizei NumChannels, const ALfloat (*restrict AmbiPoints)[2], const ALfloat (*restrict AmbiMatrix)[2][MAX_AMBI_COEFFS], ALsizei AmbiCount);
 
 #endif /* ALC_HRTF_H */

@@ -2,17 +2,14 @@
 #define AL_API  ${EXPORT_DECL}
 #define ALC_API ${EXPORT_DECL}
 
-/* Define to the library version */
-#define ALSOFT_VERSION "${LIB_VERSION}"
-
-#ifdef IN_IDE_PARSER
-/* KDevelop's parser doesn't recognize the C99-standard restrict keyword, but
- * recent versions (at least 4.5.1) do recognize GCC's __restrict. */
-#define restrict __restrict
-#endif 
-
 /* Define any available alignment declaration */
 #define ALIGN(x) ${ALIGN_DECL}
+
+/* Define a built-in call indicating an aligned data pointer */
+#define ASSUME_ALIGNED(x, y) ${ASSUME_ALIGNED_DECL}
+
+/* Define if HRTF data is embedded in the library */
+#cmakedefine ALSOFT_EMBED_HRTF_DATA
 
 /* Define if we have the C11 aligned_alloc function */
 #cmakedefine HAVE_ALIGNED_ALLOC
@@ -26,13 +23,11 @@
 /* Define if we have SSE CPU extensions */
 #cmakedefine HAVE_SSE
 #cmakedefine HAVE_SSE2
+#cmakedefine HAVE_SSE3
 #cmakedefine HAVE_SSE4_1
 
 /* Define if we have ARM Neon CPU extensions */
 #cmakedefine HAVE_NEON
-
-/* Define if we have FluidSynth support */
-#cmakedefine HAVE_FLUIDSYNTH
 
 /* Define if we have the ALSA backend */
 #cmakedefine HAVE_ALSA
@@ -64,6 +59,9 @@
 /* Define if we have the PulseAudio backend */
 #cmakedefine HAVE_PULSEAUDIO
 
+/* Define if we have the JACK backend */
+#cmakedefine HAVE_JACK
+
 /* Define if we have the CoreAudio backend */
 #cmakedefine HAVE_COREAUDIO
 
@@ -79,8 +77,17 @@
 /* Define if we have the lrintf function */
 #cmakedefine HAVE_LRINTF
 
+/* Define if we have the modff function */
+#cmakedefine HAVE_MODFF
+
+/* Define if we have the log2f function */
+#cmakedefine HAVE_LOG2F
+
 /* Define if we have the strtof function */
 #cmakedefine HAVE_STRTOF
+
+/* Define if we have the strnlen function */
+#cmakedefine HAVE_STRNLEN
 
 /* Define if we have the __int64 type */
 #cmakedefine HAVE___INT64
@@ -136,11 +143,8 @@
 /* Define if we have malloc.h */
 #cmakedefine HAVE_MALLOC_H
 
-/* Define if we have ftw.h */
-#cmakedefine HAVE_FTW_H
-
-/* Define if we have io.h */
-#cmakedefine HAVE_IO_H
+/* Define if we have dirent.h */
+#cmakedefine HAVE_DIRENT_H
 
 /* Define if we have strings.h */
 #cmakedefine HAVE_STRINGS_H
@@ -181,17 +185,17 @@
 /* Define if we have __control87_2() */
 #cmakedefine HAVE___CONTROL87_2
 
-/* Define if we have ftw() */
-#cmakedefine HAVE_FTW
-
-/* Define if we have _wfindfirst() */
-#cmakedefine HAVE__WFINDFIRST
-
 /* Define if we have pthread_setschedparam() */
 #cmakedefine HAVE_PTHREAD_SETSCHEDPARAM
 
 /* Define if we have pthread_setname_np() */
 #cmakedefine HAVE_PTHREAD_SETNAME_NP
+
+/* Define if pthread_setname_np() only accepts one parameter */
+#cmakedefine PTHREAD_SETNAME_NP_ONE_PARAM
+
+/* Define if pthread_setname_np() accepts three parameters */
+#cmakedefine PTHREAD_SETNAME_NP_THREE_PARAMS
 
 /* Define if we have pthread_set_name_np() */
 #cmakedefine HAVE_PTHREAD_SET_NAME_NP

@@ -13,12 +13,35 @@ typedef struct ALnullState {
     DERIVE_FROM_TYPE(ALeffectState);
 } ALnullState;
 
+/* Forward-declare "virtual" functions to define the vtable with. */
+static ALvoid ALnullState_Destruct(ALnullState *state);
+static ALboolean ALnullState_deviceUpdate(ALnullState *state, ALCdevice *device);
+static ALvoid ALnullState_update(ALnullState *state, const ALCdevice *device, const ALeffectslot *slot, const ALeffectProps *props);
+static ALvoid ALnullState_process(ALnullState *state, ALsizei samplesToDo, const ALfloatBUFFERSIZE*restrict samplesIn, ALfloatBUFFERSIZE*restrict samplesOut, ALsizei NumChannels);
+static void *ALnullState_New(size_t size);
+static void ALnullState_Delete(void *ptr);
+
+/* Define the ALeffectState vtable for this type. */
+DEFINE_ALEFFECTSTATE_VTABLE(ALnullState);
+
+
+/* This constructs the effect state. It's called when the object is first
+ * created. Make sure to call the parent Construct function first, and set the
+ * vtable!
+ */
+static void ALnullState_Construct(ALnullState *state)
+{
+    ALeffectState_Construct(STATIC_CAST(ALeffectState, state));
+    SET_VTABLE2(ALnullState, ALeffectState, state);
+}
 
 /* This destructs (not free!) the effect state. It's called only when the
- * effect slot is no longer used.
+ * effect slot is no longer used. Make sure to call the parent Destruct
+ * function before returning!
  */
-static ALvoid ALnullState_Destruct(ALnullState* UNUSED(state))
+static ALvoid ALnullState_Destruct(ALnullState *state)
 {
+    ALeffectState_Destruct(STATIC_CAST(ALeffectState,state));
 }
 
 /* This updates the device-dependant effect state. This is called on
@@ -33,7 +56,7 @@ static ALboolean ALnullState_deviceUpdate(ALnullState* UNUSED(state), ALCdevice*
 /* This updates the effect state. This is called any time the effect is
  * (re)loaded into a slot.
  */
-static ALvoid ALnullState_update(ALnullState* UNUSED(state), ALCdevice* UNUSED(device), const ALeffectslot* UNUSED(slot))
+static ALvoid ALnullState_update(ALnullState* UNUSED(state), const ALCdevice* UNUSED(device), const ALeffectslot* UNUSED(slot), const ALeffectProps* UNUSED(props))
 {
 }
 
@@ -41,31 +64,25 @@ static ALvoid ALnullState_update(ALnullState* UNUSED(state), ALCdevice* UNUSED(d
  * input to the output buffer. The result should be added to the output buffer,
  * not replace it.
  */
-static ALvoid ALnullState_process(ALnullState* UNUSED(state), ALuint UNUSED(samplesToDo), const ALfloat *restrict UNUSED(samplesIn), ALfloat (*restrict samplesOut)[BUFFERSIZE])
+static ALvoid ALnullState_process(ALnullState* UNUSED(state), ALsizei UNUSED(samplesToDo), const ALfloatBUFFERSIZE*restrict UNUSED(samplesIn), ALfloatBUFFERSIZE*restrict UNUSED(samplesOut), ALsizei UNUSED(NumChannels))
 {
-    /* NOTE: Couldn't use the UNUSED macro on samplesOut due to the way GCC's
-     * __attribute__ declaration interacts with the parenthesis. */
-    (void)samplesOut;
 }
 
 /* This allocates memory to store the object, before it gets constructed.
- * DECLARE_DEFAULT_ALLOCATORS can be used to declate a default method.
+ * DECLARE_DEFAULT_ALLOCATORS can be used to declare a default method.
  */
 static void *ALnullState_New(size_t size)
 {
-    return malloc(size);
+    return al_malloc(16, size);
 }
 
 /* This frees the memory used by the object, after it has been destructed.
- * DECLARE_DEFAULT_ALLOCATORS can be used to declate a default method.
+ * DECLARE_DEFAULT_ALLOCATORS can be used to declare a default method.
  */
 static void ALnullState_Delete(void *ptr)
 {
-    free(ptr);
+    al_free(ptr);
 }
-
-/* Define the forwards and the ALeffectState vtable for this type. */
-DEFINE_ALEFFECTSTATE_VTABLE(ALnullState);
 
 
 typedef struct ALnullStateFactory {
@@ -77,10 +94,8 @@ ALeffectState *ALnullStateFactory_create(ALnullStateFactory *UNUSED(factory))
 {
     ALnullState *state;
 
-    state = ALnullState_New(sizeof(*state));
+    NEW_OBJ0(state, ALnullState)();
     if(!state) return NULL;
-    /* Set vtables for inherited types. */
-    SET_VTABLE2(ALnullState, ALeffectState, state);
 
     return STATIC_CAST(ALeffectState, state);
 }
@@ -91,7 +106,6 @@ DEFINE_ALEFFECTSTATEFACTORY_VTABLE(ALnullStateFactory);
 ALeffectStateFactory *ALnullStateFactory_getFactory(void)
 {
     static ALnullStateFactory NullFactory = { { GET_VTABLE2(ALnullStateFactory, ALeffectStateFactory) } };
-
     return STATIC_CAST(ALeffectStateFactory, &NullFactory);
 }
 

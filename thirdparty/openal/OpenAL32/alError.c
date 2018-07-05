@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU Library General Public
  *  License along with this library; if not, write to the
- *  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- *  Boston, MA  02111-1307, USA.
+ *  Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
 
@@ -36,6 +36,8 @@ ALboolean TrapALError = AL_FALSE;
 ALvoid alSetError(ALCcontext *Context, ALenum errorCode)
 {
     ALenum curerr = AL_NO_ERROR;
+
+    WARN("Error generated on context %p, code 0x%04x\n", Context, errorCode);
     if(TrapALError)
     {
 #ifdef _WIN32
@@ -46,7 +48,8 @@ ALvoid alSetError(ALCcontext *Context, ALenum errorCode)
         raise(SIGTRAP);
 #endif
     }
-    ATOMIC_COMPARE_EXCHANGE_STRONG(ALenum, &Context->LastError, &curerr, errorCode);
+
+    (void)(ATOMIC_COMPARE_EXCHANGE_STRONG_SEQ(&Context->LastError, &curerr, errorCode));
 }
 
 AL_API ALenum AL_APIENTRY alGetError(void)
@@ -57,6 +60,8 @@ AL_API ALenum AL_APIENTRY alGetError(void)
     Context = GetContextRef();
     if(!Context)
     {
+        WARN("Querying error state on null context (implicitly 0x%04x)\n",
+             AL_INVALID_OPERATION);
         if(TrapALError)
         {
 #ifdef _WIN32
@@ -69,7 +74,7 @@ AL_API ALenum AL_APIENTRY alGetError(void)
         return AL_INVALID_OPERATION;
     }
 
-    errorCode = ATOMIC_EXCHANGE(ALenum, &Context->LastError, AL_NO_ERROR);
+    errorCode = ATOMIC_EXCHANGE_SEQ(&Context->LastError, AL_NO_ERROR);
 
     ALCcontext_DecRef(Context);
 
