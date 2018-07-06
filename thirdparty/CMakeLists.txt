@@ -53,24 +53,30 @@ set( BUILD_UNIT_TESTS OFF CACHE BOOL "Build Unit Tests" FORCE )
 set( BUILD_BULLET2_DEMOS OFF CACHE BOOL "Set when you want to build the Bullet 2 demos" FORCE )
 add_subdirectory(bullet)
 
-# SDL2
-set( SDL_SHARED_ENABLED_BY_DEFAULT OFF )
-add_subdirectory(SDL2)
+
+if(LINUX OR WINDOWS)
+    # SDL2
+    set( SDL_SHARED_ENABLED_BY_DEFAULT OFF )
+    add_subdirectory(SDL2)
+
+    add_subdirectory(openal)
+    add_subdirectory(freetype)
+endif()
 
 # add subdirectory
 add_subdirectory(libjson)
 add_subdirectory(tinyxml2)
 add_subdirectory(lua)
-add_subdirectory(openal)
+#add_subdirectory(openal)
 add_subdirectory(zlib)
-add_subdirectory(libpng)
+#add_subdirectory(libpng)
 add_subdirectory(ogg)   	# Ogg needs to be built before vorbis
 add_subdirectory(vorbis)
 add_subdirectory(base64)
 include(${PROJECT_SOURCE_DIR}/cmake/imgui.cmake)
 add_subdirectory(spark)
 add_subdirectory(efsw)
-add_subdirectory(freetype)
+#add_subdirectory(freetype)
 
 set(BUILD_TARGETS
     BulletDynamics
@@ -80,13 +86,13 @@ set(BUILD_TARGETS
     vorbisenc
     vorbis
     ogg
-    png_static
+    #png_static
     zlibstatic
     lua
     tinyxml2static
     json
     base64
-    SDL2-static
+    #SDL2-static
     bgfx
     bimg
     bx
@@ -94,12 +100,33 @@ set(BUILD_TARGETS
     imgui
     spark
     efsw
-    freetype
+    #freetype
 )
+
+
+if(LINUX OR WINDOWS)
+    list(APPEND BUILD_TARGETS SDL2-static)
+    list(APPEND BUILD_TARGETS freetype)
+endif()
+
+if(LINUX)
+    list(APPEND BUILD_TARGETS openal)
+endif()
+
+if(WINDOWS)
+    list(APPEND BUILD_TARGETS OpenAL32)
+endif()
+
 
 # amalgamate libraries
 
 if(LINUX)
+    set(GLAY_DEPS_LIB libgplay-deps.a)
+    set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh
+    	${CMAKE_AR}
+    	${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
+    )
+elseif(EMSCRIPTEN)
     set(GLAY_DEPS_LIB libgplay-deps.a)
     set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh
     	${CMAKE_AR}
@@ -111,7 +138,7 @@ elseif(WINDOWS)
     	${CMAKE_AR}
     	${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
     )
-endif(LINUX)
+endif()
 
 add_custom_command(
     OUTPUT ${GLAY_DEPS_LIB}

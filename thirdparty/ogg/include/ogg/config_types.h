@@ -1,7 +1,7 @@
 #ifndef __CONFIG_TYPES_H__
 #define __CONFIG_TYPES_H__
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(EMSCRIPTEN)
 
 	#define INCLUDE_INTTYPES_H 1
 	#define INCLUDE_STDINT_H 1

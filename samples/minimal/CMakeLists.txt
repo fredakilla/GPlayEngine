@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.1)
 project(sample-minimal)
 
 set(GAME_NAME ${PROJECT_NAME})
+if(EMSCRIPTEN)
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif()
 
 set(GAME_SRC
     src/minimal.hpp

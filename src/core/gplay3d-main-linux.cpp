@@ -1,5 +1,5 @@
 #ifndef GP_NO_PLATFORM
-#ifdef __linux__
+#if defined(__linux__) || defined(EMSCRIPTEN)
 
 #include "gplay-engine.h"
 

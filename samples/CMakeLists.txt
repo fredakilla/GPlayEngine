@@ -45,11 +45,23 @@ elseif(WINDOWS)
             version
             odbc32
             odbccp32)
+
+elseif(EMSCRIPTEN)
+
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s FULL_ES2=1 -o ${PROJECT_NAME}.html")
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s FULL_ES3=1 -s FULL_ES2=1 -s USE_FREETYPE=1 -s DISABLE_EXCEPTION_CATCHING=0 -s DEMANGLE_SUPPORT=1 -s SAFE_HEAP=1 --bind -s WASM=1")    
+
+    set(GPLAY_LIBRARIES
+        gplay
+        gplay-deps
+    )
+
 endif()
 
 add_subdirectory(minimal)
-add_subdirectory(browser)
-add_subdirectory(spaceship)
-add_subdirectory(racer)
-add_subdirectory(character)
-add_subdirectory(graphics)
+#add_subdirectory(browser)
+#add_subdirectory(spaceship)
+#add_subdirectory(racer)
+#add_subdirectory(character)
+#add_subdirectory(graphics)

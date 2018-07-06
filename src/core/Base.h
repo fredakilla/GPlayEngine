@@ -199,6 +199,9 @@ extern int strcmpnocase(const char* s1, const char* s2);
 #elif __linux__
     #include <AL/al.h>
     #include <AL/alc.h>
+#elif EMSCRIPTEN
+    #include <AL/al.h>
+    #include <AL/alc.h>
 #elif __APPLE__
     #include <OpenAL/al.h>
     #include <OpenAL/alc.h>
