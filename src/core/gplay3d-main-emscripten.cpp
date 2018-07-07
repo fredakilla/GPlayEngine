@@ -1,12 +1,26 @@
 #ifndef GP_NO_PLATFORM
-#if defined(__linux__)
+#if defined(EMSCRIPTEN)
 
 #include "gplay-engine.h"
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#include <emscripten/bind.h>
+#include <emscripten/html5.h>
+#endif
 
 using namespace gplay;
 
 extern int __app_argc;
 extern char** __app_argv;
+
+
+void emloop(void* arg_)
+{
+    Platform* plateform = (Platform*)arg_;
+    plateform->frame();
+}
+
 
 /**
  * Main entry point.
@@ -22,10 +36,9 @@ int main(int argc, char** argv)
     GP_ASSERT(platform);
 
     platform->start();
-    while(platform->processEvents())
-    {
-        platform->frame();
-    }
+
+    emscripten_set_main_loop_arg(emloop, (void*)platform , 60, 1);
+
     platform->stop();
 
     delete platform;
