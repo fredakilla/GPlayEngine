@@ -13,19 +13,24 @@ The purpose of this fork is also to continue the active development of this engi
 
 ## Current status
 - bgfx integration is completed and replace opengl calls.
-- bgfx is currently forced to use the opengl driver because engine still use the old glsl shaders. A pass on shaders is planned to use the bgfx shader syntax to be fully compatible with others bgfx backends.
+- bgfx is currently forced to use the opengl driver because engine still use some old glsl shaders. A pass on shaders is planned to use the bgfx shader syntax to be fully compatible with others bgfx backends.
 - Engine now use SDL2 by default to manage windows and inputs. Gamepad are not yet implanted.
 - Lua is temporarily disabled to speed up the compilation during core dev phase.
 - All previous samples and demo are now working with the new renderer.
-- Only tested on Linux and Windows for now.
+- Only tested on Linux, Windows and Emscripten for now.
 
+
+
+## Install submodules dependencies
+
+Some thirdparty libraries are registered as submodules, you need to install them before building engine.
+```
+git submodule init
+git submodule update
+```
 
 ## Building
-* [CMake (Linux)](https://github.com/fredakilla/GPlayEngine/wiki/CMake-Linux-Setup)
-* [CMake (Windows)](https://github.com/fredakilla/GPlayEngine/wiki/CMake-Windows-Setup)
-* [Qt Creator (Linux, Windows, MacOS)](https://github.com/fredakilla/GPlayEngine/wiki/QtCreator-Setup)
-
-See [wiki](https://github.com/fredakilla/GPlayEngine/wiki) for more detailed build instructions.
+See [wiki - compiling framework](https://github.com/fredakilla/GPlayEngine/wiki/Compiling-framework) for build instructions.
 
 
 ## Features
