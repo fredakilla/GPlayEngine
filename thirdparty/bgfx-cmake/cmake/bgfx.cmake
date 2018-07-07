@@ -72,7 +72,7 @@ if( APPLE )
 endif()
 
 if( UNIX AND NOT APPLE )
-	find_package(X11 REQUIRED)
+	#find_package(X11 REQUIRED)
 	find_package(OpenGL REQUIRED)
 	#The following commented libraries are linked by bx
 	#find_package(Threads REQUIRED)
