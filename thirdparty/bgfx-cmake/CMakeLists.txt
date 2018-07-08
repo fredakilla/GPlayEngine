@@ -52,7 +52,7 @@ if( BGFX_BUILD_TOOLS )
 	include( cmake/tools.cmake )
 endif()
 
-include( cmake/examples.cmake )
+#include( cmake/examples.cmake )
 
 if( BGFX_INSTALL )
 	# install bx

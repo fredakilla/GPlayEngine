@@ -51,6 +51,7 @@ set( BUILD_EXTRAS OFF CACHE BOOL "Set when you want to build the extras" FORCE )
 set( INSTALL_LIBS OFF CACHE BOOL "Set when you want to install libraries" FORCE )
 set( BUILD_UNIT_TESTS OFF CACHE BOOL "Build Unit Tests" FORCE )
 set( BUILD_BULLET2_DEMOS OFF CACHE BOOL "Set when you want to build the Bullet 2 demos" FORCE )
+set( USE_MSVC_RUNTIME_LIBRARY_DLL ON CACHE BOOL "Use MSVC Runtime Library DLL (/MD or /MDd)" FORCE)
 add_subdirectory(bullet)
 
 

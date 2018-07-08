@@ -20,3 +20,13 @@ if("${CMAKE_C_COMPILER}" MATCHES "emcc")
     set(TCMALLOC OFF)
     #set(CFLAGS_EMSCRIPTEN "-Oz -O3")
 endif()
+
+# flags for windows
+if(WINDOWS)
+    # msvc compiler
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+        add_definitions( /MP /wd"4305" )
+    endif()
+endif()

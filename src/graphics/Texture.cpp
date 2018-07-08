@@ -133,6 +133,7 @@ Texture* Texture::create(Format format, unsigned int width, unsigned int height,
     textureInfo.bytePerPixel = getFormatBPP(format);
     textureInfo.type = type;
     textureInfo.id = "";
+    textureInfo.flags = 0;
 
     Texture* texture = BGFXTexture::createFromData(textureInfo, data);
     if (generateMipmaps)
