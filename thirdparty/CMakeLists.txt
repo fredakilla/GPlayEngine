@@ -54,6 +54,10 @@ set( BUILD_BULLET2_DEMOS OFF CACHE BOOL "Set when you want to build the Bullet 2
 set( USE_MSVC_RUNTIME_LIBRARY_DLL ON CACHE BOOL "Use MSVC Runtime Library DLL (/MD or /MDd)" FORCE)
 add_subdirectory(bullet)
 
+if(LINUX)
+    # openal as static
+    set(LIBTYPE STATIC)
+endif()
 
 if(LINUX OR WINDOWS)
     # SDL2
