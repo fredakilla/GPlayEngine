@@ -108,19 +108,14 @@ set(BUILD_TARGETS
     #freetype
 )
 
-
-if(LINUX OR WINDOWS)
+# Emscripten ships with its own implementation of the OpenAL, sdl2, freetype
+if(NOT EMSCRIPTEN)
     list(APPEND BUILD_TARGETS SDL2-static)
+    list(APPEND BUILD_TARGETS SDL2main)
     list(APPEND BUILD_TARGETS freetype)
+    list(APPEND BUILD_TARGETS OpenAL)
 endif()
 
-if(LINUX)
-    list(APPEND BUILD_TARGETS openal)
-endif()
-
-if(WINDOWS)
-    list(APPEND BUILD_TARGETS OpenAL32)
-endif()
 
 
 # amalgamate libraries
@@ -148,11 +143,12 @@ endif()
 add_custom_command(
     OUTPUT ${GLAY_DEPS_LIB}
     COMMAND ${TARGET_CMD}
-    DEPENDS ${BUILD_TARGETS}
+    #DEPENDS ${BUILD_TARGETS}
     COMMENT "Amalgamate external dependencies..."
 )
 
 add_custom_target(GPLAY_DEPS ALL DEPENDS ${GLAY_DEPS_LIB})
+add_dependencies(GPLAY_DEPS ${BUILD_TARGETS})
 
 # copy thirdparty headers to output directory
 COPY_HEADERS(base64/base64.h ${OUT_DIR_INCLUDE}/base64/)
