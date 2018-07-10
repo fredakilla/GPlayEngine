@@ -188,7 +188,7 @@ COPY_HEADERS(${CMAKE_CURRENT_SOURCE_DIR}/../src/ ${OUT_DIR}/include/gplayengine/
 
 # write setup.pri file for Qt
 get_filename_component(result "${OUT_DIR}" ABSOLUTE)
-file(WRITE ../setup.pri "OUTPUT_DIR=${result}")
+file(WRITE ../setup.pri "GPLAY_OUTPUT_DIR=${result}")
 
 # copy res directory to output bin directory (or create symbolic link on supported systems)
 file(MAKE_DIRECTORY ${OUT_DIR}/bin)

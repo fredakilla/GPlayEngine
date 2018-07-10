@@ -27,18 +27,3 @@ add_subdirectory(src)
 add_subdirectory(samples)
 
 
-
-## copy engine headers to output directory
-#COPY_HEADERS(src/ ${OUT_DIR_INCLUDE}/gplayengine/)
-#
-## write setup.pri file for Qt
-#file(WRITE setup.pri "OUTPUT_DIR=${CMAKE_SOURCE_DIR}/output")
-#
-## copy res directory to output bin directory (or create symbolic link on supported systems)
-#file(MAKE_DIRECTORY ${OUT_DIR_BIN})
-#if(WINDOWS)
-#    # add copy command
-#elseif(LINUX)
-#    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/res ${OUT_DIR_BIN}/res)
-#endif()
-

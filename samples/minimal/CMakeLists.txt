@@ -7,8 +7,8 @@ if(EMSCRIPTEN)
 endif()
 
 set(GAME_SRC
-    src/minimal.hpp
-    src/minimal.cpp
+    src/main.h
+    src/main.cpp
 )
 
 add_executable(${GAME_NAME} ${GAME_SRC})
@@ -20,7 +20,7 @@ if(EMSCRIPTEN)
     SET_TARGET_PROPERTIES(${GAME_NAME} PROPERTIES LINK_FLAGS "--preload-file ${OUT_DIR_BIN}/data@/ --bind")
 endif()
 
-
 if(MSVC)
     set_target_properties(${GAME_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${OUT_DIR_BIN}")
 endif()
+

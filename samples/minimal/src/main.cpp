@@ -1,4 +1,4 @@
-#include "minimal.hpp"
+#include "main.h"
 
 // Declare our game instance
 MinimalSample game;
