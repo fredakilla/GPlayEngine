@@ -18,6 +18,7 @@ extern char** __app_argv;
 void emloop(void* arg_)
 {
     Platform* plateform = (Platform*)arg_;
+    plateform->processEvents();
     plateform->frame();
 }
 
