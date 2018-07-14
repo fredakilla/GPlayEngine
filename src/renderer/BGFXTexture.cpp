@@ -229,8 +229,8 @@ bgfx::TextureHandle loadTexture(const char* filePath, uint32_t flags, bgfx::Text
     bgfx::TextureHandle handle = createTexture(imageContainer, flags, info);
     GP_ASSERT(bgfx::isValid(handle));
 
-    // free texture data
-    free(data);
+    // free file data
+    delete[] data;
 
     return handle;
 }
