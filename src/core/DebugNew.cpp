@@ -302,7 +302,7 @@ extern void printMemoryLeaks()
             else
                 gplay::print("[memory] LEAK: HEAP allocation leak at address %#x of size %d from line %d in file '%s'.\n", rec->address, rec->size, rec->line, rec->file);
 #else
-            gplay::print("[memory] LEAK: HEAP allocation leak at address %#x of size %d from line %d in file '%s'.\n", rec->address, rec->size, rec->line, rec->file);
+            gplay::print("file:///%s:%i - [memory] LEAK: HEAP allocation leak at address %#x of size %d\n", rec->file, rec->line, rec->address, rec->size);
 #endif
             rec = rec->next;
         }
