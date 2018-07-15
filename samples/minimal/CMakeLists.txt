@@ -17,7 +17,7 @@ add_dependencies(${GAME_NAME} GPLAY)
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/game.config ${OUT_DIR_BIN}/${GAME_NAME}.config COPYONLY)
 
 if(EMSCRIPTEN)
-    SET_TARGET_PROPERTIES(${GAME_NAME} PROPERTIES LINK_FLAGS "--preload-file ${OUT_DIR_BIN}/data@/ --bind")
+    SET_TARGET_PROPERTIES(${GAME_NAME} PROPERTIES LINK_FLAGS "--preload-file ${OUT_DIR_BIN}/emdata@/ --bind")
 endif()
 
 if(MSVC)
