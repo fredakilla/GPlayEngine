@@ -30,6 +30,7 @@ set(GAME_SRC
     src/ShaderReload.cpp
     src/EventSample.cpp
     src/LightsAndShadows.cpp
+    src/DeferredTest.cpp
 )
 
 add_executable(${GAME_NAME} ${GAME_SRC})

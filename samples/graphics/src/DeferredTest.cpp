@@ -987,6 +987,6 @@ public:
 };
 
 #if defined(ADD_SAMPLE)
-    ADD_SAMPLE("Graphics", "Def test", DeferredTestSample, 255);
+    ADD_SAMPLE("Graphics", "Deferred rendering", DeferredTestSample, 255);
 #endif
 
