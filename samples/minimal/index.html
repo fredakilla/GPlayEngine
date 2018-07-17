@@ -1,0 +1,29 @@
+
+<html>
+    <style media="screen" type="text/css">
+        .game {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            margin: 0px;
+            border: 0;
+            width: 360;
+            height: 640;
+            overflow: hidden;
+            display: block;
+        }
+    </style>
+
+    <body>
+        <canvas class="game" id="canvas"></canvas>
+        <script type="text/javascript">
+            var canvas = document.getElementById("canvas");
+            var Module = {};
+            Module.canvas = canvas;
+        </script>
+        <script type="text/javascript" src="sample-minimal.js"></script>
+        <script type="text/javascript">
+            var program = new MinimalSample.Program(canvas);
+        </script>
+    </body>
+</html>
