@@ -244,7 +244,7 @@ void SamplesGame::gamepadEvent(Gamepad::GamepadEvent evt, Gamepad* gamepad, unsi
 void SamplesGame::runSample(void* func)
 {
     exitActiveSample();
-    
+
     SampleGameCreatePtr p = (SampleGameCreatePtr)func;
 
     _activeSample = reinterpret_cast<Sample*>(p());
@@ -272,6 +272,11 @@ void SamplesGame::exitActiveSample()
     // Reset some game options
     setMultiTouch(false);
     setMouseCaptured(false);
+
+    // clear all views and create a new default one
+    View::clearAll();
+    View::create(0, getViewport(), View::ClearFlags::COLOR_DEPTH_STENCIL);
+    View::getView(0)->bind();
 }
 
 void SamplesGame::addSample(const char* category, const char* title, void* func, unsigned int order)

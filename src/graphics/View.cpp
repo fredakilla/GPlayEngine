@@ -29,6 +29,18 @@ void View::setViewOrder(std::vector<unsigned short>& views)
     }
 }
 
+void View::clearAll()
+{
+    for(auto it : __views)
+    {
+        View* view = it.second;
+        bgfx::resetView(view->_id);
+        delete view;
+    }
+
+    __views.clear();
+}
+
 View::View() :
   _id(0)
   , _rectangle(Rectangle())
@@ -45,7 +57,23 @@ View::View() :
 
 View* View::create(unsigned short id, Rectangle rectangle, ClearFlags clearFlags, unsigned int clearColor, float depth, unsigned char stencil)
 {
-    View* view = new View();
+    View* view = nullptr;
+
+    // search if the view id already exists in map
+    size_t existingView = __views.count(id);
+    if(existingView == 0)
+    {
+        // create a new view
+        view = new View();
+    }
+    else
+    {
+        // reset existing view
+        view = __views.at(id);
+        bgfx::resetView(id);
+    }
+
+    // setup view
     view->_id = id;
     view->_rectangle = rectangle;
     view->_clearFlags = clearFlags;
@@ -53,7 +81,9 @@ View* View::create(unsigned short id, Rectangle rectangle, ClearFlags clearFlags
     view->_depth = depth;
     view->_stencil = stencil;
 
-    __views.insert(std::make_pair(id, view));
+    // if a new view add top map
+    if(existingView == 0)
+        __views.insert(std::make_pair(id, view));
 
     return view;
 }

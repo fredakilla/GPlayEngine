@@ -39,7 +39,7 @@ PostProcessSample::Compositor::Compositor(FrameBuffer* srcBuffer, FrameBuffer* d
 
 PostProcessSample::Compositor::~Compositor()
 {
-    SAFE_RELEASE(_material);
+    //SAFE_RELEASE(_material);
 }
 
 FrameBuffer* PostProcessSample::Compositor::getSrcFrameBuffer() const 

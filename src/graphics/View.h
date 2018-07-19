@@ -108,6 +108,11 @@ public:
      */
     static void setViewOrder(std::vector<unsigned short>& views);
 
+    /**
+     * @brief reset to default all views and clear cache
+     */
+    static void clearAll();
+
 private:
 
     View();
