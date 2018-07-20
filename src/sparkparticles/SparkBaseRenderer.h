@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #pragma once
 
 #include <spark/SPARK_Core.h>
@@ -33,3 +35,5 @@ protected :
 
 
 }}
+
+#endif

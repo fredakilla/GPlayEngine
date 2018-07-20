@@ -21,6 +21,7 @@ CONFIG(debug, debug|release):
     DEFINES += _DEBUG
 DEFINES += GP_USE_GAMEPAD
 #DEFINES += COMPIL_WITH_LUA
+#DEFINES += GP_NO_SPARK
 
 INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/
 INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/thirdparty

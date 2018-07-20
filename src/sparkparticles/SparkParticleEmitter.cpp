@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #include "../sparkparticles/SparkParticleEmitter.h"
 #include "../graphics/Scene.h"
 #include "../sparkparticles/SparkBaseRenderer.h"
@@ -92,3 +94,5 @@ unsigned int SparkParticleEmitter::draw()
 }
 
 }
+
+#endif

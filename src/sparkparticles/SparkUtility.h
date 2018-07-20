@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #pragma once
 
 #include "../math/Vector3.h"
@@ -40,3 +42,5 @@ namespace GP3D {
     }
 
 }}
+
+#endif

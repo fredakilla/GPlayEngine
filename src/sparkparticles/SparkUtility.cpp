@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #include "../sparkparticles/SparkUtility.h"
 #include "../sparkparticles/SparkQuadRenderer.h"
 #include <spark/Core/IO/SPK_IO_Manager.h>
@@ -22,3 +24,5 @@ namespace GP3D {
     }*/
 
 }}
+
+#endif

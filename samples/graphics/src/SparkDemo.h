@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef GP_NO_SPARK
+
 #include "gplay-engine.h"
 #include "Example.h"
 #include "FirstPersonCamera.h"
@@ -32,3 +34,5 @@ private:
     Node* _cubeNode;
     Material* _materialParticle;
 };
+
+#endif

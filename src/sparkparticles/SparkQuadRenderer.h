@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #pragma once
 
 #include <spark/Extensions/Renderers/SPK_QuadRenderBehavior.h>
@@ -98,3 +100,5 @@ inline Ref<SparkQuadRenderer> SparkQuadRenderer::create(float scaleX, float scal
 
 
 }}
+
+#endif

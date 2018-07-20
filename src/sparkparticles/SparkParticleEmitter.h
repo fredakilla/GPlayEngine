@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #pragma once
 
 #include <spark/SPARK.h>
@@ -48,3 +50,5 @@ private:
 };
 
 }
+
+#endif

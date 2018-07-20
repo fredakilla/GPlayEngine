@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #include <spark/SPARK_Core.h>
 #include "../sparkparticles/SparkQuadRenderer.h"
 #include "../graphics/MeshPart.h"
@@ -358,3 +360,5 @@ void SparkQuadRenderer::innerExport(IO::Descriptor& descriptor) const
 
 
 }}
+
+#endif

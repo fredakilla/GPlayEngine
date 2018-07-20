@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #include "SparkDemo.h"
 #include "SamplesGame.h"
 #include "sparkparticles/SparkQuadRenderer.h"
@@ -410,3 +412,4 @@ void SparkDemo::keyEvent(Keyboard::KeyEvent evt, int key)
     _fpCamera.keyEvent(evt, key);
 }
 
+#endif

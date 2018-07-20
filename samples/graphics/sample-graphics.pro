@@ -19,6 +19,7 @@ QMAKE_CLEAN += $$DESTDIR/$$TARGET
 CONFIG(debug, debug|release):
     DEFINES += _DEBUG
 DEFINES += GP_USE_GAMEPAD
+#DEFINES += GP_NO_SPARK
 
 INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/
 INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/thirdparty

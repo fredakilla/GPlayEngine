@@ -1,3 +1,5 @@
+#ifndef GP_NO_SPARK
+
 #include "../sparkparticles/SparkBaseRenderer.h"
 
 namespace SPK {
@@ -46,3 +48,5 @@ void SparkBaseRenderer::setMaterial(gplay::Material* material)
 
 
 }}
+
+#endif
