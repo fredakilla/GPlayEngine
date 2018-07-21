@@ -1,10 +1,10 @@
-#include "gplay3d.h"
+#include <gplay-engine.h>
 #include "Example.h"
 #include "SamplesGame.h"
 #include "FirstPersonCamera.h"
 #include <imgui/imgui.h>
 
-using namespace gameplay;
+using namespace gplay;
 
 class MyNewExample : public Example
 {
@@ -28,7 +28,7 @@ public:
     void initialize()
     {
         // Create the font for drawing the framerate.
-        _font = Font::create("res/coredata/ui/arial.gpb");
+        _font = Font::create("res/core/ui/arial.gpb");
 
         // Create a new empty scene.
         _scene = Scene::create();
