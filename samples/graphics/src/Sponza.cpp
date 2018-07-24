@@ -62,7 +62,7 @@ public:
 
     void initLightForMaterial(Material* material)
     {
-        material->setParameterAutoBinding("u_worldViewProjectionMatrix", RenderState::WORLD_VIEW_PROJECTION_MATRIX);
+        //material->setParameterAutoBinding("u_worldViewProjectionMatrix", RenderState::WORLD_VIEW_PROJECTION_MATRIX);
         material->setParameterAutoBinding("u_inverseTransposeWorldViewMatrix", RenderState::INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX);
         material->setParameterAutoBinding("u_viewMatrix", RenderState::VIEW_MATRIX);
         material->setParameterAutoBinding("u_worldMatrix", RenderState::WORLD_MATRIX);
