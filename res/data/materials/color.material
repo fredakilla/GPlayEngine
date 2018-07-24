@@ -5,8 +5,8 @@ material
         pass 0
         {
             // shaders
-            vertexShader = res/core/shaders/forward/color.vert
-            fragmentShader = res/core/shaders/forward/color.frag
+            vertexShader = res/core/shaders/color.vert
+            fragmentShader = res/core/shaders/color.frag
             defines = VERTEX_COLOR
             
             // uniforms
