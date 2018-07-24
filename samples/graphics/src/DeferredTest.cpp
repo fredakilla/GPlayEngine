@@ -212,7 +212,7 @@ public:
 
         _matCombine->getParameter("s_albedo")->setValue(_gBuffer->getRenderTarget("AlbedoSpecBuffer"));
         _matCombine->getParameter("s_light")->setValue(_lightBuffer->getRenderTarget(0));
-        _matCombine->getParameter("s_bloom")->setValue(_lightBuffer->getRenderTarget(1));
+        ///_matCombine->getParameter("s_bloom")->setValue(_lightBuffer->getRenderTarget(1));
 
         _matCombine->getTechnique()->setId("default");
 
