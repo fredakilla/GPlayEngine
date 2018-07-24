@@ -565,3 +565,6 @@ namespace shaderc
     }
 
 }
+
+// restore previous defines BX_TRACE BX_WARN and BX_CHECK
+#include "../../bgfx/tools/shaderc/shaderc.h"
