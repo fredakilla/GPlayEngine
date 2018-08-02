@@ -1,9 +1,8 @@
 # GPlayEngine
-GPlayEngine is C++ cross-platform game engine for creating 2D/3D games.
+GPlayEngine is a C++ cross-platform game engine for creating 2D/3D games.
 
-GPlayEngine is based on the [GamePlay 3D engine](http://www.gameplay3d.io/) v3.0.
-This engine version principally replace the OpenGL 2.x backend to use the [BGFX](https://github.com/bkaradzic/bgfx) graphic framework.
-The purpose of this fork is also to continue the active development of this engine by fixing old issues, integrating new features and modern rendering techniques like deferred, PBR, screen space reflection, advanced post-processing effects, ...
+GPlayEngine is based on the [GamePlay 3D engine](http://www.gameplay3d.io/) v3.0 and principally replace the OpenGL 2.x backend to use the [BGFX](https://github.com/bkaradzic/bgfx) graphic framework.
+
 
 ## Screenshots
 <img src="https://i.imgur.com/u3arwg3.png" width="50%" height="%"><img src="https://i.imgur.com/IZKGhDb.jpg" width="50%" height="%">
@@ -12,13 +11,14 @@ The purpose of this fork is also to continue the active development of this engi
 <img src="https://i.imgur.com/KyRqyIP.png" width="25%" height="%">
 
 ## Current status
-- bgfx integration is completed and replace opengl calls.
+- Cmake is used as main build system (qtcreator is also up-to-date)
+- bgfx integration is completed and replace opengl.
 - bgfx is currently forced to use the opengl driver because engine still use some old glsl shaders. A pass on shaders is planned to use the bgfx shader syntax to be fully compatible with others bgfx backends.
 - Engine now use SDL2 by default to manage windows and inputs. Gamepad are not yet implanted.
 - Lua is temporarily disabled to speed up the compilation during core dev phase.
 - All previous samples and demo are now working with the new renderer.
+- A new sample "sample-graphics" is used to test bgfx conversion and new features.
 - Only tested on Linux, Windows and Emscripten for now.
-
 
 
 ## Install submodules dependencies
@@ -59,3 +59,6 @@ See [wiki - compiling framework](https://github.com/fredakilla/GPlayEngine/wiki/
 - Image supported format (DDS, KTX, PVR, JPG, PNG, TGA, BMP, PSD, GIF, HDR, PIC)
 - 3D model supported format (FBX)
 
+## License
+
+Open-source under Apache 2.0 license.
