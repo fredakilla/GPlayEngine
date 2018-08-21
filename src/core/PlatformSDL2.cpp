@@ -14,8 +14,8 @@
 #include "../renderer/Renderer.h"
 #include "../renderer/BGFXImGui.h"
 
-int __app_argc;
-char** __app_argv;
+int __app_argc = 0;
+char** __app_argv = nullptr;
 
 
 namespace gplay {
@@ -342,6 +342,8 @@ static bool ImGui_ImplSdlGL3_ProcessEvent(SDL_Event* event)
 Platform::Platform(Game* game) :
     _game(game)
 {
+    GP_ASSERT(__app_argc);
+    GP_ASSERT(__app_argv);
 
     std::memset(_translateKey, 0, sizeof(_translateKey));
     initTranslateKey(SDL_SCANCODE_ESCAPE,       Keyboard::KEY_ESCAPE);
@@ -938,6 +940,12 @@ void Platform::getAccelerometerValues(float* pitch, float* roll)
 void Platform::getSensorValues(float* accelX, float* accelY, float* accelZ, float* gyroX, float* gyroY, float* gyroZ)
 {
     GP_ERROR("Fix me !");
+}
+
+void Platform::setArguments(int* argc, char*** argv)
+{
+    __app_argc = *argc;
+    __app_argv = *argv;
 }
 
 void Platform::getArguments(int* argc, char*** argv)

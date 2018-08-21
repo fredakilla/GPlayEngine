@@ -63,6 +63,15 @@ public:
      */
     static double getAbsoluteTime();
 
+
+    /**
+     * Set arguments from main entry point.
+     *
+     * @param argc The argument count.
+     * @param argv The argument array strings.
+     */
+    static void setArguments(int* argc, char*** argv);
+
 private:
 
     /**
