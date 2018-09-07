@@ -14,7 +14,10 @@ unsigned short View::getCurrentViewId()
 
 View* View::getView(unsigned short id)
 {
-    return __views[id];
+    if(__views.count(id)>0)
+        return __views.at(id);
+    else
+        return nullptr;
 }
 
 void View::setViewOrder(std::vector<unsigned short>& views)
@@ -80,6 +83,12 @@ View* View::create(unsigned short id, Rectangle rectangle, ClearFlags clearFlags
     view->_clearColor = clearColor;
     view->_depth = depth;
     view->_stencil = stencil;
+
+
+    uint16_t flags = static_cast<uint16_t>(clearFlags);
+    bgfx::setViewClear(id, flags, clearColor, depth, stencil);
+    bgfx::setViewRect(id, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+
 
     // if a new view add top map
     if(existingView == 0)
