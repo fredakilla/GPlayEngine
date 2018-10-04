@@ -27,6 +27,14 @@ SparkParticleEmitter* SparkParticleEmitter::create(SPK::Ref<SPK::System> sparkSy
     return sparkParticleEmitter;
 }
 
+SparkParticleEmitter* SparkParticleEmitter::createRef(SPK::Ref<SPK::System> sparkSystem, bool worldTransformed)
+{
+    SparkParticleEmitter* sparkParticleEmitter = new SparkParticleEmitter();
+    sparkParticleEmitter->_sparkSystem = sparkSystem;
+    sparkParticleEmitter->_worldTransformed = worldTransformed;
+    return sparkParticleEmitter;
+}
+
 Drawable* SparkParticleEmitter::clone(NodeCloneContext& context)
 {
 	return nullptr;
