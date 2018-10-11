@@ -101,6 +101,11 @@ unsigned int SparkParticleEmitter::draw()
     return 0;
 }
 
+SPK::Ref<SPK::System> SparkParticleEmitter::getSparkSystem()
+{
+    return _sparkSystem;
+}
+
 }
 
 #endif

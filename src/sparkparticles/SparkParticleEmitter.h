@@ -23,6 +23,7 @@ public:
 
     unsigned int draw() override;
     void update(float dt);
+    SPK::Ref<SPK::System> getSparkSystem();
 
 private:
 
