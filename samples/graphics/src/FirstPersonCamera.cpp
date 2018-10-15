@@ -193,15 +193,19 @@ void FirstPersonCamera::keyEvent(Keyboard::KeyEvent evt, int key)
     {
         switch (key)
         {
+        case Keyboard::KEY_UP_ARROW:
         case Keyboard::KEY_W:
             _moveFlags |= MOVE_FORWARD;
             break;
+        case Keyboard::KEY_DOWN_ARROW:
         case Keyboard::KEY_S:
             _moveFlags |= MOVE_BACKWARD;
             break;
+        case Keyboard::KEY_LEFT_ARROW:
         case Keyboard::KEY_A:
             _moveFlags |= MOVE_LEFT;
             break;
+        case Keyboard::KEY_RIGHT_ARROW:
         case Keyboard::KEY_D:
             _moveFlags |= MOVE_RIGHT;
             break;
@@ -224,15 +228,19 @@ void FirstPersonCamera::keyEvent(Keyboard::KeyEvent evt, int key)
     {
         switch (key)
         {
+        case Keyboard::KEY_UP_ARROW:
         case Keyboard::KEY_W:
             _moveFlags &= ~MOVE_FORWARD;
             break;
+        case Keyboard::KEY_DOWN_ARROW:
         case Keyboard::KEY_S:
             _moveFlags &= ~MOVE_BACKWARD;
             break;
+        case Keyboard::KEY_LEFT_ARROW:
         case Keyboard::KEY_A:
             _moveFlags &= ~MOVE_LEFT;
             break;
+        case Keyboard::KEY_RIGHT_ARROW:
         case Keyboard::KEY_D:
             _moveFlags &= ~MOVE_RIGHT;
             break;

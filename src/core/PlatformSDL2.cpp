@@ -35,7 +35,7 @@ static float __mouseCapturePointY = 0;
 static bool __cursorVisible = true;
 
 // keys
-uint8_t _translateKey[256];
+uint16_t _translateKey[256];
 
 // mobile device gesture
 static bool __multiTouch = false;
@@ -130,12 +130,12 @@ inline bool setWindowForBgfx(SDL_Window* _window)
 
 void initTranslateKey(uint16_t sdl, Keyboard::Key key)
 {
-    _translateKey[sdl & 0xff] = (uint8_t)key;
+    _translateKey[sdl & 0xffff] = (uint16_t)key;
 }
 
 Keyboard::Key translateKey(SDL_Scancode sdl)
 {
-    return (Keyboard::Key)_translateKey[sdl & 0xff];
+    return (Keyboard::Key)_translateKey[sdl & 0xffff];
 }
 
 
