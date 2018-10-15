@@ -49,7 +49,7 @@ either expressed or implied, of the FreeBSD Project.
 #define SPLINES_HH
 
 // Uncomment this if you do not want that Splines uses GenericContainer
-// #define SPLINES_DO_NOT_USE_GENERIC_CONTAINER 1
+#define SPLINES_DO_NOT_USE_GENERIC_CONTAINER 1
 
 // some one may force the use of GenericContainer
 #ifndef SPLINES_DO_NOT_USE_GENERIC_CONTAINER
