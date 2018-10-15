@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.5)
+
+SET( TARGET Splines )
+
+add_compile_options(-DSPLINES_DO_NOT_USE_GENERIC_CONTAINER)
+
+set(SPLINES_PUBLIC_HEADERS src/Splines.hh)
+
+SET( SOURCES )
+FILE( GLOB S ./src/*.cc )
+FOREACH (F ${S})
+  FILE( RELATIVE_PATH RF ${CMAKE_CURRENT_SOURCE_DIR} "${F}" )
+  LIST( APPEND SOURCES ${RF} )
+ENDFOREACH (F ${S})
+SET( HEADERS )
+FILE( GLOB S ./src/*.hh )
+FOREACH (F ${S})
+  FILE( RELATIVE_PATH RF ${CMAKE_CURRENT_SOURCE_DIR} "${F}" )
+  LIST( APPEND HEADERS ${RF} )
+ENDFOREACH (F ${S})
+
+add_library(splines STATIC ${SOURCES} ${HEADERS} )
+
+install(FILES ${SPLINES_PUBLIC_HEADERS} DESTINATION include/splines)
