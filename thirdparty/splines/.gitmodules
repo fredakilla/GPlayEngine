@@ -1,0 +1,3 @@
+[submodule "GC"]
+	path = GC
+	url = https://github.com/ebertolazzi/GenericContainer.git
