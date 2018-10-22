@@ -1,0 +1,38 @@
+material duck
+{
+    technique
+    {
+        pass 0
+        {
+            // shaders
+            vertexShader = res/core/shaders/particle.vert
+            fragmentShader = res/core/shaders/particle.frag
+            defines = SPECULAR;DIRECTIONAL_LIGHT_COUNT=1
+            
+            // uniforms
+            u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+            
+            // samplers
+            sampler u_diffuseTexture
+            {
+                path = res/data/textures/flare.png
+                mipmap = true
+                wrapS = CLAMP
+                wrapT = CLAMP
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+
+            // render state
+            renderState
+            {
+                cullFace = true
+                depthTest = true
+                depthWrite = false
+                blend = true
+                blendSrc = SRC_ALPHA
+                blendDst = ONE
+            }
+        }
+    }
+}
