@@ -4,6 +4,7 @@ add_library(
 	${PROJECT_SOURCE_DIR}/imgui/imgui.cpp
 	${PROJECT_SOURCE_DIR}/imgui/imgui_demo.cpp
 	${PROJECT_SOURCE_DIR}/imgui/imgui_draw.cpp
+	${PROJECT_SOURCE_DIR}/imgui/imgui_widgets.cpp
 )
 target_include_directories( imgui PUBLIC ${PROJECT_SOURCE_DIR}/imgui )
 set_target_properties( imgui PROPERTIES FOLDER "imgui" )
