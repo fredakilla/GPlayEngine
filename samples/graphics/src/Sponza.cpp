@@ -252,7 +252,7 @@ public:
         texInfo.height = FRAMEBUFFER_HEIGHT;
         texInfo.type = Texture::TEXTURE_RT;
         texInfo.format = Texture::Format::D16;
-        texInfo.flags = BGFX_TEXTURE_RT | BGFX_TEXTURE_COMPARE_LEQUAL;
+        texInfo.flags = BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL;
         Texture* texDepth = Texture::create(texInfo);
 
         std::vector<Texture*> textures;

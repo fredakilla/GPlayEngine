@@ -270,7 +270,7 @@ public:
         Texture::Sampler* shadowSampler = _shadowBuffer->getRenderTarget(0);
         shadowSampler->setWrapMode(Texture::BORDER, Texture::BORDER);
         shadowSampler->setFilterMode(Texture::NEAREST, Texture::NEAREST);
-        shadowSampler->setCustomFlags(BGFX_TEXTURE_COMPARE_LESS | BGFX_TEXTURE_BORDER_COLOR(0));
+        shadowSampler->setCustomFlags(BGFX_SAMPLER_COMPARE_LESS | BGFX_SAMPLER_BORDER_COLOR(0));
 
         lightingMaterial->getParameter("s_shadowMap")->setSampler(shadowSampler);
 

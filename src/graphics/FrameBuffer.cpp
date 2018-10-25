@@ -35,7 +35,7 @@ FrameBuffer::~FrameBuffer()
 
 FrameBuffer* FrameBuffer::create(const char* id, uint16_t width, uint16_t height, Texture::Format format)
 {
-    uint32_t textureFlags = BGFX_TEXTURE_U_CLAMP | BGFX_TEXTURE_V_CLAMP;
+    uint32_t textureFlags = BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP;
     bgfx::TextureFormat::Enum bgfxFormat = BGFXTexture::toBgfxFormat(format);
 
     // create simple frame buffer
