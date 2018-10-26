@@ -190,7 +190,8 @@ HEADERS += \
     ui/ThemeStyle.h \
     ui/VerticalLayout.h \
     gplay3d.h \
-    graphics/View.h
+    graphics/View.h \
+    graphics/DebugDraw.h
 
 SOURCES += \
     ai/AIAgent.cpp \
@@ -314,7 +315,8 @@ SOURCES += \
     ui/Theme.cpp \
     ui/ThemeStyle.cpp \
     ui/VerticalLayout.cpp \
-    graphics/View.cpp
+    graphics/View.cpp \
+    graphics/DebugDraw.cpp
 
 
 #--------------------------------------------------------------------

@@ -1,8 +1,9 @@
 #ifndef VERTEXFORMAT_H_
 #define VERTEXFORMAT_H_
 
-namespace gplay
-{
+#include <vector>
+
+namespace gplay {
 
 /**
  * Defines the format of a vertex layout used by a mesh.
