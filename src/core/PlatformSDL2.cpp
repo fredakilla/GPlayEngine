@@ -2,43 +2,7 @@
 #include "../core/Platform.h"
 #include "../core/Game.h"
 
-
-#include <SDL2/SDL_config.h>
-#include <SDL2/SDL.h>
-    #ifdef GP_PLATFORM_LINUX
-#define SDL_VIDEO_DRIVER_X11
-#endif
-#include <SDL2/SDL_syswm.h>
-#include <bgfx/platform.h>
-
-#include "../renderer/Renderer.h"
-#include "../renderer/BGFXImGui.h"
-
-int __app_argc = 0;
-char** __app_argv = nullptr;
-
-
 namespace gplay {
-
-// sdl window
-static SDL_Window * __window;
-static int __windowSize[2];
-
-// timer
-static double __timeAbsolute;
-static std::chrono::time_point<std::chrono::high_resolution_clock> __timeStart;
-
-// mouse input
-static bool __mouseCaptured = false;
-static float __mouseCapturePointX = 0;
-static float __mouseCapturePointY = 0;
-static bool __cursorVisible = true;
-
-// keys
-uint16_t _translateKey[256];
-
-// mobile device gesture
-static bool __multiTouch = false;
 
 
 extern int strcmpnocase(const char* s1, const char* s2)
@@ -82,6 +46,53 @@ extern void print(const char* format, ...)
     va_end(argptr);
 #endif
 }
+
+}
+
+#ifndef GP_CUSTOM_PLATFORM
+
+
+
+
+#include <SDL2/SDL_config.h>
+#include <SDL2/SDL.h>
+    #ifdef GP_PLATFORM_LINUX
+#define SDL_VIDEO_DRIVER_X11
+#endif
+#include <SDL2/SDL_syswm.h>
+#include <bgfx/platform.h>
+
+#include "../renderer/Renderer.h"
+#include "../renderer/BGFXImGui.h"
+
+int __app_argc = 0;
+char** __app_argv = nullptr;
+
+
+namespace gplay {
+
+// sdl window
+static SDL_Window * __window;
+static int __windowSize[2];
+
+// timer
+static double __timeAbsolute;
+static std::chrono::time_point<std::chrono::high_resolution_clock> __timeStart;
+
+// mouse input
+static bool __mouseCaptured = false;
+static float __mouseCapturePointX = 0;
+static float __mouseCapturePointY = 0;
+static bool __cursorVisible = true;
+
+// keys
+uint16_t _translateKey[256];
+
+// mobile device gesture
+static bool __multiTouch = false;
+
+
+
 
 void updateWindowSize()
 {
@@ -1053,3 +1064,5 @@ void*  Platform::getWindowHandle()
 }
 
 }
+
+#endif // GP_CUSTOM_PLATFORM
