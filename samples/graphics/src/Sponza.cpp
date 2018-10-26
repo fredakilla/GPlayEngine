@@ -232,8 +232,8 @@ public:
         _scene->getActiveCamera()->setAspectRatio(getAspectRatio());
 
         // Add watcher to shader directory and bind event to be notified on changes
-        FileWatcher::Get()->addDirectory("res/core/shaders", true);
-        EventManager::get()->addListener(GP_EVENT_LISTENER(this, Sponza::onShaderDirectoryEvent), FileWatcherEvent::ID());
+        FileWatcher::getInstance()->addDirectory("res/core/shaders", true);
+        EventManager::getInstance()->addListener(GP_EVENT_LISTENER(this, Sponza::onShaderDirectoryEvent), FileWatcherEvent::ID());
 
 
 

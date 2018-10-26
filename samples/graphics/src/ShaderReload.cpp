@@ -30,7 +30,7 @@ public:
 
     void finalize()
     {
-        EventManager::get()->removeListener(GP_EVENT_LISTENER(this, ShaderReload::onShaderDirectoryEvent), FileWatcherEvent::ID());
+        EventManager::getInstance()->removeListener(GP_EVENT_LISTENER(this, ShaderReload::onShaderDirectoryEvent), FileWatcherEvent::ID());
         SAFE_RELEASE(_font);
         SAFE_RELEASE(_scene);
     }
@@ -103,10 +103,10 @@ public:
         View::create(0, Game::getInstance()->getViewport(), View::ClearFlags::COLOR_DEPTH, 0x111122ff, 1.0f, 0);
 
         // Add to the fileWatcher a task to monitor the shaders directory.
-        FileWatcher::Get()->addDirectory("res/shaders", true);
+        FileWatcher::getInstance()->addDirectory("res/shaders", true);
 
         // Add a listener to call specified metod when a file operation is detected in the shader directory
-        EventManager::get()->addListener(GP_EVENT_LISTENER(this, ShaderReload::onShaderDirectoryEvent), FileWatcherEvent::ID());
+        EventManager::getInstance()->addListener(GP_EVENT_LISTENER(this, ShaderReload::onShaderDirectoryEvent), FileWatcherEvent::ID());
 
     }
 

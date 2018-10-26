@@ -3,7 +3,7 @@
 
 static EventManagerBase* kEventManager = nullptr;
 
-EventManagerBase* EventManagerBase::get()
+EventManagerBase* EventManagerBase::getInstance()
 {
     return kEventManager;
 }

@@ -52,7 +52,7 @@ void FileWatcherBase::handleFileAction( efsw::WatchID watchid,
     args.directory = dir;
     args.filename = filename;
     args.oldFilename = oldFilename;
-    EventManager::get()->queueEvent(FileWatcherEvent::create(args));
+    EventManager::getInstance()->queueEvent(FileWatcherEvent::create(args));
 }
 
 

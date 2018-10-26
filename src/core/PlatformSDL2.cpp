@@ -167,7 +167,7 @@ static void ImGui_ImplSdlGL3_Shutdown()
     memset(g_MouseCursors, 0, sizeof(g_MouseCursors));
 
     // Destroy bgfx imgui objects
-    GPImGui::Get()->imguiShutdown();
+    GPImGui::getInstance()->imguiShutdown();
 }
 
 static bool ImGui_ImplSdlGL3_Init(SDL_Window* window)
@@ -175,7 +175,7 @@ static bool ImGui_ImplSdlGL3_Init(SDL_Window* window)
     ImGui::StyleColorsClassic();
 
     // Create bgfx imgui objects
-    GPImGui::Get()->imguiInit();
+    GPImGui::getInstance()->imguiInit();
 
     // Setup back-end capabilities flags
     ImGuiIO& io = ImGui::GetIO();
@@ -616,7 +616,7 @@ void Platform::frame()
         _game->frame();
 
         ImGui::Render();
-        GPImGui::Get()->imguiRender(ImGui::GetDrawData());
+        GPImGui::getInstance()->imguiRender(ImGui::GetDrawData());
 
         Renderer::getInstance().endFrame();
     }

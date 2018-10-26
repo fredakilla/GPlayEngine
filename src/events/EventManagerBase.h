@@ -54,7 +54,7 @@ public:
     //! is used by the majority of the engine, though you are free to define your
     //! own as long as you instantiate it with setAsGlobal set to false.
     //! It is not valid to have more than one global event manager.
-    static EventManagerBase* get();
+    static EventManagerBase* getInstance();
 
     //! Registers a delegate function that will get called when the event type is
     //! triggered. NOTE: This listener can be called from any thread. Appropriate

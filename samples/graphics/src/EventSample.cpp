@@ -117,8 +117,8 @@ public:
     void finalize()
     {
         // Remove the delegates from the event manager
-        EventManager::get()->removeListener(GP_EVENT_LISTENER(this, EventSample::onEventCreateNewActor), MyMouseEvent::ID());
-        EventManager::get()->removeListener(GP_EVENT_LISTENER(&_dummyActor, DummyActor::onEventMouseClicked), MyMouseEvent::ID());
+        EventManager::getInstance()->removeListener(GP_EVENT_LISTENER(this, EventSample::onEventCreateNewActor), MyMouseEvent::ID());
+        EventManager::getInstance()->removeListener(GP_EVENT_LISTENER(&_dummyActor, DummyActor::onEventMouseClicked), MyMouseEvent::ID());
 
         SAFE_RELEASE(_font);
         SAFE_RELEASE(_scene);
@@ -152,8 +152,8 @@ public:
         // Add some listeners for the event MyMouseEvent.
         // This event is triggered in touchEvent() when a button is clicked.
         // Any object that wants to be notified of this event can add a listener.
-        EventManager::get()->addListener(GP_EVENT_LISTENER(this, EventSample::onEventCreateNewActor), MyMouseEvent::ID());
-        EventManager::get()->addListener(GP_EVENT_LISTENER(&_dummyActor, DummyActor::onEventMouseClicked), MyMouseEvent::ID());
+        EventManager::getInstance()->addListener(GP_EVENT_LISTENER(this, EventSample::onEventCreateNewActor), MyMouseEvent::ID());
+        EventManager::getInstance()->addListener(GP_EVENT_LISTENER(&_dummyActor, DummyActor::onEventMouseClicked), MyMouseEvent::ID());
     }
 
     void onEventCreateNewActor(EventDataRef eventData)
@@ -243,7 +243,7 @@ public:
             }
 
             // Send event that mouse was clicked, don't care about if someone is waiting this event or not.
-            EventManager::get()->queueEvent(MyMouseEvent::create(Vector2(x,y)));
+            EventManager::getInstance()->queueEvent(MyMouseEvent::create(Vector2(x,y)));
 
             break;
         case Touch::TOUCH_RELEASE:
