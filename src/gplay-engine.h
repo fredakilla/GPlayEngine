@@ -11,6 +11,7 @@
 #include "core/Bundle.h"
 #include "math/MathUtil.h"
 #include "core/Logger.h"
+#include "core/Singleton.h"
 
 // Math
 #include "math/Rectangle.h"
