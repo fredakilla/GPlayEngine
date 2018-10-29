@@ -38,6 +38,9 @@ void operator delete[] (void* p, const char* file, int line) throw();
 void* operator new(size_t, bx::PlacementNewTag, void* _ptr);
 void  operator delete(void*, bx::PlacementNewTag, void*) throw();
 
+#include "thirdparty/imgui/imgui.h"
+void* operator new(size_t, ImNewDummy, void* ptr);
+
 // Re-define new to use versions with file and line number
 #define DEBUG_NEW new (__FILE__, __LINE__)
 #define new DEBUG_NEW
