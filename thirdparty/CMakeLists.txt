@@ -75,7 +75,7 @@ add_subdirectory(tinyxml2)
 add_subdirectory(lua)
 #add_subdirectory(openal)
 add_subdirectory(zlib)
-#add_subdirectory(libpng)
+add_subdirectory(libpng)
 add_subdirectory(ogg)   	# Ogg needs to be built before vorbis
 add_subdirectory(vorbis)
 add_subdirectory(base64)
@@ -92,7 +92,7 @@ set(BUILD_TARGETS
     vorbisenc
     vorbis
     ogg
-    #png_static
+    png_static
     zlibstatic
     lua
     tinyxml2static

@@ -12,6 +12,6 @@ SUBDIRS += \
     samples/spaceship/sample-spaceship.pro \
     samples/racer/sample-racer.pro \
     samples/character/sample-character.pro \
-    #tools/encoder/gplay-encoder.pro \
+    tools/encoder/gplay-encoder.pro \
     #tools/luagen/gplay-luagen.pro \
 
