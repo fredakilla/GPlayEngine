@@ -1,6 +1,6 @@
 #include "Base.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 void fillArray(float values[], float value, size_t length)

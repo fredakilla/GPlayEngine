@@ -1,10 +1,10 @@
-#ifndef BOUNDINGVOLUME_H_
-#define BOUNDINGVOLUME_H_
+#ifndef ENCODER_BOUNDINGVOLUME_H_
+#define ENCODER_BOUNDINGVOLUME_H_
 
 #include "Vector3.h"
 #include "Matrix.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

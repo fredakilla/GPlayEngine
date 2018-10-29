@@ -1,9 +1,9 @@
-#ifndef EFFECT_H_
-#define EFFECT_H_
+#ifndef ENCODER_EFFECT_H_
+#define ENCODER_EFFECT_H_
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Effect : public Object

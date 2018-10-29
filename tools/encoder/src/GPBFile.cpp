@@ -7,7 +7,7 @@
 
 #define EPSILON 1.2e-7f;
 
-namespace gameplay
+namespace gplayencoder
 {
 
 static GPBFile* __instance = NULL;

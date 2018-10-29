@@ -7,11 +7,12 @@
 #include "Vector3.h"
 #include "Vector2.h"
 
-using namespace gameplay;
 using std::string;
 using std::vector;
 using std::map;
 using std::ostringstream;
+
+namespace gplayencoder {
 
 float getAspectRatio(FbxCamera* fbxCamera)
 {
@@ -802,4 +803,6 @@ std::string toString(double value)
     ostringstream stream;
     stream << value;
     return stream.str();
+}
+
 }

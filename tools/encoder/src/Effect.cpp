@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Effect.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Effect::Effect(void)

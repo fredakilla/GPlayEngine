@@ -1,5 +1,5 @@
-#ifndef VERTEX_H_
-#define VERTEX_H_
+#ifndef ENCODER_VERTEX_H_
+#define ENCODER_VERTEX_H_
 
 #include "FileIO.h"
 #include "Vector2.h"
@@ -9,7 +9,7 @@
 // Maximum number of supported UV sets
 #define MAX_UV_SETS 8
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Vertex

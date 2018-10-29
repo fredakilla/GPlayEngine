@@ -1,12 +1,12 @@
-#ifndef NODE_H_
-#define NODE_H_
+#ifndef ENCODER_NODE_H_
+#define ENCODER_NODE_H_
 
 #include "Object.h"
 #include "Camera.h"
 #include "Light.h"
 #include "Model.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Node : public Object

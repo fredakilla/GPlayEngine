@@ -1,11 +1,11 @@
-#ifndef MESHSUBSET_H_
-#define MESHSUBSET_H_
+#ifndef ENCODER_MESHSUBSET_H_
+#define ENCODER_MESHSUBSET_H_
 
 #include "Base.h"
 #include "Object.h"
 #include "Vertex.h"
 
-namespace gameplay 
+namespace gplayencoder 
 {
 
 class MeshSubSet : public Object

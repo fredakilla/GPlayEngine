@@ -1,10 +1,10 @@
-#ifndef FONT_H_
-#define FONT_H_
+#ifndef ENCODER_FONT_H_
+#define ENCODER_FONT_H_
 
 #include "Object.h"
 #include "Glyph.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Font : public Object

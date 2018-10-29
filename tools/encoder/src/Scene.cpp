@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Scene.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Scene::Scene(void) : _cameraNode(NULL)

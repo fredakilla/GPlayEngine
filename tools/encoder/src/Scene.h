@@ -1,11 +1,11 @@
-#ifndef SCENE_H_
-#define SCENE_H_
+#ifndef ENCODER_SCENE_H_
+#define ENCODER_SCENE_H_
 
 #include "Object.h"
 #include "Node.h"
 #include "FileIO.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Scene : public Object

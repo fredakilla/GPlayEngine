@@ -55,8 +55,8 @@
  * Updated in 2011 to avoid a corner case infinite loop.
  *
  */
-#ifndef __EDTAA3FUNC_H__
-#define __EDTAA3FUNC_H__
+#ifndef ENCODER___EDTAA3FUNC_H__
+#define ENCODER___EDTAA3FUNC_H__
 
 #ifdef __cplusplus
 extern "C" {

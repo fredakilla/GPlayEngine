@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "ReferenceTable.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 ReferenceTable::ReferenceTable(void)

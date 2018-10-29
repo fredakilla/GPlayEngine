@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Transform.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 const char* Transform::getPropertyString(unsigned int prop)

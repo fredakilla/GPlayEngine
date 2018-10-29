@@ -13,7 +13,7 @@
 #define ENCODER_VERSION "3.0.0"
 #define HEIGHTMAP_SIZE_MAX 2049
 
-namespace gameplay
+namespace gplayencoder
 {
 
 static EncoderArguments* __instance;

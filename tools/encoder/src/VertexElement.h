@@ -1,9 +1,9 @@
-#ifndef VERTEXELEMENT_H_
-#define VERTEXELEMENT_H_
+#ifndef ENCODER_VERTEXELEMENT_H_
+#define ENCODER_VERTEXELEMENT_H_
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class VertexElement : public Object

@@ -1,9 +1,9 @@
-#ifndef REFERENCE_H_
-#define REFERENCE_H_
+#ifndef ENCODER_REFERENCE_H_
+#define ENCODER_REFERENCE_H_
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Reference : public Object

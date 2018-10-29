@@ -1,5 +1,5 @@
-#ifndef FILEIO_H_
-#define FILEIO_H_
+#ifndef ENCODER_FILEIO_H_
+#define ENCODER_FILEIO_H_
 
 #include <cstdio>
 #include <list>
@@ -11,7 +11,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

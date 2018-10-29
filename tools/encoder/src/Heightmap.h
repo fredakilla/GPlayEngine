@@ -1,9 +1,9 @@
-#ifndef HEIGHTMAP_H_
-#define HEIGHTMAP_H_
+#ifndef ENCODER_HEIGHTMAP_H_
+#define ENCODER_HEIGHTMAP_H_
 
 #include "Node.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Heightmap

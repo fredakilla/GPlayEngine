@@ -1,11 +1,11 @@
-#ifndef MESHPART_H_
-#define MESHPART_H_
+#ifndef ENCODER_MESHPART_H_
+#define ENCODER_MESHPART_H_
 
 #include "Base.h"
 #include "Object.h"
 #include "Vertex.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class MeshPart : public Object

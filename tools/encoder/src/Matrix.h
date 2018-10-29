@@ -1,5 +1,5 @@
-#ifndef MATRIX_H_
-#define MATRIX_H_
+#ifndef ENCODER_MATRIX_H_
+#define ENCODER_MATRIX_H_
 
 #include "Vector4.h"
 #include "Vector3.h"
@@ -12,7 +12,7 @@
 #define TORADIANS(degrees) (degrees * (PI / 180.0f))
 #define TODEGREES(radians) (radians * (180.0f / PI))
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

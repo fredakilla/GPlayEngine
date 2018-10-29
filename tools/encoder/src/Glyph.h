@@ -1,9 +1,9 @@
-#ifndef GLYPH_H_
-#define GLYPH_H_
+#ifndef ENCODER_GLYPH_H_
+#define ENCODER_GLYPH_H_
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Glyph : public Object

@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "MaterialParameter.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 MaterialParameter::MaterialParameter(void) :

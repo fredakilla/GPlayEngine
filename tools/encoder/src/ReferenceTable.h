@@ -1,11 +1,11 @@
-#ifndef REFTABLE_H_
-#define REFTABLE_H_
+#ifndef ENCODER_REFTABLE_H_
+#define ENCODER_REFTABLE_H_
 
 #include "FileIO.h"
 #include "Reference.h"
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

@@ -6,7 +6,7 @@
 #define NODE 1
 #define JOINT 2
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Node::Node(void) :

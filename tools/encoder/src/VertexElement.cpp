@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "VertexElement.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 VertexElement::VertexElement(unsigned int t, unsigned int c) :

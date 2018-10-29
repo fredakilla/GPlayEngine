@@ -1,10 +1,10 @@
-#ifndef QUATERNION_H_
-#define QUATERNION_H_
+#ifndef ENCODER_QUATERNION_H_
+#define ENCODER_QUATERNION_H_
 
 #include "Vector3.h"
 #include "Matrix.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Matrix;

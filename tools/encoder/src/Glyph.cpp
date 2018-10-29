@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Glyph.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Glyph::Glyph(void) :

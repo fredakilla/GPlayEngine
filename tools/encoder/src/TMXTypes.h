@@ -1,5 +1,5 @@
-#ifndef TMXTYPES_H_
-#define TMXTYPES_H_
+#ifndef ENCODER_TMXTYPES_H_
+#define ENCODER_TMXTYPES_H_
 
 #include <vector>
 #include <set>
@@ -8,7 +8,7 @@
 
 #include "Vector2.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 typedef std::map<std::string, std::string> TMXProperties;

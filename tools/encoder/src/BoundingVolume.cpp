@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "BoundingVolume.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 BoundingVolume::BoundingVolume()

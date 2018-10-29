@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Quaternion.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Quaternion::Quaternion()

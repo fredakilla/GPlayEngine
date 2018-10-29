@@ -1,7 +1,7 @@
-#ifndef IMAGE_H__
-#define IMAGE_H__
+#ifndef ENCODER_IMAGE_H__
+#define ENCODER_IMAGE_H__
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

@@ -3,7 +3,7 @@
 #include "StringUtil.h"
 #include "edtaa3func.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 using std::string;

@@ -1,7 +1,7 @@
 #include "Constants.h"
 
 
-namespace gameplay
+namespace gplayencoder
 {
 
 const std::string SPOT_LIGHT = "SPOT_LIGHT";

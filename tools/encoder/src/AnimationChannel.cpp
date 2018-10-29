@@ -2,7 +2,7 @@
 #include "AnimationChannel.h"
 #include "Transform.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 AnimationChannel::AnimationChannel(void) :

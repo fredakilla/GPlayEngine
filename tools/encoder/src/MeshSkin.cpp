@@ -9,7 +9,7 @@
 #include "Curve.h"
 #include "Matrix.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 MeshSkin::MeshSkin(void) :
@@ -332,7 +332,7 @@ void MeshSkin::computeBounds()
 
                 // Set the curve point
                 // TODO: Handle other interpolation types
-                curve->setPoint(j, t, keyValuesPtr, gameplay::Curve::LINEAR);
+                curve->setPoint(j, t, keyValuesPtr, Curve::LINEAR);
 
                 // Move to the next point on the curve
                 keyValuesPtr += curve->getComponentCount();

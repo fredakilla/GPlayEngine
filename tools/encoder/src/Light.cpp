@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Light.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Light::Light(void) :

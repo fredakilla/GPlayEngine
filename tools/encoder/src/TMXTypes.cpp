@@ -1,6 +1,6 @@
 #include "TMXTypes.h"
 
-using namespace gameplay;
+namespace gplayencoder {
 
 // TMXMap
 TMXMap::TMXMap()
@@ -515,4 +515,6 @@ void TMXImageLayer::setImagePath(const std::string& path)
 const std::string& TMXImageLayer::getImagePath() const
 {
     return _path;
+}
+
 }

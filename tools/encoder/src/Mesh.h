@@ -1,5 +1,5 @@
-#ifndef MESH_H_
-#define MESH_H_
+#ifndef ENCODER_MESH_H_
+#define ENCODER_MESH_H_
 
 #include "Base.h"
 #include "Object.h"
@@ -7,7 +7,7 @@
 #include "VertexElement.h"
 #include "BoundingVolume.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Model;

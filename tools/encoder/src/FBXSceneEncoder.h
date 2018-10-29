@@ -1,5 +1,5 @@
-#ifndef FBXSCENEEENCODER_H_
-#define FBXSCENEEENCODER_H_
+#ifndef ENCODER_FBXSCENEEENCODER_H_
+#define ENCODER_FBXSCENEEENCODER_H_
 
 #define FBXSDK_NEW_API
 
@@ -32,7 +32,7 @@
 #include "GPBFile.h"
 #include "EncoderArguments.h"
 
-using namespace gameplay;
+namespace gplayencoder {
 
 /**
  * Class for binary encoding an FBX file.
@@ -291,5 +291,7 @@ private:
      */
     bool _autoGroupAnimations;
 };
+
+}
 
 #endif

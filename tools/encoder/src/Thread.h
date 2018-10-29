@@ -1,7 +1,7 @@
-#ifndef THREAD_H_
-#define THREAD_H_
+#ifndef ENCODER_THREAD_H_
+#define ENCODER_THREAD_H_
 
-namespace gameplay
+namespace gplayencoder
 {
 
 #ifdef WIN32

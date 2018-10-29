@@ -1,6 +1,6 @@
 
 
-namespace gameplay
+namespace gplayencoder
 {
 
 inline float bezier(float eq0, float eq1, float eq2, float eq3, float from, float out, float to, float in)

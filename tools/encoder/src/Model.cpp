@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Model.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Model::Model(void) :

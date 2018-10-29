@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "StringUtil.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 inline char lowercase(char c)

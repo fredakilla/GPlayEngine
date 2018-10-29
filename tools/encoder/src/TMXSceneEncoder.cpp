@@ -4,7 +4,6 @@
 
 #include "TMXSceneEncoder.h"
 
-using namespace gameplay;
 using namespace tinyxml2;
 using std::string;
 
@@ -19,6 +18,9 @@ using std::string;
 #ifdef WIN32
 #define snprintf(s, n, fmt, ...) sprintf((s), (fmt), __VA_ARGS__)
 #endif
+
+
+namespace gplayencoder {
 
 TMXSceneEncoder::TMXSceneEncoder() :
     _tabCount(0)
@@ -314,7 +316,7 @@ bool TMXSceneEncoder::parseTmx(const XMLDocument& xmlDoc, TMXMap& map, const str
     return true;
 }
 
-void TMXSceneEncoder::parseBaseLayerProperties(const tinyxml2::XMLElement* xmlBaseLayer, gameplay::TMXBaseLayer* layer) const
+void TMXSceneEncoder::parseBaseLayerProperties(const tinyxml2::XMLElement* xmlBaseLayer, TMXBaseLayer* layer) const
 {
     layer->setName(xmlBaseLayer->Attribute("name"));
 
@@ -677,7 +679,7 @@ void TMXSceneEncoder::writeTileset(const TMXMap& map, const TMXLayer* tileset, s
     WRITE_PROPERTY_BLOCK_END();
 }
 
-void TMXSceneEncoder::writeSoloTileset(const TMXMap& map, const gameplay::TMXTileSet& tmxTileset, const TMXLayer& tileset, std::ofstream& file, unsigned int resultOnlyForTileset)
+void TMXSceneEncoder::writeSoloTileset(const TMXMap& map, const TMXTileSet& tmxTileset, const TMXLayer& tileset, std::ofstream& file, unsigned int resultOnlyForTileset)
 {
     WRITE_PROPERTY_BLOCK_START("tileset");
 
@@ -739,7 +741,7 @@ void TMXSceneEncoder::writeSoloTileset(const TMXMap& map, const gameplay::TMXTil
     WRITE_PROPERTY_BLOCK_END();
 }
 
-void TMXSceneEncoder::writeSprite(const gameplay::TMXImageLayer* imageLayer, std::ofstream& file)
+void TMXSceneEncoder::writeSprite(const TMXImageLayer* imageLayer, std::ofstream& file)
 {
     if (!imageLayer)
     {
@@ -997,4 +999,6 @@ void TMXSceneEncoder::copyImage(unsigned char* dst, const unsigned char* src,
             memcpy(dstPtr, srcPtr, sizePerRow);
         }
     }
+}
+
 }

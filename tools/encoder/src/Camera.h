@@ -1,9 +1,9 @@
-#ifndef CAMERA_H_
-#define CAMERA_H_
+#ifndef ENCODER_CAMERA_H_
+#define ENCODER_CAMERA_H_
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Camera : public Object

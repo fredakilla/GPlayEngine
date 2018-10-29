@@ -1,5 +1,5 @@
-#ifndef MESHSKIN_H_
-#define MESHSKIN_H_
+#ifndef ENCODER_MESHSKIN_H_
+#define ENCODER_MESHSKIN_H_
 
 #include "Base.h"
 #include "Object.h"
@@ -7,7 +7,7 @@
 #include "Animation.h"
 #include "BoundingVolume.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Node;

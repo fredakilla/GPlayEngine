@@ -1,10 +1,10 @@
-#ifndef Sampler_H_
-#define Sampler_H_
+#ifndef ENCODER_SAMPLER_H_
+#define ENCODER_SAMPLER_H_
 
 #include "Base.h"
 #include "Constants.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Sampler

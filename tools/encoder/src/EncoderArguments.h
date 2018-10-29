@@ -1,11 +1,11 @@
-#ifndef ENCODERARGUMENTS_H_
-#define ENCODERARGUMENTS_H_
+#ifndef ENCODER_ENCODERARGUMENTS_H_
+#define ENCODER_ENCODERARGUMENTS_H_
 
 #include <set>
 #include "Vector3.h"
 #include "Font.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

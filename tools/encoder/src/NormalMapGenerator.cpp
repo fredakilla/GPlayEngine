@@ -2,7 +2,7 @@
 #include "Image.h"
 #include "Base.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 NormalMapGenerator::NormalMapGenerator(const char* inputFile, const char* outputFile, int resolutionX, int resolutionY, const Vector3& worldSize)

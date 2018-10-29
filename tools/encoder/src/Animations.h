@@ -1,10 +1,10 @@
-#ifndef LIBRARYANIMATIONS_H_
-#define LIBRARYANIMATIONS_H_
+#ifndef ENCODER_LIBRARYANIMATIONS_H_
+#define ENCODER_LIBRARYANIMATIONS_H_
 
 #include "Object.h"
 #include "Animation.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

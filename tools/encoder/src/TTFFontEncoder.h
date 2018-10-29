@@ -6,7 +6,9 @@
 #define END_INDEX       127
 #define GLYPH_PADDING   4
 
-namespace gameplay
+#include "Font.h"
+
+namespace gplayencoder
 {
 
 // Structure of TTF Glyph.

@@ -4,7 +4,7 @@
 
 #include "Vector2.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 inline Vector2 Vector2::operator+(const Vector2& v)

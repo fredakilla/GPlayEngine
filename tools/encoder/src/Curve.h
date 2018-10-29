@@ -1,7 +1,7 @@
-#ifndef CURVE_H_
-#define CURVE_H_
+#ifndef ENCODER_CURVE_H_
+#define ENCODER_CURVE_H_
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

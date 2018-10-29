@@ -1,5 +1,5 @@
-#ifndef GPBFILE_H_
-#define GPBFILE_H_
+#ifndef ENCODER_GPBFILE_H_
+#define ENCODER_GPBFILE_H_
 
 #include "FileIO.h"
 #include "Object.h"
@@ -14,7 +14,7 @@
 #include "Animation.h"
 #include "AnimationChannel.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

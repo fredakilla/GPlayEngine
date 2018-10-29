@@ -6,11 +6,12 @@
 #include "FBXUtil.h"
 #include "Sampler.h"
 
-using namespace gameplay;
 using std::string;
 using std::vector;
 using std::map;
 using std::ostringstream;
+
+namespace gplayencoder {
 
 // Fix bad material names
 static void fixMaterialName(string& name);
@@ -1351,4 +1352,6 @@ void fixMaterialName(string& name)
         stream << "unnamed_" << (++unnamedCount);
         name = stream.str();
     }
+}
+
 }

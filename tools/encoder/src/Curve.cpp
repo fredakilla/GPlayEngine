@@ -51,7 +51,7 @@ using std::strcmp;
 #endif
 
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Curve::Curve(unsigned int pointCount, unsigned int componentCount)

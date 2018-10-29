@@ -3,7 +3,7 @@
 #include "GPBFile.h"
 #include "Thread.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 // Number of threads to spawn for the heightmap generator

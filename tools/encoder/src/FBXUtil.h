@@ -1,5 +1,5 @@
-#ifndef FBXUTIL_H_
-#define FBXUTIL_H_
+#ifndef ENCODER_FBXUTIL_H_
+#define ENCODER_FBXUTIL_H_
 
 #define FBXSDK_NEW_API
 
@@ -19,7 +19,8 @@
 #include "AnimationChannel.h"
 #include "EncoderArguments.h"
 
-using namespace gameplay;
+
+namespace gplayencoder {
 
 /**
  * Returns the aspect ratio from the given camera.
@@ -200,4 +201,7 @@ std::string toString(const FbxDouble3& fbxDouble);
 std::string toString(const FbxDouble3& fbxDouble, double d);
 std::string toString(double value);
 
+}
+
 #endif
+

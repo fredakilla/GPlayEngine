@@ -1,10 +1,10 @@
-#ifndef ANIMATION_H_
-#define ANIMATION_H_
+#ifndef ENCODER_ANIMATION_H_
+#define ENCODER_ANIMATION_H_
 
 #include "Object.h"
 #include "AnimationChannel.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Animation : public Object

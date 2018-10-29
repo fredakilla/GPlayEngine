@@ -1,7 +1,7 @@
-#ifndef VECTOR2_H_
-#define VECTOR2_H_
+#ifndef ENCODER_VECTOR2_H_
+#define ENCODER_VECTOR2_H_
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Matrix;

@@ -1,6 +1,6 @@
 #include "Quaternion.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 inline Quaternion Quaternion::operator*(const Quaternion& q) const

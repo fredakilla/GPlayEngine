@@ -1,7 +1,7 @@
-#ifndef TRANSFORM_H_
-#define TRANSFORM_H_
+#ifndef ENCODER_TRANSFORM_H_
+#define ENCODER_TRANSFORM_H_
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Transform

@@ -1,7 +1,7 @@
 #include "Base.h"
 #include "Matrix.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 Matrix::Matrix(void)

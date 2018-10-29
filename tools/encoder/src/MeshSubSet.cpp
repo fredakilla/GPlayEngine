@@ -1,6 +1,6 @@
 #include "MeshSubSet.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 MeshSubSet::MeshSubSet(void)

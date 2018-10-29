@@ -1,9 +1,9 @@
-#ifndef GPBDECODER_H_
-#define GPBDECODER_H_
+#ifndef ENCODER_GPBDECODER_H_
+#define ENCODER_GPBDECODER_H_
 
 #include "FileIO.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 /**
  * This class is used for decoding a GPB file for the purpose of debugging.

@@ -1,9 +1,9 @@
-#ifndef CONSTANTS_H_
-#define CONSTANTS_H_
+#ifndef ENCODER_CONSTANTS_H_
+#define ENCODER_CONSTANTS_H_
 
 #include "string"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 extern const std::string SPOT_LIGHT;

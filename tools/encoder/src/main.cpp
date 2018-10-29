@@ -7,8 +7,6 @@
 #include "NormalMapGenerator.h"
 #include "Font.h"
 
-using namespace gameplay;
-
 #define FONT_SIZE_DISTANCEFIELD 48
 
 /**
@@ -65,6 +63,8 @@ static std::vector<unsigned int> promptUserFontSize()
     return fontSizes;
 }
 
+
+using namespace gplayencoder;
 
 /**
  * Main application entry point.

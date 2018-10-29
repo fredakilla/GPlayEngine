@@ -1,9 +1,9 @@
-#ifndef MATERIALPARAMETER_H_
-#define MATERIALPARAMETER_H_
+#ifndef ENCODER_MATERIALPARAMETER_H_
+#define ENCODER_MATERIALPARAMETER_H_
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class MaterialParameter : public Object

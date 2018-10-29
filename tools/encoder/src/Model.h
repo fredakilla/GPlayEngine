@@ -1,12 +1,12 @@
-#ifndef MODEL_H_
-#define MODEL_H_
+#ifndef ENCODER_MODEL_H_
+#define ENCODER_MODEL_H_
 
 #include "Object.h"
 #include "Mesh.h"
 #include "MeshSkin.h"
 #include "Material.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Model : public Object

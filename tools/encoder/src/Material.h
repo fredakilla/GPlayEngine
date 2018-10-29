@@ -1,11 +1,11 @@
-#ifndef MATERIAL_H_
-#define MATERIAL_H_
+#ifndef ENCODER_MATERIAL_H_
+#define ENCODER_MATERIAL_H_
 
 #include "Sampler.h"
 #include "Light.h"
 #include "Constants.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Material

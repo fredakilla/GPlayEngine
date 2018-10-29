@@ -1,10 +1,10 @@
-#ifndef OBJ_H_
-#define OBJ_H_
+#ifndef ENCODER_OBJ_H_
+#define ENCODER_OBJ_H_
 
 #include "FileIO.h"
 #include "Base.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 /**

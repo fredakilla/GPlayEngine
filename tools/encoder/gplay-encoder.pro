@@ -7,9 +7,22 @@ include($$PWD/../../setup.pri)
 #--------------------------------------------------------------------
 # project
 #--------------------------------------------------------------------
+
+# uncomment to compil as library
+#DEFINES = USE_LIB_VERSION
+
+# library or app
+contains ( DEFINES, USE_LIB_VERSION ) {
+    TEMPLATE = lib
+    CONFIG += staticlib
+} else {
+    TEMPLATE = app
+    SOURCES += src/main.cpp
+}
+
+
 QT -= core gui
 TARGET = gplay-encoder
-TEMPLATE = app
 CONFIG += c++11
 CONFIG -= qt
 CONFIG -= app_bundle
@@ -18,11 +31,9 @@ DESTDIR = $$GPLAY_OUTPUT_DIR/bin
 QMAKE_CLEAN += $$DESTDIR/$$TARGET
 
 CONFIG(debug, debug|release):
-    DEFINES += _DEBUG
-DEFINES += USE_FBX
+    DEFINES +=  _DEBUG \
+                USE_FBX
 
-
-#INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/
 INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/thirdparty
 
 #--------------------------------------------------------------------
@@ -35,12 +46,9 @@ linux: {
 
     QMAKE_CXXFLAGS += -std=c++11 -lstdc++ -pthread -w
     INCLUDEPATH += /usr/include/fbxsdk
-    #INCLUDEPATH += /usr/include/freetype2
-    #INCLUDEPATH += /usr/include
 
     LIBS += -L/usr/lib/gcc4/x64/release -lfbxsdk
     LIBS += -lstdc++ -ldl -lpthread
-    #LIBS += -lfreetype
 
     # Note: when running the encoder, if error : error while loading shared libraries: libfbxsdk.so: cannot open shared object...
     # open a terminal :
@@ -51,6 +59,10 @@ linux: {
     QMAKE_LFLAGS_RPATH=
     QMAKE_LFLAGS += "-Wl,-rpath,\'/usr/lib/gcc4/x64/release\'"
 }
+
+
+
+
 
 
 #--------------------------------------------------------------------
@@ -78,7 +90,6 @@ SOURCES += src/Mesh.cpp \
     src/Heightmap.cpp \
     src/Image.cpp \
     src/Light.cpp \
-    src/main.cpp \
     src/Material.cpp \
     src/MaterialParameter.cpp \
     src/Matrix.cpp \

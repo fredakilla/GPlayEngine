@@ -1,9 +1,9 @@
-#ifndef LIGHT_H_
-#define LIGHT_H_
+#ifndef ENCODER_LIGHT_H_
+#define ENCODER_LIGHT_H_
 
 #include "Object.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class Light : public Object

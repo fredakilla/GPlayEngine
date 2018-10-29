@@ -1,9 +1,9 @@
-#ifndef NORMALMAPGENERATOR_H_
-#define NORMALMAPGENERATOR_H_
+#ifndef ENCODER_NORMALMAPGENERATOR_H_
+#define ENCODER_NORMALMAPGENERATOR_H_
 
 #include "Vector3.h"
 
-namespace gameplay
+namespace gplayencoder
 {
 
 class NormalMapGenerator
