@@ -8,7 +8,7 @@ GPlayEngine is based on the [GamePlay 3D engine](http://www.gameplay3d.io/) v3.0
 <img src="https://i.imgur.com/u3arwg3.png" width="50%" height="%"><img src="https://i.imgur.com/IZKGhDb.jpg" width="50%" height="%">
 <img src="https://i.imgur.com/0ei9Y28.png" width="50%" height="%"><img src="https://i.imgur.com/mXvz27x.jpg" width="50%" height="%">
 <img src="https://i.imgur.com/nRpTNIm.jpg" width="50%" height="%"><img src="https://i.imgur.com/SDIgTkt.png" width="50%" height="%">
-<img src="https://i.imgur.com/KyRqyIP.png" width="25%" height="%">
+<img src="https://i.imgur.com/4uplO1O.png" width="75%" height="%"><img src="https://i.imgur.com/KyRqyIP.png" width="25%" height="%">
 
 ## Current status
 - Cmake is used as main build system (qtcreator is also up-to-date)
