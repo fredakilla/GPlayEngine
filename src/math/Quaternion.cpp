@@ -104,23 +104,40 @@ void Quaternion::createFromRotationTo(const Vector3& start, const Vector3& end, 
 
 void Quaternion::createFromEuler(float yaw, float pitch, float roll, Quaternion* dst)
 {
-	GP_ASSERT(dst);
+    /*
+    GP_ASSERT(dst);
 
-	pitch *= 0.5f;
-	yaw *= 0.5f;
-	roll *= 0.5f;
+    pitch *= 0.5f;
+    yaw *= 0.5f;
+    roll *= 0.5f;
 
-	float sinp = sin(pitch);
-	float siny = sin(yaw);
-	float sinr = sin(roll);
-	float cosp = cos(pitch);
-	float cosy = cos(yaw);
-	float cosr = cos(roll);
+    float sinp = sin(pitch);
+    float siny = sin(yaw);
+    float sinr = sin(roll);
+    float cosp = cos(pitch);
+    float cosy = cos(yaw);
+    float cosr = cos(roll);
 
-	dst->w = cosp * cosy * cosr + sinp * siny * sinr;
-	dst->x = sinp * cosy * cosr - cosp * siny * sinr;
-	dst->y = cosp * siny * cosr + sinp * cosy * sinr;
-	dst->z = cosp * cosy * sinr - sinp * siny * cosr;
+    dst->w = cosp * cosy * cosr + sinp * siny * sinr;
+    dst->x = sinp * cosy * cosr - cosp * siny * sinr;
+    dst->y = cosp * siny * cosr + sinp * cosy * sinr;
+    dst->z = cosp * cosy * sinr - sinp * siny * cosr;
+    */
+
+
+    GP_ASSERT(dst);
+
+    float cy = cos(yaw * 0.5f);
+    float sy = sin(yaw * 0.5f);
+    float cr = cos(roll * 0.5f);
+    float sr = sin(roll * 0.5f);
+    float cp = cos(pitch * 0.5f);
+    float sp = sin(pitch * 0.5f);
+
+    dst->w = cy * cr * cp + sy * sr * sp;
+    dst->x = cy * sr * cp - sy * cr * sp;
+    dst->y = cy * cr * sp + sy * sr * cp;
+    dst->z = sy * cr * cp - cy * sr * sp;
 }
 
 void Quaternion::createFromRotationMatrix(const Matrix& m, Quaternion* dst)
@@ -147,11 +164,40 @@ void Quaternion::computeEuler(float* yaw, float* pitch, float* roll)
 {
 	GP_ASSERT(yaw);
 	GP_ASSERT(pitch);
-	GP_ASSERT(roll);
+    GP_ASSERT(roll);
 
-	*pitch = std::atan2(2 * (w*x + y*z), 1 - 2 * (x*x + y*y));
-	*yaw = std::asin(2 * (w*y - z*x));
-	*roll = atan2(2 * (w*z + x*y), 1 - 2 * (y*y + z*z));
+    //*pitch = std::atan2(2 * (w*x + y*z), 1 - 2 * (x*x + y*y));
+    //*yaw = std::asin(2 * (w*y - z*x));
+    //*roll = atan2(2 * (w*z + x*y), 1 - 2 * (y*y + z*z));
+
+
+    float test = x*y + z*w;
+
+    // singularity at north pole
+    if (test > 0.499f)
+    {
+        *pitch = 2.0f * std::atan2(x,w);
+        *yaw = MATH_PIOVER2;
+        *roll = 0.0f;
+        return;
+    }
+
+    // singularity at south pole
+    if (test < -0.499f)
+    {
+        *pitch = -2.0f * std::atan2(x,w);
+        *yaw = -MATH_PIOVER2;
+        *roll = 0.0f;
+        return;
+    }
+
+    float sqx = x*x;
+    float sqy = y*y;
+    float sqz = z*z;
+
+    *pitch = std::atan2(2*y*w-2*x*z , 1 - 2*sqy - 2*sqz);
+    *yaw = std::asin(2*test);
+    *roll = std::atan2(2*x*w-2*y*z , 1 - 2*sqx - 2*sqz);
 }
 
 void Quaternion::conjugate()
