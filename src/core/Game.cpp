@@ -67,6 +67,8 @@ Game::Game()
       _physicsController(NULL), _aiController(NULL), _audioListener(NULL),
       _timeEvents(NULL), _scriptController(NULL), _scriptTarget(NULL)
 {
+    setlocale(LC_NUMERIC, "C");
+
     GP_ASSERT(__gameInstance == NULL);
 
     __gameInstance = this;
