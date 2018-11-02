@@ -395,6 +395,16 @@ public:
     float determinant() const;
 
     /**
+     * Gets the Euler angles equivalent to the rotational portion
+     * of the specified matrix.
+     *
+     * The returned Euler angles are in XYZ order an in degrees.
+     *
+     * @return The rotational component of this matrix
+     */
+    Vector3 getEulerAngles() const;
+
+    /**
      * Gets the scalar component of this matrix in the specified vector.
      *
      * If the scalar component of this matrix has negative parts,

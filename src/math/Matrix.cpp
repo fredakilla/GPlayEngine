@@ -577,6 +577,40 @@ float Matrix::determinant() const
     return (a0 * b5 - a1 * b4 + a2 * b3 + a3 * b2 - a4 * b1 + a5 * b0);
 }
 
+Vector3 Matrix::getEulerAngles() const
+{
+    Vector3 scale;
+    getScale(&scale);
+
+    float sx = scale.x;
+    float sy = scale.y;
+    float sz = scale.z;
+
+    float x, y, z;
+    y = std::asin(-m[2] / sx);
+    if (y < MATH_PIOVER2)
+    {
+        if (y > -MATH_PIOVER2)
+        {
+            x = std::atan2(m[6] / sy, m[10] / sz);
+            z = std::atan2(m[1] / sx, m[0] / sx);
+        }
+        else
+        {
+            z = 0;
+            x = -std::atan2(m[4] / sy, m[5] / sy);
+        }
+    }
+    else
+    {
+        z = 0;
+        x = std::atan2(m[4] / sy, m[5] / sy);
+    }
+    Vector3 eulerAngles(x, y, z);
+    eulerAngles.scale(MATH_180OVERPI);
+    return eulerAngles;
+}
+
 void Matrix::getScale(Vector3* scale) const
 {
     decompose(scale, NULL, NULL);
