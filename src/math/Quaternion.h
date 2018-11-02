@@ -89,7 +89,14 @@ public:
      *
      * @param m The matrix.
      */
-    Quaternion(const Matrix& m);
+    Quaternion(const Matrix& m);   
+
+    /**
+     * Constructor.
+     *
+     * @param eulerAngles The euler angles x(roll), y(pitch), z(yaw)
+     */
+    Quaternion(const Vector3& eulerAngles);
 
     /**
      * Constructs a quaternion equal to the rotation from the specified axis and angle.
@@ -157,16 +164,13 @@ public:
      */
     static void createFromRotationTo(const Vector3& start, const Vector3& end, Quaternion* dst);
 
-	/**
-	* Creates this quaternion equal to the rotation from the specified euler angles
-	* and stores the result in dst.
-	*
-	* @param yaw The yaw angle (in radians)
-	* @param pitch The pitch angle (in radians)
-	* @param roll The roll angle (in radians)
-	* @param dst A quaternion to store the result in.
-	*/
-	static void createFromEuler(float yaw, float pitch, float roll, Quaternion* dst);
+    /**
+    * Creates this quaternion equal to the rotation from the specified euler angles.
+    *
+    * @param eulerAngles The euler angles x(roll), y(pitch), z(yaw) (in degrees).
+    * @param dst A quaternion to store the result in.
+    */
+    static void createFromEulerAngles(const Vector3& eulerAngles, Quaternion* dst);
 
     /**
      * Creates a quaternion equal to the rotational part of the specified matrix
@@ -186,17 +190,14 @@ public:
      * @param dst A quaternion to store the conjugate in.
      */
     static void createFromAxisAngle(const Vector3& axis, float angle, Quaternion* dst);
-
-	/**
-	* Calculates (in radians) the yaw, pitch and roll angles of this quaternion
-	* and stores the results in the specified pointers.
-	*
-	* @param yaw The returned yaw angle
-	* @param pitch The returned pitch angle
-	* @param roll The returned roll angle
-	*/
-	void computeEuler(float* yaw, float* pitch, float* roll);
 	
+    /**
+     * Gets the euler angles from the quaterion rotation.
+     *
+     * @param eulerAngles The euler angles (in degrees).
+     */
+    void toEulerAngles(Vector3* eulerAngles) const;
+
     /**
      * Sets this quaternion to the conjugate of itself.
      */
@@ -305,6 +306,14 @@ public:
      * @param m The matrix.
      */
     void set(const Matrix& m);
+
+    /**
+     * Sets the quaternion equal to the rotation from the specified
+     * euler angles x(roll), y(pitch), z(yaw).
+     *
+     * @param euler The euler angles x(roll), y(pitch), z(yaw) - (in degress).
+     */
+    void set(const Vector3& euler);
 
     /**
      * Sets the quaternion equal to the rotation from the specified axis and angle.

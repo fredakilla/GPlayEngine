@@ -174,6 +174,9 @@ extern int strcmpnocase(const char* s1, const char* s2);
 #define MATH_PI                     3.14159265358979323846f
 #define MATH_PIOVER2                1.57079632679489661923f
 #define MATH_PIOVER4                0.785398163397448309616f
+#define MATH_PIOVER360              0.008726646259971647884f
+#define MATH_PIOVER180              0.0174532924f
+#define MATH_180OVERPI              57.29578f
 #define MATH_PIX2                   6.28318530717958647693f
 #define MATH_EPSILON                0.000001f
 #define MATH_CLAMP(x, lo, hi)       ((x < lo) ? lo : ((x > hi) ? hi : x))
