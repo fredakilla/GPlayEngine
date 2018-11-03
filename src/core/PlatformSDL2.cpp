@@ -23,6 +23,11 @@ extern int strcmpnocase(const char* s1, const char* s2)
 #endif
 }
 
+
+#if 0
+
+// old print
+
 extern void print(const char* format, ...)
 {
 #if defined (GP_PLATFORM_WINDOWS)
@@ -47,7 +52,27 @@ extern void print(const char* format, ...)
 #endif
 }
 
+#else
+
+// new print, using std::cout for output
+
+extern void print(const char* format, ...)
+{
+    GP_ASSERT(format);
+
+    static char buffer[4096] = "";
+
+    va_list argptr;
+    va_start(argptr, format);
+    vsprintf(buffer, format, argptr);
+    va_end(argptr);
+
+    std::cout << buffer << std::flush;
 }
+
+#endif
+
+} // end namespace gplay
 
 #ifndef GP_CUSTOM_PLATFORM
 
