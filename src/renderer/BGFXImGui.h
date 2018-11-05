@@ -1,7 +1,8 @@
+#if 0
 #include "../core/Singleton.h"
 #include "../core/Base.h"
 #include "../input/Mouse.h"
-#include <imgui/imgui.h>
+#include <dear-imgui/imgui.h>
 
 namespace gplay {
 
@@ -23,3 +24,4 @@ private:
 typedef Singleton<BGFXImGui> GPImGui;
 
 }
+#endif

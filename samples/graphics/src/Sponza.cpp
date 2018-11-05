@@ -1,7 +1,7 @@
 #include "SamplesGame.h"
 #include "renderer/BGFXRenderer.h"
 #include "FirstPersonCamera.h"
-#include <imgui/imgui.h>
+#include <dear-imgui/imgui.h>
 #include <events/EventManager.h>
 #include <core/FileWatcher.h>
 

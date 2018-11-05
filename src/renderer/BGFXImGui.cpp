@@ -1,7 +1,8 @@
+#if 0
 #include "BGFXImGui.h"
 
 #include "../core/Base.h"
-#include <imgui/imgui.h>
+#include <dear-imgui/imgui.h>
 #include <brtshaderc/brtshaderc.h>
 #include <bx/math.h>
 
@@ -140,3 +141,4 @@ void BGFXImGui::imguiShutdown()
 
 
 }
+#endif

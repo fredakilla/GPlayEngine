@@ -5,7 +5,7 @@
 #include "sparkparticles/SparkQuadRenderer.h"
 #include "sparkparticles/SparkParticleEmitter.h"
 #include <spark/SPARK.h>
-#include <imgui/imgui.h>
+#include <dear-imgui/imgui.h>
 
 #if defined(ADD_SAMPLE)
     ADD_SAMPLE("Graphics", "Spark Demo", SparkDemo, 7);

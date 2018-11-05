@@ -7,8 +7,8 @@ include(../global.cmake)
 # set cmake default output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 if(WINDOWS)
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
 endif()
 
 # set output directories
@@ -63,9 +63,9 @@ if(LINUX OR WINDOWS)
     # SDL2
     set( SDL_SHARED_ENABLED_BY_DEFAULT OFF )
     add_subdirectory(SDL2)
-
     add_subdirectory(openal)
-    add_subdirectory(freetype)
+    #add_subdirectory(freetype)
+    add_subdirectory(libpng)        # only needed by gplay-encoder
 endif()
 
 # add subdirectory
@@ -75,11 +75,10 @@ add_subdirectory(tinyxml2)
 add_subdirectory(lua)
 #add_subdirectory(openal)
 add_subdirectory(zlib)
-add_subdirectory(libpng)
-add_subdirectory(ogg)   	# Ogg needs to be built before vorbis
+add_subdirectory(ogg)       # Ogg needs to be built before vorbis
 add_subdirectory(vorbis)
 add_subdirectory(base64)
-include(${PROJECT_SOURCE_DIR}/cmake/imgui.cmake)
+# include(${PROJECT_SOURCE_DIR}/cmake/imgui.cmake)
 add_subdirectory(spark)
 add_subdirectory(efsw)
 #add_subdirectory(freetype)
@@ -92,29 +91,30 @@ set(BUILD_TARGETS
     vorbisenc
     vorbis
     ogg
-    png_static
     zlibstatic
     lua
     tinyxml2static
     json
     base64
-    #SDL2-static
     bgfx
     bimg
     bx
     brtshaderc
-    imgui
+    #bgfxEx
+    bgfxcommon
+    # imgui
+    dear-imgui	# build by bgfxcommon, use bgfx/3rdparty/dear-imgui
     spark
     efsw
-    #freetype
 )
 
 # Emscripten ships with its own implementation of the OpenAL, sdl2, freetype
 if(NOT EMSCRIPTEN)
     list(APPEND BUILD_TARGETS SDL2-static)
     list(APPEND BUILD_TARGETS SDL2main)
-    list(APPEND BUILD_TARGETS freetype)
+    #list(APPEND BUILD_TARGETS freetype)
     list(APPEND BUILD_TARGETS OpenAL)
+    list(APPEND BUILD_TARGETS png_static)
 endif()
 
 
@@ -124,20 +124,20 @@ endif()
 if(LINUX)
     set(GLAY_DEPS_LIB libgplay-deps.a)
     set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh
-    	${CMAKE_AR}
-    	${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
+        ${CMAKE_AR}
+        ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
     )
 elseif(EMSCRIPTEN)
     set(GLAY_DEPS_LIB libgplay-deps.a)
     set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/gnu-amalgamate.sh
-    	${CMAKE_AR}
-    	${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
+        $(EMSCRIPTEN)/emar
+        ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
     )
 elseif(WINDOWS)
     set(GLAY_DEPS_LIB gplay-deps.lib)
     set(TARGET_CMD ${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc-amalgamate.bat
-    	${CMAKE_AR}
-    	${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
+        ${CMAKE_AR}
+        ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} ${OUT_DIR_LIB}
     )
 endif()
 
@@ -152,16 +152,10 @@ add_custom_target(GPLAY_DEPS ALL DEPENDS ${GLAY_DEPS_LIB})
 add_dependencies(GPLAY_DEPS ${BUILD_TARGETS})
 
 # copy thirdparty headers to output directory
+
 COPY_HEADERS(base64/base64.h ${OUT_DIR_INCLUDE}/base64/)
-COPY_HEADERS(bgfx-cmake/bgfx/include/ ${OUT_DIR_INCLUDE}/)
-COPY_HEADERS(bgfx-cmake/bimg/include/ ${OUT_DIR_INCLUDE}/)
-COPY_HEADERS(bgfx-cmake/bx/include/ ${OUT_DIR_INCLUDE}/)
-COPY_HEADERS(bgfx-cmake/brtshaderc/brtshaderc.h ${OUT_DIR_INCLUDE}/brtshaderc/)
 COPY_HEADERS(bullet/src/ ${OUT_DIR_INCLUDE}/)
 COPY_HEADERS(efsw/include/ ${OUT_DIR_INCLUDE}/)
-COPY_HEADERS(imgui/imconfig.h ${OUT_DIR_INCLUDE}/imgui/)
-COPY_HEADERS(imgui/imgui.h ${OUT_DIR_INCLUDE}/imgui/)
-COPY_HEADERS(imgui/imgui_internal.h ${OUT_DIR_INCLUDE}/imgui/)
 COPY_HEADERS(libjson/ ${OUT_DIR_INCLUDE}/libjson/)
 COPY_HEADERS(lua/src/ ${OUT_DIR_INCLUDE}/lua/)
 COPY_HEADERS(ogg/include/ogg/ ${OUT_DIR_INCLUDE}/ogg/)
@@ -176,10 +170,20 @@ COPY_HEADERS(freetype/include/freetype/ ${OUT_DIR_INCLUDE}/freetype/)
 COPY_HEADERS(freetype/include/ft2build.h ${OUT_DIR_INCLUDE}/)
 #COPY_HEADERS(assimp/include/ ${OUT_DIR_INCLUDE}/)
 COPY_HEADERS(splines/src/Splines.hh ${OUT_DIR_INCLUDE}/splines/)
+
+# copy thirdparty bgfx stuff to output directory
+
+COPY_HEADERS(bgfx-cmake/bgfx/include/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(bgfx-cmake/bimg/include/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(bgfx-cmake/bx/include/ ${OUT_DIR_INCLUDE}/)
+COPY_HEADERS(bgfx-cmake/brtshaderc/brtshaderc.h ${OUT_DIR_INCLUDE}/brtshaderc/)
+COPY_HEADERS(bgfx-cmake/bgfx/3rdparty/dear-imgui/ ${OUT_DIR_INCLUDE}/dear-imgui/)
+COPY_HEADERS(bgfx-cmake/bgfx/3rdparty/iconfontheaders/ ${OUT_DIR_INCLUDE}/iconfontheaders/)
+COPY_HEADERS(bgfx-cmake/bgfxcommon/ ${OUT_DIR_INCLUDE}/bgfxcommon/)
+
 if(WINDOWS)
     COPY_HEADERS(bgfx-cmake/bx/include/compat/ ${OUT_DIR_INCLUDE}/bx/compat/)
 endif()
-
 
 
 

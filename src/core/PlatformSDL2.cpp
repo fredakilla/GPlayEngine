@@ -76,7 +76,10 @@ extern void print(const char* format, ...)
 
 #ifndef GP_CUSTOM_PLATFORM
 
-
+// bgfx imgui
+#include <thirdparty/bgfxcommon/common.h>
+#include <thirdparty/bgfxcommon/imgui/bgfximgui.h>
+entry::MouseState m_mouseState;
 
 
 #include <SDL2/SDL_config.h>
@@ -88,7 +91,11 @@ extern void print(const char* format, ...)
 #include <bgfx/platform.h>
 
 #include "../renderer/Renderer.h"
-#include "../renderer/BGFXImGui.h"
+
+
+
+
+
 
 int __app_argc = 0;
 char** __app_argv = nullptr;
@@ -181,7 +188,7 @@ Keyboard::Key translateKey(SDL_Scancode sdl)
 //-------------------------------------------------------------------------------------------------------------
 
 static bool g_MousePressed[3] = { false, false, false };
-static SDL_Cursor* g_MouseCursors[ImGuiMouseCursor_Count_] = { 0 };
+static SDL_Cursor* g_MouseCursors[ImGuiMouseCursor_COUNT] = { 0 };
 static Uint64 g_Time = 0;
 
 
@@ -198,20 +205,20 @@ static void ImGui_ImplSdlGL3_SetClipboardText(void*, const char* text)
 static void ImGui_ImplSdlGL3_Shutdown()
 {
     // Destroy SDL mouse cursors
-    for (ImGuiMouseCursor cursor_n = 0; cursor_n < ImGuiMouseCursor_Count_; cursor_n++)
+    for (ImGuiMouseCursor cursor_n = 0; cursor_n < ImGuiMouseCursor_COUNT; cursor_n++)
         SDL_FreeCursor(g_MouseCursors[cursor_n]);
     memset(g_MouseCursors, 0, sizeof(g_MouseCursors));
 
-    // Destroy bgfx imgui objects
-    GPImGui::getInstance()->imguiShutdown();
+    // Destroy bgfx imgui
+    imguiDestroy();
 }
 
 static bool ImGui_ImplSdlGL3_Init(SDL_Window* window)
 {
-    ImGui::StyleColorsClassic();
+    // Create and init bgfx imgui
+    imguiCreate(16.0f);
 
-    // Create bgfx imgui objects
-    GPImGui::getInstance()->imguiInit();
+    ImGui::StyleColorsClassic();
 
     // Setup back-end capabilities flags
     ImGuiIO& io = ImGui::GetIO();
@@ -283,6 +290,14 @@ static void ImGui_ImplSDL2_UpdateMousePosAndButtons()
     io.MouseDown[2] = g_MousePressed[2] || (mouse_buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE)) != 0;
     g_MousePressed[0] = g_MousePressed[1] = g_MousePressed[2] = false;
 
+    // bgfx imgui mouse state
+    m_mouseState.m_mx = mx;
+    m_mouseState.m_my = my;
+    m_mouseState.m_buttons[entry::MouseButton::Left] = io.MouseDown[0];
+    m_mouseState.m_buttons[entry::MouseButton::Right] = io.MouseDown[1];
+    m_mouseState.m_buttons[entry::MouseButton::Middle] = io.MouseDown[2];
+
+
 #if SDL_HAS_CAPTURE_MOUSE && !defined(__EMSCRIPTEN__)
     SDL_Window* focused_window = SDL_GetKeyboardFocus();
     if (g_Window == focused_window)
@@ -346,11 +361,24 @@ static void ImGui_ImplSdlGL3_NewFrame(SDL_Window* window)
     io.DeltaTime = g_Time > 0 ? (float)((double)(current_time - g_Time) / frequency) : (float)(1.0f / 60.0f);
     g_Time = current_time;
 
+
     ImGui_ImplSDL2_UpdateMousePosAndButtons();
     ImGui_ImplSDL2_UpdateMouseCursor();
 
+
     // Start the frame. This call will update the io.WantCaptureMouse, io.WantCaptureKeyboard flag that you can use to dispatch inputs (or not) to your application.
-    ImGui::NewFrame();
+    ///ImGui::NewFrame();
+    imguiBeginFrame(
+                m_mouseState.m_mx
+                ,  m_mouseState.m_my
+                , (m_mouseState.m_buttons[entry::MouseButton::Left] ? IMGUI_MBUT_LEFT : 0)
+            | (m_mouseState.m_buttons[entry::MouseButton::Right] ? IMGUI_MBUT_RIGHT : 0)
+            | (m_mouseState.m_buttons[entry::MouseButton::Middle] ? IMGUI_MBUT_MIDDLE : 0)
+            ,  m_mouseState.m_mz
+            , uint16_t(__windowSize[0])
+            , uint16_t(__windowSize[1])
+            );
+
 
     // fix issue when debugging (mouse was still captured by sdl and we cannot use it in debugger)
     //SDL_CaptureMouse(SDL_FALSE);
@@ -400,8 +428,6 @@ static bool ImGui_ImplSdlGL3_ProcessEvent(SDL_Event* event)
     }
     return false;
 }
-
-
 
 
 //-------------------------------------------------------------------------------------------------------------
@@ -607,10 +633,7 @@ Platform* Platform::create(Game* game, void* externalWindow)
 
     updateWindowSize();
 
-
-
     // Create ImGui context and init
-    ImGui::CreateContext();
     ImGui_ImplSdlGL3_Init(__window);
 
     return platform;
@@ -651,8 +674,10 @@ void Platform::frame()
 
         _game->frame();
 
-        ImGui::Render();
-        GPImGui::getInstance()->imguiRender(ImGui::GetDrawData());
+        ///ImGui::Render();
+        ///GPImGui::getInstance()->imguiRender(ImGui::GetDrawData());
+        imguiEndFrame();
+
 
         Renderer::getInstance().endFrame();
     }
@@ -666,6 +691,7 @@ int Platform::processEvents()
     {
         // Process ImGui events
         ImGui_ImplSdlGL3_ProcessEvent(&evt);
+
 
         // Process SDL2 events
         switch (evt.type)
@@ -746,8 +772,8 @@ int Platform::processEvents()
 
             case SDL_MOUSEMOTION:
             {
-                if(ImGui::GetIO().WantCaptureMouse)
-                    continue;
+               if(ImGui::GetIO().WantCaptureMouse)
+                   continue;
 
                 const SDL_MouseMotionEvent& motionEvt = evt.motion;
 

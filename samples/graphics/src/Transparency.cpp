@@ -2,7 +2,7 @@
 #include "Example.h"
 #include "SamplesGame.h"
 #include "FirstPersonCamera.h"
-#include <imgui/imgui.h>
+#include <thirdparty/bgfxcommon/imgui/bgfximgui.h>
 
 using namespace gplay;
 
@@ -130,7 +130,7 @@ public:
         // Create 3 wide boxes
         {
             Material* materialClone = material->clone();
-            materialClone->getParameter("u_diffuseColor")->setValue(Vector4(1.0f, 0.0f, 0.0, 0.3f));            
+            materialClone->getParameter("u_diffuseColor")->setValue(Vector4(1.0f, 0.0f, 0.0, 0.3f));
 
             Model* model = Model::create(meshBox);
             model->setMaterial(materialClone);
@@ -174,8 +174,13 @@ public:
 
     void update(float elapsedTime)
     {
-        // show toolbox
-        showToolbox();
+        // render frame buffer inside an imgui window
+        ImGui::Begin("FrameBuffer preview");
+        ImGui::Image(_frameBuffer->getRenderTarget(0)->getTexture()->getHandle()->getHandle(), ImVec2(400,400)
+                     , ImVec2(0.0f, 0.0f)
+                     , ImVec2(1.0f, -1.0f)  // flip vertically
+                     );
+        ImGui::End();
 
         // update camera
         _fpCamera.updateCamera(elapsedTime);
@@ -187,7 +192,6 @@ public:
         View::getView(1)->bind();
         _frameBuffer->bind();
         _scene->visit(this, &Transparency::drawScene);
-
 
         // render scene in main view
         View::getView(0)->bind();
@@ -202,12 +206,6 @@ public:
         if (drawable)
             drawable->draw();
         return true;
-    }
-
-    void showToolbox()
-    {
-        ImGui::Begin("Toolbox");
-        ImGui::End();
     }
 
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)

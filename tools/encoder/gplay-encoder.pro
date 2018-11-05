@@ -48,7 +48,7 @@ linux: {
     INCLUDEPATH += /usr/include/fbxsdk
 
     LIBS += -L/usr/lib/gcc4/x64/release -lfbxsdk
-    LIBS += -lstdc++ -ldl -lpthread
+    LIBS += -lGL -lstdc++ -ldl -lX11 -lpthread
 
     # Note: when running the encoder, if error : error while loading shared libraries: libfbxsdk.so: cannot open shared object...
     # open a terminal :

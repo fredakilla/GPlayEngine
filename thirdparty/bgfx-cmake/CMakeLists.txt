@@ -82,5 +82,9 @@ if( BGFX_INSTALL )
 	endif()
 endif()
 
+
+# additional library used by gplay-engine
 add_subdirectory(brtshaderc)
+add_subdirectory(bgfxcommon)
+#include( cmake/bgfxEx.cmake )
 

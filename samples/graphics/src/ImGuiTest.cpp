@@ -1,6 +1,6 @@
 #include "ImGuiTest.h"
 #include "SamplesGame.h"
-#include <imgui/imgui.h>
+#include <dear-imgui/imgui.h>
 
 #if defined(ADD_SAMPLE)
     ADD_SAMPLE("Graphics", "ImGui", ImGuiTest, 6);
@@ -137,7 +137,7 @@ void ImGuiTest::update(float elapsedTime)
 {
     // Show ImGui test window
     ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-    ImGui::ShowTestWindow();
+    ImGui::ShowDemoWindow();
 
     // Create some ImGui controls to manage cube rotation
     static float axis[] = { 0.2f, 0.4f, 0.3f };
