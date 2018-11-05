@@ -8,32 +8,27 @@ using namespace gplay;
 class EditorSample : public Example
 {
     FirstPersonCamera _fpCamera;
-    Font* _font;
     Scene* _scene;
 
 public:
 
     EditorSample()
-        : _font(nullptr), _scene(nullptr)
+        : _scene(nullptr)
     {
     }
 
     void finalize()
     {
-        SAFE_RELEASE(_font);
         SAFE_RELEASE(_scene);
         Game::getInstance()->showEditor(nullptr);
     }
 
     void initialize()
     {
-        // Create the font for drawing the framerate.
-        _font = Font::create("res/core/ui/arial.gpb");
+        // Create a new scene.
+        _scene = Scene::load("res/data/samples/browser/sample.scene");
 
-        // Create a new empty scene.
-        _scene = Scene::create();
-
-        // create a node hierarchy for testing
+        // create a node hierarchy
         Node* n1 = Node::create("n1");
         Node* n2 = Node::create("n2");
         Node* n3 = Node::create("n3");
@@ -48,10 +43,11 @@ public:
         _scene->addNode(n1);
         _scene->addNode(n2);
         _scene->addNode(n6);
-        _scene->addNode();
 
+        // visit all the nodes in the scene to bind lighting to materials
+        _scene->visit(this, &EditorSample::initializeMaterials);
 
-        // set fps camera
+        // create fps camera and set as active camera
         Vector3 cameraPosition(0, 1, 5);
         _fpCamera.initialize(1.0, 10000.0f);
         _fpCamera.setPosition(cameraPosition);
@@ -59,34 +55,33 @@ public:
         _scene->setActiveCamera(_fpCamera.getCamera());
         _scene->getActiveCamera()->setAspectRatio(getAspectRatio());
 
-
-
-        // load a box model
-
-        Bundle* bundle = Bundle::create("res/data/scenes/box.gpb");
-        Model* modelBox = Model::create(bundle->loadMesh("box_Mesh"));
-        modelBox->setMaterial("res/data/materials/box.material");
-        Node* nodeBox = Node::create("nodeBox");
-        nodeBox->setDrawable(modelBox);
-        SAFE_RELEASE(modelBox);
-        _scene->addNode(nodeBox);
-
-        nodeBox->setScale(2,1,3);
-        nodeBox->setTranslation(1,2,-3);
-        Quaternion q;
-        Quaternion::createFromEulerAngles(Vector3(25,-42,126), &q);
-        nodeBox->setRotation(q);
-
-        SAFE_RELEASE(nodeBox);
-
-
-
-
-        // show editor
+        // show this scene in editor
         Game::getInstance()->showEditor(_scene);
+    }
 
 
-        View::create(0, Rectangle(getWidth(), getHeight()), View::ClearFlags::COLOR_DEPTH, 0xaaaaffff);
+    bool initializeMaterials(Node* node)
+    {
+        Model* model = dynamic_cast<Model*>(node->getDrawable());
+        if (model)
+        {
+            Material* material = model->getMaterial();
+            MaterialParameter* colorParam = material->getParameter("u_directionalLightColor[0]");
+            colorParam->setValue(Vector3(0.75f, 0.75f, 0.75f));
+
+            Node* lightNode = _scene->findNode("directionalLight");
+            if(lightNode)
+            {
+                Light* light = dynamic_cast<Light*>(lightNode->getLight());
+                if(light)
+                {
+                    MaterialParameter* directionParam = material->getParameter("u_directionalLightDirection[0]");
+                    directionParam->bindValue(lightNode, &Node::getForwardVectorView);
+                }
+            }
+
+        }
+        return true;
     }
 
     void update(float elapsedTime)
@@ -97,11 +92,11 @@ public:
 
     void render(float elapsedTime)
     {
+        // Clear the color and depth buffers
+        clear(CLEAR_COLOR_DEPTH, 0.6f, 0.6f, 0.8f, 1.0f, 1.0f, 0);
 
         // Visit all the nodes in the scene, drawing the models.
         _scene->visit(this, &EditorSample::drawScene);
-
-        drawFrameRate(_font, Vector4(0, 0.5f, 1, 1), 5, 1, getFrameRate());
     }
 
     bool drawScene(Node* node)
@@ -119,11 +114,6 @@ public:
         switch (evt)
         {
         case Touch::TOUCH_PRESS:
-            if (x < 75 && y < 50)
-            {
-                // Toggle Vsync if the user touches the top left corner
-                setVsync(!isVsync());
-            }
             break;
         case Touch::TOUCH_RELEASE:
             break;

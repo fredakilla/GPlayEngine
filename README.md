@@ -9,9 +9,10 @@ GPlayEngine is based on the [GamePlay 3D engine](http://www.gameplay3d.io/) v3.0
 <img src="https://i.imgur.com/0ei9Y28.png" width="50%" height="%"><img src="https://i.imgur.com/mXvz27x.jpg" width="50%" height="%">
 <img src="https://i.imgur.com/nRpTNIm.jpg" width="50%" height="%"><img src="https://i.imgur.com/SDIgTkt.png" width="50%" height="%">
 <img src="https://i.imgur.com/4uplO1O.png" width="75%" height="%"><img src="https://i.imgur.com/KyRqyIP.png" width="25%" height="%">
+<img src="https://i.imgur.com/Vyl2Pxc.png" width="50%" height="%">
 
 ## Current status
-- Cmake is used as main build system (qtcreator is also up-to-date)
+- cmake is used as main build system (qtcreator is also up-to-date)
 - bgfx integration is completed and replace opengl.
 - bgfx is currently forced to use the opengl driver because engine still use some old glsl shaders. A pass on shaders is planned to use the bgfx shader syntax to be fully compatible with others bgfx backends.
 - Engine now use SDL2 by default to manage windows and inputs. Gamepad are not yet implanted.
@@ -46,6 +47,7 @@ See [wiki - compiling framework](https://github.com/fredakilla/GPlayEngine/wiki/
 - Declarative UI system supporing 2D/3D theme-able user interfaces.
 - Nice, customizable and complete built-in 2D GUI, with buttons, lists, edit boxes, layout...
 - ImGui GUI support.
+- In-game editor using imgui (WIP)
 - File watcher system for hot reloading (shaders, scripts...)
 - Fully extensible animation system with skeletal character animation.
 - Complete 3D audio system with WAV and OGG support.
