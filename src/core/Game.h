@@ -15,6 +15,7 @@
 #include "../math/Vector4.h"
 #include "../core/TimeListener.h"
 #include "../events/EventManager.h"
+#include "../editor/InGameEditor.h"
 
 namespace gplay
 {
@@ -627,6 +628,12 @@ public:
      */
     bool launchURL(const char *url) const;
 
+    /**
+     * Show in game editor
+     * @param scene the current scene, if null editor will not be processed
+     */
+    void showEditor(Scene* scene);
+
 protected:
 
     /**
@@ -776,6 +783,7 @@ private:
     ScriptController* _scriptController;        // Controls the scripting engine.
     ScriptTarget* _scriptTarget;                // Script target for the game
     EventManagerRef _eventManager;              // Event manager
+    InGameEditor* _inGameEditor;                // ImGui based scene editor
 
     // Note: Do not add STL object member variables on the stack; this will cause false memory leaks to be reported.
 

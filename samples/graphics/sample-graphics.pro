@@ -57,7 +57,8 @@ SOURCES += \
     src/EventSample.cpp \
     src/LightsAndShadows.cpp \
     src/DeferredTest.cpp \
-    src/DebugDraw.cpp
+    src/DebugDraw.cpp \
+    src/EditorSample.cpp
 
 HEADERS += \
     src/SamplesGame.h \

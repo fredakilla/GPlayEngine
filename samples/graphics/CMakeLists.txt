@@ -31,6 +31,7 @@ set(GAME_SRC
     src/EventSample.cpp
     src/LightsAndShadows.cpp
     src/DeferredTest.cpp
+    src/EditorSample.cpp
 )
 
 add_executable(${GAME_NAME} ${GAME_SRC})

@@ -192,7 +192,8 @@ HEADERS += \
     ui/VerticalLayout.h \
     gplay3d.h \
     graphics/View.h \
-    graphics/DebugDraw.h
+    graphics/DebugDraw.h \
+    editor/InGameEditor.h
 
 SOURCES += \
     ai/AIAgent.cpp \
@@ -317,7 +318,8 @@ SOURCES += \
     ui/ThemeStyle.cpp \
     ui/VerticalLayout.cpp \
     graphics/View.cpp \
-    graphics/DebugDraw.cpp
+    graphics/DebugDraw.cpp \
+    editor/InGameEditor.cpp
 
 
 #--------------------------------------------------------------------

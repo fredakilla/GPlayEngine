@@ -65,7 +65,7 @@ Game::Game()
       _clearDepth(1.0f), _clearStencil(0), _properties(NULL),
       _animationController(NULL), _audioController(NULL),
       _physicsController(NULL), _aiController(NULL), _audioListener(NULL),
-      _timeEvents(NULL), _scriptController(NULL), _scriptTarget(NULL)
+      _timeEvents(NULL), _scriptController(NULL), _scriptTarget(NULL), _inGameEditor(NULL)
 {
     setlocale(LC_NUMERIC, "C");
 
@@ -184,6 +184,9 @@ bool Game::startup()
     _scriptController = new ScriptController();
     _scriptController->initialize();
 
+    _inGameEditor = new InGameEditor();
+    _inGameEditor->initialize();
+
     // Load any gamepads, ui or physical.
     loadGamepads();
 
@@ -280,6 +283,8 @@ void Game::shutdown()
         ControlFactory::finalize();
 
         Theme::finalize();
+
+        SAFE_DELETE(_inGameEditor);
 
         // Note: we do not clean up the script controller here
         // because users can call Game::exit() from a script.
@@ -420,6 +425,9 @@ void Game::frame()
 
         // Audio Rendering.
         _audioController->update(elapsedTime);
+
+        // Editor update.
+        _inGameEditor->update(elapsedTime);
 
         // Graphics Rendering.
         render(elapsedTime);
@@ -838,6 +846,12 @@ void Game::ShutdownListener::timeEvent(long timeDiff, void* cookie)
 {
 	Game::getInstance()->shutdown();
 }
+
+void Game::showEditor(Scene* scene)
+{
+    _inGameEditor->setScene(scene);
+}
+
 
 }
 
