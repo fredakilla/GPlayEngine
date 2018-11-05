@@ -29,6 +29,7 @@ file(GLOB GPLAY_SRC
     ${PROJECT_SOURCE_DIR}/script/*.cpp
     ${PROJECT_SOURCE_DIR}/sparkparticles/*.cpp
     ${PROJECT_SOURCE_DIR}/ui/*.cpp
+    ${PROJECT_SOURCE_DIR}/editor/*.cpp
 )
 
 add_library(GPLAY STATIC
