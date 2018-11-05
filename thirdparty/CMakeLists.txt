@@ -78,10 +78,10 @@ add_subdirectory(zlib)
 add_subdirectory(ogg)       # Ogg needs to be built before vorbis
 add_subdirectory(vorbis)
 add_subdirectory(base64)
-# include(${PROJECT_SOURCE_DIR}/cmake/imgui.cmake)
+# include(${PROJECT_SOURCE_DIR}/cmake/imgui.cmake)	# imgui is now provided by bgfx 3rdparty
 add_subdirectory(spark)
 add_subdirectory(efsw)
-#add_subdirectory(freetype)
+# add_subdirectory(freetype)		# freetype is now provided by bgfx 3rdparty
 
 set(BUILD_TARGETS
     BulletDynamics
@@ -100,10 +100,8 @@ set(BUILD_TARGETS
     bimg
     bx
     brtshaderc
-    #bgfxEx
     bgfxcommon
     # imgui
-    dear-imgui	# build by bgfxcommon, use bgfx/3rdparty/dear-imgui
     spark
     efsw
 )
@@ -112,7 +110,7 @@ set(BUILD_TARGETS
 if(NOT EMSCRIPTEN)
     list(APPEND BUILD_TARGETS SDL2-static)
     list(APPEND BUILD_TARGETS SDL2main)
-    #list(APPEND BUILD_TARGETS freetype)
+    # list(APPEND BUILD_TARGETS freetype)
     list(APPEND BUILD_TARGETS OpenAL)
     list(APPEND BUILD_TARGETS png_static)
 endif()

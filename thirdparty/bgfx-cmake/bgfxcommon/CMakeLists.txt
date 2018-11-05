@@ -27,4 +27,6 @@ target_include_directories( bgfxcommon PUBLIC ${BIMG_DIR}/include )
 target_include_directories( bgfxcommon PUBLIC ${BGFX_DIR}/include )
 target_include_directories( bgfxcommon PUBLIC ${BGFX_DIR}/3rdparty )
 
+target_link_libraries( bgfxcommon PUBLIC dear-imgui )
+
 
