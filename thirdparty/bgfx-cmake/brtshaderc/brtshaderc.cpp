@@ -216,13 +216,11 @@ namespace shaderc
         // include current dir
         std::string dir;
         {
-            const char* base = bgfx::baseName(filePath);
+            bx::FilePath fp(filePath);
+            bx::StringView path(fp.getPath() );
 
-            if (base != filePath)
-            {
-                dir.assign(filePath, base-filePath);
-                options.includeDirs.push_back(dir.c_str());
-            }
+            dir.assign(path.getPtr(), path.getTerm() );
+            options.includeDirs.push_back(dir);
         }
 
         // set defines
@@ -310,13 +308,10 @@ namespace shaderc
         }
     }
 
-    const char* baseName(const char* _filePath)
+    bx::StringView baseName(const char* _filePath)
     {
         bx::FilePath fp(_filePath);
-        char tmp[bx::kMaxFilePath];
-        bx::strCopy(tmp, BX_COUNTOF(tmp), fp.getFileName() );
-        bx::StringView base = bx::strFind(_filePath, tmp);
-        return base.isEmpty() ? NULL : base.getPtr();
+        return bx::strFind(_filePath, fp.getBaseName() );
     }
 
     int compileShader(int _argc, const char* _argv[], bx::FileWriter* _writer)
@@ -448,13 +443,11 @@ namespace shaderc
 
         std::string dir;
         {
-            const char* base = baseName(filePath);
+            bx::FilePath fp(filePath);
+            bx::StringView path(fp.getPath() );
 
-            if (base != filePath)
-            {
-                dir.assign(filePath, base-filePath);
-                options.includeDirs.push_back(dir.c_str());
-            }
+            dir.assign(path.getPtr(), path.getTerm() );
+            options.includeDirs.push_back(dir);
         }
 
         const char* defines = cmdLine.findOption("define");
