@@ -178,6 +178,7 @@ COPY_HEADERS(bgfx-cmake/brtshaderc/brtshaderc.h ${OUT_DIR_INCLUDE}/brtshaderc/)
 COPY_HEADERS(bgfx-cmake/bgfx/3rdparty/dear-imgui/ ${OUT_DIR_INCLUDE}/dear-imgui/)
 COPY_HEADERS(bgfx-cmake/bgfx/3rdparty/iconfontheaders/ ${OUT_DIR_INCLUDE}/iconfontheaders/)
 COPY_HEADERS(bgfx-cmake/bgfxcommon/ ${OUT_DIR_INCLUDE}/bgfxcommon/)
+COPY_HEADERS(bgfx-cmake/bgfx/3rdparty/stb/ ${OUT_DIR_INCLUDE}/stb/)
 
 if(WINDOWS)
     COPY_HEADERS(bgfx-cmake/bx/include/compat/ ${OUT_DIR_INCLUDE}/bx/compat/)
