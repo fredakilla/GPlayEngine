@@ -81,6 +81,23 @@ public:
     static Vector3 fromColor(unsigned int color);
 
     /**
+     * Creates a new vector from a hex formatted string interpreted as an RGB value.
+     * Ex. "#ff0000" represents opaque red or the vector (1, 0, 0).
+     *
+     * @param str The hex string to interpret as an RGB value.
+     * @return A vector corresponding to the interpreted RGB color.
+     */
+    static Vector3 fromColorString(const char* str);
+
+    /**
+     * Gets the vector as a packed uint32_t represented as RGB value.
+     * Ex. 0xff0000 represents opaque red or the vector (1, 0, 0).
+     *
+     * @return The vector as an uint32_t color value.
+     */
+    unsigned int toUInt() const;
+
+    /**
      * Destructor.
      */
     ~Vector3();

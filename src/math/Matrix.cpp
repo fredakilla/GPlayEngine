@@ -1002,4 +1002,24 @@ void Matrix::transpose(Matrix* dst) const
     MathUtil::transposeMatrix(m, dst->m);
 }
 
+Matrix& Matrix::operator=(const Matrix& m)
+{
+    if(&m == this)
+        return *this;
+
+    std::memcpy(this->m, m.m, GP_MATH_MATRIX_SIZE);
+
+    return *this;
+}
+
+bool Matrix::operator==(const Matrix& m) const
+{
+    return memcmp(this->m, m.m, GP_MATH_MATRIX_SIZE) == 0;
+}
+
+bool Matrix::operator!=(const Matrix& m) const
+{
+    return memcmp(this->m, m.m, GP_MATH_MATRIX_SIZE) != 0;
+}
+
 }

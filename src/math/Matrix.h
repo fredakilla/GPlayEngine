@@ -933,6 +933,29 @@ public:
      */
     inline Matrix& operator*=(const Matrix& m);
     
+    /**
+     * operator =
+     */
+    Matrix& operator=(const Matrix& m);
+
+    /**
+     * Determines if this matrix is equal to the given matrix.
+     *
+     * @param m The matrix to compare against.
+     *
+     * @return True if this matrix is equal to the given matrix, false otherwise.
+     */
+    bool operator==(const Matrix& m) const;
+
+    /**
+     * Determines if this vector is not equal to the given vector.
+     *
+     * @param m The matrix to compare against.
+     * @return True if this matrix is not equal to the given matrix, false otherwise.
+     */
+    bool operator!=(const Matrix& m) const;
+
+
 private:
 
     static void createBillboardHelper(const Vector3& objectPosition, const Vector3& cameraPosition,

@@ -44,6 +44,22 @@ Vector4 Vector4::fromColor(unsigned int color)
     return value;
 }
 
+Vector4 Vector4::fromColorString(const char* str)
+{
+    Vector4 value = Vector4(0, 0, 0, 0);
+    if (str[0] == '#' && strlen(str) == 9 )
+    {
+        uint32_t color;
+        if (sscanf(str + 1, "%x", &color) == 1)
+            value = Vector4::fromColor(color);
+    }
+    else
+    {
+        GP_WARN("Invalid color string formatting:%s", str);
+    }
+    return value;
+}
+
 unsigned Vector4::toUInt() const
 {
     auto r = (unsigned)MATH_CLAMP(((int)(x * 255.0f)), 0, 255);

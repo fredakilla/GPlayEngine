@@ -193,7 +193,12 @@ HEADERS += \
     gplay3d.h \
     graphics/View.h \
     graphics/DebugDraw.h \
-    editor/InGameEditor.h
+    editor/InGameEditor.h \
+    core/Serializable.h \
+    core/Serializer.h \
+    core/SerializerJson.h \
+    core/Activator.h \
+    core/SerializerBinary.h
 
 SOURCES += \
     ai/AIAgent.cpp \
@@ -319,7 +324,11 @@ SOURCES += \
     ui/VerticalLayout.cpp \
     graphics/View.cpp \
     graphics/DebugDraw.cpp \
-    editor/InGameEditor.cpp
+    editor/InGameEditor.cpp \
+    core/Serializer.cpp \
+    core/SerializerJson.cpp \
+    core/Activator.cpp \
+    core/SerializerBinary.cpp
 
 
 #--------------------------------------------------------------------

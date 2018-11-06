@@ -45,6 +45,34 @@ Vector3 Vector3::fromColor(unsigned int color)
     return value;
 }
 
+Vector3 Vector3::fromColorString(const char* str)
+{
+    Vector3 value = Vector3(0, 0, 0);
+    if (str[0] == '#' && strlen(str) == 7 )
+    {
+        uint32_t color;
+        if (sscanf(str + 1, "%x", &color) == 1)
+            value = Vector3::fromColor(color);
+    }
+    return value;
+}
+
+unsigned int Vector3::toUInt() const
+{
+    unsigned char component;
+    unsigned int value = 0;
+    // Red component
+    component = static_cast<unsigned char>(x * 255);
+    value += component << 16;
+    // Green component
+    component = static_cast<unsigned char>(y * 255);
+    value += component << 8;
+    // Blue component
+    component = static_cast<unsigned char>(z * 255);
+    value += component;
+    return value;
+}
+
 Vector3::~Vector3()
 {
 }

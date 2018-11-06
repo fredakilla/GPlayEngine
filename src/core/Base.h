@@ -161,6 +161,12 @@ extern int strcmpnocase(const char* s1, const char* s2);
         x = NULL; \
     }
 
+// Engine
+#define GP_ENGINE_NAME              "gplayengine"
+#define GP_ENGINE_VERSION_MAJOR     1
+#define GP_ENGINE_VERSION_MINOR     0
+#define GP_ENGINE_MAGIC_NUMBER      { '\xAB', 'G', 'P', 'B', '\xBB', '\r', '\n', '\x1A', '\n' }
+
 // Math
 #define MATH_DEG_TO_RAD(x)          ((x) * 0.0174532925f)
 #define MATH_RAD_TO_DEG(x)          ((x)* 57.29577951f)
@@ -180,6 +186,7 @@ extern int strcmpnocase(const char* s1, const char* s2);
 #define MATH_PIX2                   6.28318530717958647693f
 #define MATH_EPSILON                0.000001f
 #define MATH_CLAMP(x, lo, hi)       ((x < lo) ? lo : ((x > hi) ? hi : x))
+#define GP_MATH_MATRIX_SIZE         (sizeof(float) * 16)
 #ifndef M_1_PI
 #define M_1_PI                      0.31830988618379067154
 #endif
