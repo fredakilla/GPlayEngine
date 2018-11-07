@@ -28,7 +28,7 @@ public:
     /**
      * Callback used to create objects on registered serializable classes.
      */
-    typedef std::shared_ptr<Serializable> (*CreateObjectCallback)();
+    typedef Serializable* (*CreateObjectCallback)();
     
     /**
      * Callback used to convert enum values to string on registered serializable enums.
@@ -54,7 +54,7 @@ public:
      * @param className The serialized class name of the instance to be created.
      * @return The new object instance.
      */
-    std::shared_ptr<Serializable> createObject(const std::string& className);
+    Serializable* createObject(const std::string& className);
     
     /**
      * Converts the enum value to a string representation.

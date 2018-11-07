@@ -256,7 +256,7 @@ void SerializerBinary::writeStringList(const char* propertyName, size_t count)
     _stream->write(&count, sizeof(size_t), 1);
 }
     
-void SerializerBinary::writeObject(const char* propertyName, std::shared_ptr<Serializable> value)
+void SerializerBinary::writeObject(const char* propertyName, Serializable* value)
 {
     GP_ASSERT(_type == Type::eWriter);
     
@@ -267,14 +267,14 @@ void SerializerBinary::writeObject(const char* propertyName, std::shared_ptr<Ser
     }
     
     bool writeValue = true;
-    if (value && value.use_count() > 1)
+    if (value && value->getRefCount() > 1)
     {
         _stream->write(&BIT_XREF, sizeof(unsigned char), 1);
-        unsigned long xrefAddress = reinterpret_cast<unsigned long>(value.get());
+        unsigned long xrefAddress = reinterpret_cast<unsigned long>(value);
         _stream->write(&xrefAddress, sizeof(unsigned long), 1);
         
         // Check if already serialized from xref table
-        std::map<unsigned long, std::shared_ptr<Serializable>>::const_iterator itr = _xrefs.find(xrefAddress);
+        std::map<unsigned long, Serializable*>::const_iterator itr = _xrefs.find(xrefAddress);
         if (itr == _xrefs.end())
         {
             writeValue = true;
@@ -547,7 +547,7 @@ size_t SerializerBinary::readStringList(const char* propertyName)
     return count;
 }
 
-std::shared_ptr<Serializable> SerializerBinary::readObject(const char* propertyName)
+Serializable *SerializerBinary::readObject(const char* propertyName)
 {
     GP_ASSERT(_type == Type::eReader);
     
@@ -562,7 +562,7 @@ std::shared_ptr<Serializable> SerializerBinary::readObject(const char* propertyN
     else if (bit == BIT_XREF)
     {
         _stream->read(&xrefAddress, sizeof(unsigned long), 1);
-        std::map<unsigned long, std::shared_ptr<Serializable>>::const_iterator itr = _xrefs.find(xrefAddress);
+        std::map<unsigned long, Serializable*>::const_iterator itr = _xrefs.find(xrefAddress);
         if (itr != _xrefs.end())
         {
             return itr->second;
@@ -573,7 +573,7 @@ std::shared_ptr<Serializable> SerializerBinary::readObject(const char* propertyN
     std::string className;
     readLengthPrefixedString(className);
 
-    std::shared_ptr<Serializable> value = std::dynamic_pointer_cast<Serializable>(Activator::getActivator()->createObject(className));
+    Serializable* value = dynamic_cast<Serializable*>(Activator::getActivator()->createObject(className));
     if (value == nullptr)
     {
         GP_ERROR("Failed to deserialize binary class: %s for propertyName:%s", className.c_str(), propertyName);

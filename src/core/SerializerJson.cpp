@@ -269,7 +269,7 @@ void SerializerJson::writeMatrix(const char* propertyName, const Matrix& value, 
     json_push_back(node, array);
 }
 
-JSONNODE* SerializerJson::createNode(JSONNODE* parent, const char* propertyName, std::shared_ptr<Serializable> object, bool moreProperties)
+JSONNODE* SerializerJson::createNode(JSONNODE* parent, const char* propertyName, Serializable* object, bool moreProperties)
 {
     if (((json_type(parent) == JSON_NODE) && propertyName) || json_type(parent) == JSON_ARRAY)
     {
@@ -318,7 +318,7 @@ void SerializerJson::writeStringList(const char* propertyName, size_t count)
     _nodesListCounts.push(count);
 }
 
-void SerializerJson::writeObject(const char* propertyName, std::shared_ptr<Serializable> value)
+void SerializerJson::writeObject(const char* propertyName, Serializable *value)
 {
     GP_ASSERT(_type == Type::eWriter);
     if (value == nullptr)
@@ -327,9 +327,9 @@ void SerializerJson::writeObject(const char* propertyName, std::shared_ptr<Seria
     JSONNODE* parentNode = _nodes.top();
     JSONNODE* writeNode = nullptr;
     JSONNODE* xrefNode = nullptr;
-    if (value && value.use_count() > 1)
+    if (value && value->getRefCount() > 1)
     {
-        unsigned long xrefAddress = (unsigned long)value.get();
+        unsigned long xrefAddress = (unsigned long)value;
         std::map<unsigned long, JSONNODE*>::const_iterator itr = _xrefsWrite.find(xrefAddress);
         std::string url;
         if (itr == _xrefsWrite.end())
@@ -705,7 +705,7 @@ void SerializerJson::readString(const char* propertyName, std::string& value, co
   
 }
 
-std::shared_ptr<Serializable> SerializerJson::readObject(const char* propertyName)
+Serializable *SerializerJson::readObject(const char* propertyName)
 {
     GP_ASSERT(_type == Type::eReader);
     
@@ -759,10 +759,10 @@ std::shared_ptr<Serializable> SerializerJson::readObject(const char* propertyNam
             std::string addressStr = url.substr(1, url.length());
             xrefAddress = std::strtol(addressStr.c_str(), nullptr, 10);
          
-            std::map<unsigned long, std::shared_ptr<Serializable>>::const_iterator itr = _xrefsRead.find(xrefAddress);
+            std::map<unsigned long, Serializable*>::const_iterator itr = _xrefsRead.find(xrefAddress);
             if (itr != _xrefsRead.end())
             {
-                std::shared_ptr<Serializable> ref = itr->second;
+                Serializable* ref = itr->second;
                 finishNode(parentNode);
                 return ref;
             }
@@ -775,7 +775,7 @@ std::shared_ptr<Serializable> SerializerJson::readObject(const char* propertyNam
         }
     }
     
-    std::shared_ptr<Serializable> value = std::dynamic_pointer_cast<Serializable>(Activator::getActivator()->createObject(className));
+    Serializable* value = dynamic_cast<Serializable*>(Activator::getActivator()->createObject(className));
     if (value == nullptr)
     {
         GP_WARN("Failed to deserialize json object:%s for class:", className);

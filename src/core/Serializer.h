@@ -207,7 +207,7 @@ public:
      * @param propertyName The property to serialize or nullptr if an item in a object list.
      * @param value The object to serialize
      */
-    virtual void writeObject(const char* propertyName, std::shared_ptr<Serializable> value) = 0;
+    virtual void writeObject(const char* propertyName, Serializable* value) = 0;
 
     /**
      * Writes a list of objects.
@@ -399,7 +399,7 @@ public:
      * @param propertyName The property to read. If nullptr a new object is created.
      * @return The object that is read into.
      */
-    virtual std::shared_ptr<Serializable> readObject(const char* propertyName) = 0;
+    virtual Serializable* readObject(const char* propertyName) = 0;
 
     /**
      * Reads a list of objects.

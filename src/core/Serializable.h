@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Serializer.h"
+#include "Ref.h"
 
 namespace gplay
 {
@@ -11,7 +12,7 @@ namespace gplay
  * For object encoding/compatibility,  properties must be serialized in the same
  * order there are deserialized.
  */
-class Serializable
+class Serializable : public Ref
 {
 public:
 

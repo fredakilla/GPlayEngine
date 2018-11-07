@@ -97,7 +97,7 @@ public:
     /**
      * @see Serializer::writeObject
      */
-    void writeObject(const char* propertyName, std::shared_ptr<Serializable> value);
+    void writeObject(const char* propertyName, Serializable *value);
 
     /**
      * @see Serializer::writeObjectList
@@ -182,7 +182,7 @@ public:
     /**
      * @see Serializer::readObject
      */
-    std::shared_ptr<Serializable> readObject(const char* propertyName);
+    Serializable* readObject(const char* propertyName);
 
     /**
      * @see Serializer::readObjectList
@@ -223,7 +223,7 @@ private:
     static unsigned char BIT_XREF;
     static unsigned char BIT_DEFAULT;
 
-    std::map< unsigned long, std::shared_ptr<Serializable>> _xrefs;
+    std::map< unsigned long, Serializable*> _xrefs;
 };
 
 }

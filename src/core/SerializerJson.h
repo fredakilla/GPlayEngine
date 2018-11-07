@@ -99,7 +99,7 @@ public:
     /**
      * @see Serializer::writeObject
      */
-    void writeObject(const char* propertyName, std::shared_ptr<Serializable> value);
+    void writeObject(const char* propertyName, Serializable* value);
 
     /**
      * @see Serializer::writeObjectList
@@ -184,7 +184,7 @@ public:
     /**
      * @see Serializer::readObject
      */
-    std::shared_ptr<Serializable> readObject(const char* propertyName);
+    Serializable* readObject(const char* propertyName);
 
     /**
      * @see Serializer::readObjectList
@@ -218,14 +218,14 @@ protected:
     
 private:
     
-    JSONNODE* createNode(JSONNODE* parent, const char* propertyName, std::shared_ptr<Serializable> object, bool moreProperties);
+    JSONNODE* createNode(JSONNODE* parent, const char* propertyName, Serializable* object, bool moreProperties);
     void finishNode(JSONNODE* parent);
     
     JSONNODE* _root;
     std::stack<JSONNODE*> _nodes;
     std::stack<size_t> _nodesListCounts;
     std::map<unsigned long, JSONNODE*> _xrefsWrite;
-    std::map<unsigned long, std::shared_ptr<Serializable>> _xrefsRead;
+    std::map<unsigned long, Serializable*> _xrefsRead;
 };
 
 }

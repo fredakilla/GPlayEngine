@@ -19,9 +19,9 @@ Activator* Activator::getActivator()
     return &activator;
 }
        
-std::shared_ptr<Serializable> Activator::createObject(const std::string& className)
+Serializable *Activator::createObject(const std::string& className)
 {
-    std::shared_ptr<Serializable> object = nullptr;
+    Serializable* object = nullptr;
     std::map<std::string, CreateObjectCallback>::const_iterator itr = _classes.find(className);
     if (itr == _classes.end())
     {
