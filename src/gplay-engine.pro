@@ -24,7 +24,6 @@ DEFINES += GP_USE_GAMEPAD \
     #COMPIL_WITH_LUA \
     #GP_NO_SPARK
 
-INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/
 INCLUDEPATH += $$GPLAY_OUTPUT_DIR/include/gplayengine/thirdparty
 
 #--------------------------------------------------------------------

@@ -1,7 +1,8 @@
-#include "InGameEditor.h"
-#include <gplay-engine.h>
-#include <thirdparty/bgfxcommon/imgui/bgfximgui.h>
-#include <thirdparty/dear-imgui/widgets/gizmo.h>
+#include "../editor/InGameEditor.h"
+#include "../core/Base.h"
+#include "../graphics/Scene.h"
+#include <bgfxcommon/imgui/bgfximgui.h>
+#include <dear-imgui/widgets/gizmo.h>
 
 using namespace gplay;
 

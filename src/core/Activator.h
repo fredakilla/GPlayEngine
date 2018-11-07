@@ -10,7 +10,6 @@ namespace gplay
  */
 class Activator
 {
-    friend class Game;
 
 public:
 

@@ -77,8 +77,8 @@ extern void print(const char* format, ...)
 #ifndef GP_CUSTOM_PLATFORM
 
 // bgfx imgui
-#include <thirdparty/bgfxcommon/common.h>
-#include <thirdparty/bgfxcommon/imgui/bgfximgui.h>
+#include <bgfxcommon/common.h>
+#include <bgfxcommon/imgui/bgfximgui.h>
 entry::MouseState m_mouseState;
 
 
