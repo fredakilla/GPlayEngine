@@ -6,6 +6,7 @@
 #include "../script/ScriptController.h"
 #include "../graphics/Light.h"
 #include "../graphics/Model.h"
+#include "../core/Serializable.h"
 
 namespace gplay
 {
@@ -15,7 +16,7 @@ namespace gplay
  *
  * @see http://gameplay3d.github.io/GamePlay/docs/file-formats.html#wiki-Scene
  */
-class Scene : public Ref
+class Scene : public Serializable
 {
 public:
 
@@ -256,6 +257,32 @@ public:
      */
     void reset();
 
+
+    /**
+    * @see Activator::createObject
+    */
+    static Serializable* createObject();
+
+protected:
+
+    /**
+     * @see Serializable::getClassName
+     */
+    std::string getClassName();
+
+    /**
+     * @see Serializable::onSerialize
+     */
+    void onSerialize(Serializer* serializer);
+
+    /**
+     * @see Serializable::onDeserialize
+     */
+    void onDeserialize(Serializer* serializer);
+
+    bool writeChild(Node* node, Serializer *serializer);
+    bool readChild(Node* node, Serializer* serializer);
+
 private:
 
     /**
@@ -303,7 +330,7 @@ private:
     Camera* _activeCamera;
     Node* _firstNode;
     Node* _lastNode;
-    unsigned int _nodeCount;
+    unsigned int _nodeCount;    // nb of direct children
     Vector3 _ambientColor;
     bool _bindAudioListenerToCamera;
     Node* _nextItr;

@@ -7,6 +7,7 @@
 #include "../graphics/Terrain.h"
 #include "../core/Bundle.h"
 
+
 namespace gplay
 {
 
@@ -456,6 +457,62 @@ bool Scene::isNodeVisible(Node* node)
     {
         return node->getBoundingSphere().intersects(_activeCamera->getFrustum());
     }
+}
+
+Serializable* Scene::createObject()
+{
+    return new Scene();
+}
+
+std::string Scene::getClassName()
+{
+    return "gplay::Scene";
+}
+
+
+#define SCENE_NAME ""
+#define SCENE_NODE_COUNT 0
+
+
+bool Scene::writeChild(Node* node, Serializer* serializer)
+{
+    serializer->writeObject("child", dynamic_cast<Node*>(node));
+    //print("node - %s\n", node->getId());
+   // __node.push_back(node);
+    return true;
+}
+
+bool Scene::readChild(Node* child, Serializer* serializer)
+{
+    //serializer->readObject(nullptr, static_cast<Serializable*>(child));
+    return true;
+}
+
+void Scene::onSerialize(Serializer* serializer)
+{
+    serializer->writeString("name", _id.c_str(), SCENE_NAME);
+    serializer->writeInt("nodeCount", _nodeCount, SCENE_NODE_COUNT);
+    serializer->writeObject("firstNode", dynamic_cast<Node*>(_firstNode));
+
+    if (_nodeCount > 0)
+    {
+       // visit(this, &Scene::writeChild, serializer);
+    }
+}
+
+void Scene::onDeserialize(Serializer* serializer)
+{
+    serializer->readString("name", _id, SCENE_NAME);
+    _nodeCount = serializer->readInt("nodeCount", SCENE_NODE_COUNT);
+
+    _firstNode = dynamic_cast<Node*>(serializer->readObject("firstNode"));
+
+
+    /*if (_nodeCount > 0)
+    {
+        size_t childCount = serializer->readObjectList("children");
+        visit(this, &Scene::readChild, serializer);
+    }*/
 }
 
 }

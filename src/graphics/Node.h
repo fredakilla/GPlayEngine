@@ -15,6 +15,7 @@
 #include "../physics/PhysicsCollisionObject.h"
 #include "../math/BoundingBox.h"
 #include "../ai/AIAgent.h"
+#include "../core/Serializable.h"
 
 namespace gplay
 {
@@ -34,7 +35,7 @@ class Drawable;
  *
  * @see http://gameplay3d.github.io/GamePlay/docs/file-formats.html#wiki-Node
  */
-class Node : public Transform, public Ref
+class Node : public Transform, public Serializable
 {
     friend class Scene;
     friend class SceneLoader;
@@ -615,6 +616,11 @@ public:
      */
     Node* clone() const;
 
+    /**
+    * @see Activator::createObject
+    */
+    static Serializable* createObject();
+
 protected:
 
     /**
@@ -705,6 +711,24 @@ protected:
      * @script{ignore}
      */
     unsigned int findNodes(const char* id, std::vector<Node*>& nodes, bool recursive, bool exactMatch, bool skipSkin) const;
+
+
+protected:
+
+    /**
+    * @see Serializable::getClassName
+    */
+    std::string getClassName();
+
+    /**
+    * @see Serializable::onSerialize
+    */
+    void onSerialize(Serializer* serializer);
+
+    /**
+     * @see Serializable::onDeserialize
+    */
+    void onDeserialize(Serializer* serializer);
 
 private:
 

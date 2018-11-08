@@ -12,6 +12,11 @@
 #include "math/MathUtil.h"
 #include "core/Logger.h"
 #include "core/Singleton.h"
+#include "core/Activator.h"
+#include "core/Serializer.h"
+#include "core/Serializable.h"
+#include "core/SerializerBinary.h"
+#include "core/SerializerJson.h"
 
 // Math
 #include "math/Rectangle.h"

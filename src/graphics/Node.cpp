@@ -1235,6 +1235,38 @@ void Node::setUserObject(Ref* obj)
     _userObject = obj;
 }
 
+
+Serializable* Node::createObject()
+{
+    return new Node("");
+}
+
+std::string Node::getClassName()
+{
+    return "gplay::Node";
+}
+
+
+#define NODE_NAME ""
+
+void Node::onSerialize(Serializer* serializer)
+{
+    serializer->writeString("name", _id.c_str(), NODE_NAME);
+    serializer->writeObject("firstChild", dynamic_cast<Node*>(_firstChild));
+    //serializer->writeObject("nextSibling", dynamic_cast<Node*>(_nextSibling));
+
+}
+
+void Node::onDeserialize(Serializer* serializer)
+{
+    serializer->readString("name", _id, NODE_NAME);
+    _firstChild = dynamic_cast<Node*>(serializer->readObject("firstChild"));
+    //_nextSibling = dynamic_cast<Node*>(serializer->readObject("nextSibling"));
+
+}
+
+
+
 NodeCloneContext::NodeCloneContext()
 {
 }

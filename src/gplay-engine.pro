@@ -189,7 +189,6 @@ HEADERS += \
     ui/Theme.h \
     ui/ThemeStyle.h \
     ui/VerticalLayout.h \
-    gplay3d.h \
     graphics/View.h \
     graphics/DebugDraw.h \
     editor/InGameEditor.h \

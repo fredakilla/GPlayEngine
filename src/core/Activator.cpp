@@ -1,5 +1,6 @@
 #include "../core/Base.h"
 #include "../core/Activator.h"
+#include "../graphics/Scene.h"
 
 
 namespace gplay
@@ -96,6 +97,11 @@ void Activator::registerSystemTypes()
     {
         return;
     }
+
+    // Register engine types with
+    Activator::getActivator()->registerType("gplay::Scene", Scene::createObject);
+    Activator::getActivator()->registerType("gplay::Node", Node::createObject);
+
 
     /*
     // Register engine types with
